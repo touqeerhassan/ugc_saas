@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
-import PropTypes from 'prop-types';
-import { useTranslation } from 'react-i18next';
+import { useRef, useState } from "react";
+import PropTypes from "prop-types";
+import { useTranslation } from "react-i18next";
 import {
   AppBar,
   Avatar,
@@ -9,39 +9,39 @@ import {
   ButtonBase,
   IconButton,
   Toolbar,
-  Tooltip
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { Menu as MenuIcon } from '../../icons/menu';
-import { AccountPopover } from './account-popover';
-import { ContactsPopover } from './contacts-popover';
-import { ContentSearchDialog } from './content-search-dialog';
-import { NotificationsPopover } from './notifications-popover';
-import { LanguagePopover } from './language-popover';
-import { Bell as BellIcon } from '../../icons/bell';
-import { UserCircle as UserCircleIcon } from '../../icons/user-circle';
-import { Search as SearchIcon } from '../../icons/search';
-import { Users as UsersIcon } from '../../icons/users';
+  Tooltip,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { Menu as MenuIcon } from "../../icons/menu";
+import { AccountPopover } from "./account-popover";
+import { ContactsPopover } from "./contacts-popover";
+import { ContentSearchDialog } from "./content-search-dialog";
+import { NotificationsPopover } from "./notifications-popover";
+import { LanguagePopover } from "./language-popover";
+import { Bell as BellIcon } from "../../icons/bell";
+import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
+import { Search as SearchIcon } from "../../icons/search";
+import { Users as UsersIcon } from "../../icons/users";
 
 const languages = {
-  en: '/static/icons/uk_flag.svg',
-  de: '/static/icons/de_flag.svg',
-  es: '/static/icons/es_flag.svg'
+  en: "/static/icons/uk_flag.svg",
+  de: "/static/icons/de_flag.svg",
+  es: "/static/icons/es_flag.svg",
 };
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  ...(theme.palette.mode === 'light'
+  ...(theme.palette.mode === "light"
     ? {
-      boxShadow: theme.shadows[3]
-    }
+        boxShadow: theme.shadows[3],
+      }
     : {
-      backgroundColor: theme.palette.background.paper,
-      borderBottomColor: theme.palette.divider,
-      borderBottomStyle: 'solid',
-      borderBottomWidth: 1,
-      boxShadow: 'none'
-    })
+        backgroundColor: theme.palette.background.paper,
+        borderBottomColor: theme.palette.divider,
+        borderBottomStyle: "solid",
+        borderBottomWidth: 1,
+        boxShadow: "none",
+      }),
 }));
 
 const LanguageButton = () => {
@@ -59,25 +59,18 @@ const LanguageButton = () => {
 
   return (
     <>
-      <IconButton
-        onClick={handleOpenPopover}
-        ref={anchorRef}
-        sx={{ ml: 1 }}
-      >
+      <IconButton onClick={handleOpenPopover} ref={anchorRef} sx={{ ml: 1 }}>
         <Box
           sx={{
-            display: 'flex',
+            display: "flex",
             height: 20,
             width: 20,
-            '& img': {
-              width: '100%'
-            }
+            "& img": {
+              width: "100%",
+            },
           }}
         >
-          <img
-            alt=""
-            src={languages[i18n.language]}
-          />
+          <img alt="" src={languages[i18n.language]} />
         </Box>
       </IconButton>
       <LanguagePopover
@@ -103,10 +96,7 @@ const ContentSearchButton = () => {
   return (
     <>
       <Tooltip title="Search">
-        <IconButton
-          onClick={handleOpenSearchDialog}
-          sx={{ ml: 1 }}
-        >
+        <IconButton onClick={handleOpenSearchDialog} sx={{ ml: 1 }}>
           <SearchIcon fontSize="small" />
         </IconButton>
       </Tooltip>
@@ -133,11 +123,7 @@ const ContactsButton = () => {
   return (
     <>
       <Tooltip title="Contacts">
-        <IconButton
-          onClick={handleOpenPopover}
-          sx={{ ml: 1 }}
-          ref={anchorRef}
-        >
+        <IconButton onClick={handleOpenPopover} sx={{ ml: 1 }} ref={anchorRef}>
           <UsersIcon fontSize="small" />
         </IconButton>
       </Tooltip>
@@ -172,15 +158,8 @@ const NotificationsButton = () => {
   return (
     <>
       <Tooltip title="Notifications">
-        <IconButton
-          ref={anchorRef}
-          sx={{ ml: 1 }}
-          onClick={handleOpenPopover}
-        >
-          <Badge
-            color="error"
-            badgeContent={unread}
-          >
+        <IconButton ref={anchorRef} sx={{ ml: 1 }} onClick={handleOpenPopover}>
+          <Badge color="error" badgeContent={unread}>
             <BellIcon fontSize="small" />
           </Badge>
         </IconButton>
@@ -201,8 +180,8 @@ const AccountButton = () => {
   // To get the user from the authContext, you can use
   // `const { user } = useAuth();`
   const user = {
-    avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-    name: 'Anika Visser'
+    avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
+    name: "Anika Visser",
   };
 
   const handleOpenPopover = () => {
@@ -220,15 +199,15 @@ const AccountButton = () => {
         onClick={handleOpenPopover}
         ref={anchorRef}
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          ml: 2
+          alignItems: "center",
+          display: "flex",
+          ml: 2,
         }}
       >
         <Avatar
           sx={{
             height: 40,
-            width: 40
+            width: 40,
           }}
           src={user.avatar}
         >
@@ -252,36 +231,37 @@ export const DashboardNavbar = (props) => {
       <DashboardNavbarRoot
         sx={{
           left: {
-            lg: 280
+            lg: 280,
           },
           width: {
-            lg: 'calc(100% - 280px)'
-          }
+            lg: "calc(100% - 280px)",
+          },
         }}
-        {...other}>
+        {...other}
+      >
         <Toolbar
           disableGutters
           sx={{
             minHeight: 64,
             left: 0,
-            px: 2
+            px: 2,
           }}
         >
           <IconButton
             onClick={onOpenSidebar}
             sx={{
               display: {
-                xs: 'inline-flex',
-                lg: 'none'
-              }
+                xs: "inline-flex",
+                lg: "none",
+              },
             }}
           >
             <MenuIcon fontSize="small" />
           </IconButton>
           <Box sx={{ flexGrow: 1 }} />
-          <LanguageButton />
+          {/* <LanguageButton />
           <ContentSearchButton />
-          <ContactsButton />
+          <ContactsButton /> */}
           <NotificationsButton />
           <AccountButton />
         </Toolbar>
@@ -291,5 +271,5 @@ export const DashboardNavbar = (props) => {
 };
 
 DashboardNavbar.propTypes = {
-  onOpenSidebar: PropTypes.func
+  onOpenSidebar: PropTypes.func,
 };

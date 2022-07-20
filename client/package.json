@@ -39,7 +39,7 @@
     "@fullcalendar/timegrid": "^5.9.0",
     "@fullcalendar/timeline": "^5.9.0",
     "@mui/icons-material": "^5.0.0-rc.1",
-    "@mui/lab": "^5.0.0-alpha.53",
+    "@mui/lab": "^5.0.0-alpha.91",
     "@mui/material": "^5.0.4",
     "@mui/system": "^5.0.4",
     "@react-pdf/renderer": "^1.6.13",
