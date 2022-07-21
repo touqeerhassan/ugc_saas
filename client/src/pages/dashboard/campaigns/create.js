@@ -35,6 +35,11 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  FormLabel,
+  RadioGroup,
+  FormControlLabel,
+  Radio,
+  Divider,
 } from "@mui/material";
 import { FileDropzone } from "../../../components/file-dropzone";
 import { QuillEditor } from "../../../components/quill-editor";
@@ -43,11 +48,50 @@ import { DotsVertical as DotsHorizontalIcon } from "../../../icons/dots-vertical
 import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
 
+//Page - 2
+import Input from "@mui/material/Input";
+import InputAdornment from "@mui/material/InputAdornment";
+import AccountCircle from "@mui/icons-material/AccountCircle";
+import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
+import CreateCampaign from "../../../components/dashboard/campaign/campaign-creation";
+import ProductInformation from "../../../components/dashboard/campaign/product-info";
+import ContentAndCreators from "../../../components/dashboard/campaign/content-and-creators";
+import Summary from "../../../components/dashboard/campaign/summary";
+import Payment from "../../../components/dashboard/campaign/payment";
+import ContentAndCreatorsSidebar from "../../../components/dashboard/campaign/sidebars/content-and-creators-sidebar";
+import SummarySidebar from "../../../components/dashboard/campaign/sidebars/summary-sidebar";
+
 const BlogPostCreate = () => {
+  //Global
+  // const [productInfo, setProductInfo] = useState({});
+  const [productInfo, setProductInfo] = useState({
+    brand: "Sortwind",
+    campaignName: "Test Campaign",
+    product: {
+      cover: "/static/mock-images/covers/cover_4.jpeg",
+      name: "Test",
+      price: "12",
+      categories: ["Sports", "Clothing"],
+      selectedCategory: "Sports",
+      link: "https://google.com",
+      handlingTime: "2",
+      shippingTime: "4",
+    },
+  });
+
   //React - Stepper
   const [activeStep, setActiveStep] = React.useState(0);
 
-  const handleNext = () => {
+  const handleNext = (pageNumber) => {
+    console.log(productInfo);
+    console.log("Hello");
+    console.log(pageNumber);
+    // if (pageNumber == 0) {
+    //   let product = products.find((item) => item.name === selectedProduct);
+    //   setProductInfo({ brand, campaignName, product });
+    // } else if (pageNumber == 1) {
+    //   console.log("page 2");
+    // }
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -58,63 +102,37 @@ const BlogPostCreate = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
+  const addProduct = (product) => {
+    console.log(products);
+    console.log(product);
+    setProducts([...products, product]);
+  };
+
   const handleReset = () => {
     setActiveStep(0);
   };
 
-  //Page - 1
-  const [cover, setCover] = useState("/static/mock-images/covers/cover_4.jpeg");
-
-  const [selectedBrand, setSelectedBrand] = useState("none");
-  const [brands, setBrands] = useState([{ value: "none", label: "None" }]);
-
-  const [selectedProduct, setSelectedProduct] = useState("none");
-  const [products, setProducts] = useState([{ value: "none", label: "None" }]);
+  const [brand, setBrand] = useState("");
+  const [selectedProduct, setSelectedProduct] = useState("");
+  const [campaignName, setCampaignName] = useState("");
+  const [products, setProducts] = useState([]);
 
   useEffect(() => {
     gtm.push({ event: "page_view" });
   }, []);
-
-  const handleBrandChange = (event) => {
-    setSelectedBrand(event.target.value);
-  };
-
-  const handleProductChange = (event) => {
-    setSelectedProduct(event.target.value);
-  };
-  const handleDropCover = async ([file]) => {
-    const data = await fileToBase64(file);
-    setCover(data);
-  };
-
-  const handleRemove = () => {
-    setCover(null);
-  };
-
-  const emails = ["username@gmail.com", "user02@gmail.com"];
-
-  const [open, setOpen] = useState(false);
-
-  const handleDialogOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDialogClose = () => {
-    setOpen(false);
-  };
 
   return (
     <>
       <Head>
         <title>Blog: Post Create | Material Kit Pro</title>
       </Head>
-      <Grid container justify="center" alignItems="center">
+      <Grid container justify="center">
         <Grid item md={2} align="center">
           <Box
             component="main"
             sx={{
-              flexGrow: 1,
               mx: 3,
+              my: 4,
             }}
           >
             <Stepper activeStep={activeStep} orientation="vertical">
@@ -128,287 +146,104 @@ const BlogPostCreate = () => {
                 );
               })}
             </Stepper>
-            {/* {activeStep === steps.length ? (
-              <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  All steps completed - you&apos;re finished
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button onClick={handleReset}>Reset</Button>
-                </Box>
-              </React.Fragment>
-            ) : (
-              <React.Fragment>
-                <Typography sx={{ mt: 2, mb: 1 }}>
-                  Step {activeStep + 1}
-                </Typography>
-                <Box sx={{ display: "flex", flexDirection: "row", pt: 2 }}>
-                  <Button
-                    color="inherit"
-                    disabled={activeStep === 0}
-                    onClick={handleBack}
-                    sx={{ mr: 1 }}
-                  >
-                    Back
-                  </Button>
-                  <Box sx={{ flex: "1 1 auto" }} />
-                  <Button onClick={handleNext}>
-                    {activeStep === steps.length - 1 ? "Finish" : "Next"}
-                  </Button>
-                </Box>
-              </React.Fragment> */}
-            {/* )} */}
           </Box>
         </Grid>
-        <Grid item md={10}>
-          <Box
-            component="main"
-            sx={{
-              flexGrow: 1,
-              py: 4,
-            }}
-          >
-            <Container maxWidth="sm">
-              <NextLink href="/dashboard" passHref>
-                <Button
-                  component="a"
-                  startIcon={<ArrowLeftIcon fontSize="small" />}
-                >
+        <Grid item xs={0.01}>
+          <Divider orientation="vertical" />
+        </Grid>
+
+        <>
+          <Grid item md={8}>
+            <Box
+              component="main"
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                py: 3,
+              }}
+            >
+              <></>
+              {activeStep === 0 && (
+                <CreateCampaign
+                  brand={brand}
+                  setBrand={setBrand}
+                  selectedProduct={selectedProduct}
+                  setSelectedProduct={setSelectedProduct}
+                  campaignName={campaignName}
+                  setCampaignName={setCampaignName}
+                  products={products}
+                  setProducts={setProducts}
+                  addProduct={addProduct}
+                />
+              )}
+              {activeStep === 1 && (
+                <ProductInformation
+                  productInfo={productInfo}
+                ></ProductInformation>
+              )}
+              {activeStep === 2 && <ContentAndCreators />}
+              {activeStep === 3 && <Summary />}
+              {activeStep === 4 && <Payment />}
+              {activeStep === steps.length && (
+                <>
+                  You've created your campaign Click here to go back to
                   Dashboard
-                </Button>
-              </NextLink>
-              <Typography variant="h3" sx={{ mt: 3 }}>
-                New Campaign
-              </Typography>
-
-              <Card sx={{ mt: 4 }}>
+                </>
+              )}
+              <Card variant="outlined" sx={{ m: 3 }}>
                 <CardContent>
-                  <Typography variant="h5">Campaign Creation</Typography>
-                  <Box sx={{ mt: 3 }}>
-                    <Stack
-                      direction="column"
-                      justifyContent="center"
-                      alignItems="flex-end"
-                      sx={{ my: 1 }}
-                    >
-                      <Button align="right">Add a new brand</Button>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Brand
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={selectedBrand}
-                          label="None"
-                          onChange={handleBrandChange}
-                        >
-                          {brands.map((brand) => (
-                            <MenuItem value={brand.value}>
-                              {brand.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Stack>
-
-                    <Stack
-                      direction="column"
-                      justifyContent="center"
-                      alignItems="flex-end"
-                      sx={{ my: 1 }}
-                    >
-                      <Button onClick={handleDialogOpen}>
-                        Add a new product
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <NextLink href="/dashboard/campaigns">
+                      <Button variant="contained" sx={{ mx: 2 }}>
+                        Cancel
                       </Button>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Product
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={selectedProduct}
-                          label="None"
-                          onChange={handleProductChange}
-                        >
-                          {products.map((brand) => (
-                            <MenuItem value={brand.value}>
-                              {brand.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Stack>
+                    </NextLink>
 
-                    <Box sx={{ mt: 5 }}>
-                      <TextField fullWidth label="Campaign name" />
-                    </Box>
-
-                    <Box
-                      sx={{
-                        mt: 3,
-                        display: "flex",
-                        justifyContent: "flex-end",
-                      }}
-                    >
-                      <NextLink href="/dashboard/campaigns">
-                        <Button variant="contained" sx={{ mx: 2 }}>
-                          Cancel
-                        </Button>
-                      </NextLink>
-
+                    <Box>
                       <Button
                         variant="contained"
                         sx={{ mx: 2 }}
-                        onClick={handleNext}
+                        onClick={() => handleBack()}
                       >
-                        Next
+                        Back
                       </Button>
+
+                      {activeStep === steps.length ? (
+                        <Button
+                          variant="contained"
+                          sx={{ mx: 2 }}
+                          onClick={handleReset}
+                        >
+                          Reset
+                        </Button>
+                      ) : (
+                        <Button
+                          variant="contained"
+                          sx={{ mx: 2 }}
+                          onClick={() => handleNext(activeStep)}
+                        >
+                          {activeStep === steps.length - 1 ? "Finish" : "Next"}
+                        </Button>
+                      )}
                     </Box>
                   </Box>
                 </CardContent>
               </Card>
-            </Container>
-            <Dialog onClose={handleDialogClose} open={open}>
-              <DialogTitle>Add a Product</DialogTitle>
-              <DialogContent>
-                <Box sx={{ m: 3 }}>
-                  <Grid container spacing={3}>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">Product Image</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Card>
-                        <CardContent>
-                          {cover ? (
-                            <Box
-                              sx={{
-                                backgroundImage: `url(${cover})`,
-                                backgroundPosition: "center",
-                                backgroundSize: "cover",
-                                borderRadius: 1,
-                                height: 150,
-                              }}
-                            />
-                          ) : (
-                            <Box
-                              sx={{
-                                alignItems: "center",
-                                display: "flex",
-                                flexDirection: "column",
-                                justifyContent: "center",
-                                border: 1,
-                                borderRadius: 1,
-                                borderStyle: "dashed",
-                                borderColor: "divider",
-                                height: 150,
-                              }}
-                            >
-                              <Typography
-                                align="center"
-                                color="textSecondary"
-                                variant="h6"
-                              >
-                                Select a product image
-                              </Typography>
-                              <Typography
-                                align="center"
-                                color="textSecondary"
-                                sx={{ mt: 1 }}
-                                variant="subtitle1"
-                              >
-                                Image used for the your product cover
-                              </Typography>
-                            </Box>
-                          )}
-                          <Button
-                            onClick={handleRemove}
-                            sx={{ mt: 3 }}
-                            disabled={!cover}
-                          >
-                            Remove photo
-                          </Button>
-                          <Box sx={{ mt: 3 }}>
-                            <FileDropzone
-                              accept="image/*"
-                              maxFiles={1}
-                              onDrop={handleDropCover}
-                            />
-                          </Box>
-                        </CardContent>
-                      </Card>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Typography variant="h6">Product Details</Typography>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField fullWidth label="Name" />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField fullWidth label="Price" />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <FormControl fullWidth>
-                        <InputLabel id="demo-simple-select-label">
-                          Category
-                        </InputLabel>
-                        <Select
-                          labelId="demo-simple-select-label"
-                          id="demo-simple-select"
-                          value={selectedProduct}
-                          label="None"
-                          onChange={handleProductChange}
-                        >
-                          {products.map((brand) => (
-                            <MenuItem value={brand.value}>
-                              {brand.label}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField fullWidth label="External Website Link" />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField fullWidth label="Max. handling time(days)" />
-                    </Grid>
-                    <Grid item xs={12} md={6}>
-                      <TextField fullWidth label="Max. shipping time(days)" />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <Box
-                        sx={{
-                          mt: 3,
-                          display: "flex",
-                          justifyContent: "flex-end",
-                        }}
-                      >
-                        <Button
-                          variant="contained"
-                          sx={{ mx: 2 }}
-                          onClick={handleDialogClose}
-                        >
-                          Cancel
-                        </Button>
-
-                        <Button
-                          variant="contained"
-                          sx={{ mx: 2 }}
-                          onClick={handleNext}
-                        >
-                          Save Changes
-                        </Button>
-                      </Box>
-                    </Grid>
-                  </Grid>
-                </Box>
-              </DialogContent>
-            </Dialog>
-          </Box>
-        </Grid>
+            </Box>
+          </Grid>
+          <Grid item xs={0.01}>
+            <Divider orientation="vertical" />
+          </Grid>
+          <Grid item xs={1.98}>
+            {activeStep === 2 && <ContentAndCreatorsSidebar />}
+            {activeStep === 4 && <SummarySidebar />}
+          </Grid>
+        </>
       </Grid>
     </>
   );
