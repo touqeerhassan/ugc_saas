@@ -53,6 +53,11 @@ const getSections = (t) => [
         path: "/dashboard/campaigns",
         icon: <UsersIcon fontSize="small" />,
       },
+      {
+        title: t("Creators Onboarding"),
+        path: "/dashboard/onboarding",
+        icon: <UsersIcon fontSize="small" />,
+      },
     ],
   },
 ];
