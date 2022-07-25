@@ -56,7 +56,17 @@ const getSections = (t) => [
       {
         title: t("Creators Onboarding"),
         path: "/dashboard/onboarding",
-        icon: <UsersIcon fontSize="small" />,
+        icon: <UserCircleIcon fontSize="small" />,
+      },
+      {
+        title: t("Jobs for Creator"),
+        path: "/dashboard/jobscreator",
+        icon: <ShoppingBagIcon fontSize="small" />,
+      },
+      {
+        title: t("Creator Orders"),
+        path: "/dashboard/orders",
+        icon: <ChartBarIcon fontSize="small" />,
       },
     ],
   },

@@ -49,6 +49,9 @@ const OrderPreview = (props) => {
 
   return (
     <>
+      <center>
+        <img style={{ width: '150px', marginTop: '5px' }} src="https://5.imimg.com/data5/CO/XW/MY-44197581/ladies-stylish-purse-500x500.jpg" alt="Image" />
+      </center>
       <Box
         sx={{
           alignItems: 'center',
@@ -63,12 +66,13 @@ const OrderPreview = (props) => {
           py: 2.5
         }}
       >
+        
         <Typography
           color="textSecondary"
           sx={{ mr: 2 }}
           variant="overline"
         >
-          Actions
+          Upload Video
         </Typography>
         <Box
           sx={{
@@ -82,20 +86,20 @@ const OrderPreview = (props) => {
           }}
         >
           <Button
-            onClick={onApprove}
             size="small"
             variant="contained"
+            type='file'
           >
-            Approve
+            Upload
           </Button>
-          <Button
+          {/* <Button
             onClick={onReject}
             size="small"
             variant="outlined"
           >
             Reject
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             onClick={onEdit}
             size="small"
             startIcon={(
@@ -103,7 +107,7 @@ const OrderPreview = (props) => {
             )}
           >
             Edit
-          </Button>
+          </Button> */}
         </Box>
       </Box>
       <Typography
@@ -113,6 +117,18 @@ const OrderPreview = (props) => {
         Details
       </Typography>
       <PropertyList>
+        <PropertyListItem
+          align={align}
+          disableGutters
+          label="Name"
+          value="Leather Bag"
+        />
+        <PropertyListItem
+          align={align}
+          disableGutters
+          label="For"
+          value="Video Recording"
+        />
         <PropertyListItem
           align={align}
           disableGutters
