@@ -68,6 +68,11 @@ const getSections = (t) => [
         path: "/dashboard/orders",
         icon: <ChartBarIcon fontSize="small" />,
       },
+      {
+        title: t("Brand select Creator"),
+        path: "/dashboard/creators",
+        icon: <ClipboardListIcon fontSize="small" />,
+      }
     ],
   },
 ];
