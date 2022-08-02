@@ -32,11 +32,16 @@ import AspectRatio from "@mui/joy/AspectRatio";
 import Sheet from "@mui/joy/Sheet";
 import CreatorLevelCard from "./cards/creator-level-card";
 import InfoIcon from "@mui/icons-material/Info";
+import { useRouter } from "next/router";
+import { useSelector } from "react-redux";
 
 export default function Summary() {
   const [description, setDescription] = useState("");
   const [creators, setCreators] = useState(1);
+  const campaign = useSelector((state) => state.campaign);
   const cover = "/static/mock-images/covers/cover_4.jpeg";
+  const router = useRouter();
+  const { campaignId } = router.query;
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -65,7 +70,7 @@ export default function Summary() {
           </Button>
         </NextLink>
         <Typography variant="h5" sx={{ mt: 3 }}>
-          Campaign Payment: Name of the test
+          Campaign Payment: {campaign?.campaignName || "No Name"}
         </Typography>
 
         <Card sx={{ mt: 4 }} variant="outlined">

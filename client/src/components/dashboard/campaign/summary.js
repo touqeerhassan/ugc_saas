@@ -18,40 +18,91 @@ import {
   TextField,
 } from "@mui/material";
 import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
 import ImageIcon from "@mui/icons-material/Image";
-import RectangleIcon from "@mui/icons-material/RectangleOutlined";
 import VideocamIcon from "@mui/icons-material/Videocam";
-import PricingCard from "./cards/pricing-card";
-import VideoTimeCard from "./cards/video-time-card";
-import AccessTime from "@mui/icons-material/AccessTime";
-import MoreTime from "@mui/icons-material/moreTime";
-import AspectRatio from "@mui/joy/AspectRatio";
-import Sheet from "@mui/joy/Sheet";
-import CreatorLevelCard from "./cards/creator-level-card";
-import InfoIcon from "@mui/icons-material/Info";
+import RectangleIcon from "@mui/icons-material/RectangleOutlined";
 
-export default function Summary() {
-  const [description, setDescription] = useState("");
-  const [creators, setCreators] = useState(1);
-  const cover = "/static/mock-images/covers/cover_4.jpeg";
+function findReimbursementPrice(...prices) {
+  let sum = 0;
+  for (const element of prices) {
+    if (!element) continue;
+    sum += parseFloat(element);
+  }
+  return sum;
+}
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
+function findContentPrice(contentType, imagePrice, videoPrice) {
+  if (contentType === 0) {
+    return imagePrice || 0;
+  } else {
+    return videoPrice || 0;
+  }
+}
+
+function findTotalBudget(contentPrice, reimbursementPrice) {
+  contentPrice = contentPrice ? parseFloat(contentPrice) : 0;
+  return contentPrice + reimbursementPrice;
+}
+
+import { useDispatch, useSelector } from "react-redux";
+import {
+  ADD_CAMPAIGN,
+  ADD_CONTENT,
+  ADD_PRODUCT_INFO,
+} from "../../../store/campaign/actions";
+import { useAuth } from "../../../hooks/use-auth";
+import { API_SERVICE } from "../../../config";
+import { useRouter } from "next/router";
+
+function toDoublePrice(price) {
+  if (price) {
+    price = parseFloat(price);
+    return price;
+  }
+  return 0;
+}
+
+export default function Summary({ content, setContent }) {
+  const campaign = useSelector((state) => state.campaign);
+  const router = useRouter();
+  const { campaignId } = router.query;
+  console.log(campaign);
+  const dispatch = useDispatch();
 
   const increment = () => {
-    setCreators((prevValue) => prevValue + 1);
+    setContent({ ...content, noOfCreators: content?.noOfCreators + 1 });
   };
 
   const decrement = () => {
-    if (creators < 2) {
+    if (content?.noOfCreators < 2) {
       return;
     }
-    setCreators((prevValue) => prevValue - 1);
+    setContent({ ...content, noOfCreators: content?.noOfCreators - 1 });
   };
+
+  let productPrice = toDoublePrice(campaign?.product?.price);
+  let contentPrice = findContentPrice(
+    campaign?.content?.contentType,
+    campaign?.content?.imageContent?.price,
+    campaign?.content?.videoContent?.price
+  );
+  let videoDurationPrice =
+    campaign?.content?.contentType === 1
+      ? toDoublePrice(campaign?.content?.videoDuration?.price)
+      : 0;
+  let shipping = toDoublePrice(campaign?.shipping);
+  let tax = toDoublePrice(campaign?.tax);
+  let creatorPrice = toDoublePrice(campaign?.content?.creatorLevel?.price);
+  let costPerJob =
+    productPrice +
+    contentPrice +
+    shipping +
+    tax +
+    videoDurationPrice +
+    creatorPrice;
+  let subTotalCost = costPerJob * content?.noOfCreators;
+  let platFormFee = subTotalCost * 0.1;
+  let totalBudget = subTotalCost + platFormFee;
 
   return (
     <>
@@ -65,7 +116,7 @@ export default function Summary() {
           </Button>
         </NextLink>
         <Typography variant="h5" sx={{ mt: 3 }}>
-          New Campaign: Name of the test
+          {`${campaignId ? "Edit" : "New"} Campaign`}: {campaign?.campaignName}
         </Typography>
 
         <Card sx={{ mt: 4 }}>
@@ -86,7 +137,7 @@ export default function Summary() {
               <Grid item xs={4}>
                 <Box
                   sx={{
-                    backgroundImage: `url(${cover})`,
+                    backgroundImage: `url(${campaign?.product?.cover})`,
                     backgroundPosition: "top left",
                     // backgroundSize: "cover",
                     borderRadius: 1,
@@ -100,7 +151,7 @@ export default function Summary() {
                 <div style={{ fontWeight: "bold", fontSize: "16px" }}>Test</div>
                 <div style={{ display: "flex" }}>
                   <div style={{ marginRight: "20px", fontSize: "16px" }}>
-                    $12.00
+                    ${productPrice.toFixed(2)}
                   </div>
                   <div style={{ fontSize: "16px", color: "#0000EE" }}>
                     Product Link
@@ -113,7 +164,9 @@ export default function Summary() {
                     fontWeight: "bold",
                   }}
                 >
-                  Reimbursement
+                  {campaign?.selectedPayment === "reimbursement"
+                    ? "Reimbursement"
+                    : "Delivered By Me"}
                 </div>
                 <div
                   style={{
@@ -121,7 +174,9 @@ export default function Summary() {
                     color: "gray",
                   }}
                 >
-                  Creators buy the product you refund the cost
+                  {campaign?.selectedPayment === "reimbursement"
+                    ? "Creators buy the product you refund the cost"
+                    : "No extra shipping cost/taxes"}
                 </div>
               </Grid>
             </Grid>
@@ -171,12 +226,21 @@ export default function Summary() {
                     marginBottom: "20px",
                   }}
                 >
-                  <ImageIcon sx={{ mr: 1 }} />
+                  {campaign?.content?.contentType === 0 ? (
+                    <ImageIcon sx={{ mr: 1 }} />
+                  ) : (
+                    <VideocamIcon sx={{ mr: 1 }} />
+                  )}
+
                   <div style={{ fontSize: "16px", marginRight: "20px" }}>
-                    Selfie with product
+                    {campaign?.content?.contentType === 0
+                      ? campaign?.content?.imageContent?.title
+                      : campaign?.content?.videoContent?.title}
                   </div>
                   <RectangleIcon sx={{ mr: 1 }} />
-                  <div style={{ fontSize: "16px" }}>Landscape</div>
+                  <div style={{ fontSize: "16px" }}>
+                    {campaign?.content?.contentFormat?.title}
+                  </div>
                 </div>
                 <Divider />
               </Grid>
@@ -205,7 +269,7 @@ export default function Summary() {
                   }}
                 >
                   <div style={{ fontSize: "16px", marginRight: "20px" }}>
-                    Test
+                    {campaign?.content?.contentDescription}
                   </div>
                 </div>
                 <Divider />
@@ -221,9 +285,35 @@ export default function Summary() {
                     marginTop: "10px",
                   }}
                 >
-                  <div style={{ fontSize: "14px" }}>Price per Image</div>
-                  <div style={{ fontSize: "14px" }}>$15.00</div>
+                  <div style={{ fontSize: "14px" }}>
+                    {`Price per
+                    ${
+                      campaign?.content?.contentType === 0 ? "Image" : "Video"
+                    }`}
+                  </div>
+                  <div style={{ fontSize: "14px" }}>
+                    ${contentPrice.toFixed(2)}
+                  </div>
                 </div>
+                {campaign?.content?.contentType === 1 && (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      flexDirection: "row",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <div style={{ fontSize: "14px" }}>
+                      Price for added video duration
+                    </div>
+                    <div style={{ fontSize: "14px" }}>
+                      ${videoDurationPrice.toFixed(2)}
+                    </div>
+                  </div>
+                )}
+
                 <div
                   style={{
                     display: "flex",
@@ -234,7 +324,24 @@ export default function Summary() {
                   }}
                 >
                   <div style={{ fontSize: "14px" }}>Product price</div>
-                  <div style={{ fontSize: "14px" }}>$12.00</div>
+                  <div style={{ fontSize: "14px" }}>
+                    ${productPrice.toFixed(2)}
+                  </div>
+                </div>
+
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    flexDirection: "row",
+                    marginTop: "10px",
+                  }}
+                >
+                  <div style={{ fontSize: "14px" }}>Creator level price</div>
+                  <div style={{ fontSize: "14px" }}>
+                    ${creatorPrice.toFixed(2)}
+                  </div>
                 </div>
                 <div
                   style={{
@@ -246,7 +353,7 @@ export default function Summary() {
                   }}
                 >
                   <div style={{ fontSize: "14px" }}>Shipping</div>
-                  <div style={{ fontSize: "14px" }}>$79.00</div>
+                  <div style={{ fontSize: "14px" }}>${shipping.toFixed(2)}</div>
                 </div>
                 <div
                   style={{
@@ -258,7 +365,7 @@ export default function Summary() {
                   }}
                 >
                   <div style={{ fontSize: "14px" }}>Taxes</div>
-                  <div style={{ fontSize: "14px" }}>$4.00</div>
+                  <div style={{ fontSize: "14px" }}> ${tax.toFixed(2)}</div>
                 </div>
                 <div
                   style={{
@@ -273,7 +380,7 @@ export default function Summary() {
                     Cost per job
                   </div>
                   <div style={{ fontSize: "14px", fontWeight: "bold" }}>
-                    $110.00
+                    ${costPerJob.toFixed(2)}
                   </div>
                 </div>
                 <div
@@ -305,7 +412,7 @@ export default function Summary() {
                       -
                     </Button>
                     <TextField
-                      value={creators}
+                      value={content?.noOfCreators}
                       variant="outlined"
                       sx={{ minHeight: 0, width: "100px", padding: 0 }}
                     ></TextField>
@@ -331,9 +438,9 @@ export default function Summary() {
                   <div style={{ fontSize: "14px" }}>
                     Subtotal cost per campaign
                   </div>
-                  <div style={{ fontSize: "14px" }}>{`$${
-                    110 * creators
-                  }.00`}</div>
+                  <div style={{ fontSize: "14px" }}>
+                    ${subTotalCost.toFixed(2)}
+                  </div>
                 </div>
 
                 <div
@@ -349,7 +456,7 @@ export default function Summary() {
                     Platform Fee
                   </div>
                   <div style={{ fontSize: "14px", fontWeight: "bold" }}>
-                    $11.00
+                    ${platFormFee.toFixed(2)}
                   </div>
                 </div>
                 <div
@@ -372,7 +479,7 @@ export default function Summary() {
                     Expected total budget(for the entire campaign)
                   </div>
                   <div style={{ fontSize: "16px", fontWeight: "bold" }}>
-                    {`${creators * 110 + 11}.00`}
+                    ${totalBudget.toFixed(2)}
                   </div>
                 </div>
               </Grid>

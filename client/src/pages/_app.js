@@ -16,13 +16,17 @@ import {
   SettingsConsumer,
   SettingsProvider,
 } from "../contexts/settings-context";
-import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
+import { AuthConsumer, AuthProvider } from "../contexts/firebase-auth-context";
 import { gtmConfig } from "../config";
 import { gtm } from "../lib/gtm";
-import { store } from "../store";
+
 import { createTheme } from "../theme";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 import "../i18n";
+import { createStore } from "redux";
+import campaignApp from "../store/campaign";
+
+const store = createStore(campaignApp);
 
 Router.events.on("routeChangeStart", nProgress.start);
 Router.events.on("routeChangeError", nProgress.done);

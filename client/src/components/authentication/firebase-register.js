@@ -1,6 +1,8 @@
-import { useRouter } from 'next/router';
-import * as Yup from 'yup';
-import { useFormik } from 'formik';
+import { useRouter } from "next/router";
+import * as Yup from "yup";
+import { useFormik } from "formik";
+import { useEffect } from "react";
+import { useReducer } from "react";
 import {
   Box,
   Button,
@@ -9,45 +11,128 @@ import {
   FormHelperText,
   Link,
   TextField,
-  Typography
-} from '@mui/material';
-import { useAuth } from '../../hooks/use-auth';
-import { useMounted } from '../../hooks/use-mounted';
+  Typography,
+} from "@mui/material";
+import { useAuth } from "../../hooks/use-auth";
+import { useMounted } from "../../hooks/use-mounted";
+import firebase from "../../lib/firebase";
+
+const reducer = (state, action) => {
+  if (action.type === "AUTH_STATE_CHANGED") {
+    const { isAuthenticated, user } = action.payload;
+
+    return {
+      ...state,
+      isAuthenticated,
+      isInitialized: true,
+      user,
+    };
+  }
+
+  return state;
+};
+
+const initialState = {
+  isAuthenticated: false,
+  isInitialized: false,
+  user: null,
+};
 
 export const FirebaseRegister = (props) => {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  useEffect(
+    () =>
+      firebase.auth().onAuthStateChanged((user) => {
+        if (user) {
+          // Here you should extract the complete user profile to make it available in your entire app.
+          // The auth state only provides basic information.
+          dispatch({
+            type: "AUTH_STATE_CHANGED",
+            payload: {
+              isAuthenticated: true,
+              user: {
+                id: user.uid,
+                avatar: user.photoURL,
+                email: user.email,
+                name: "Anika Visser",
+                plan: "Premium",
+              },
+            },
+          });
+        } else {
+          dispatch({
+            type: "AUTH_STATE_CHANGED",
+            payload: {
+              isAuthenticated: false,
+              user: null,
+            },
+          });
+        }
+      }),
+    [dispatch]
+  );
+
   const isMounted = useMounted();
   const router = useRouter();
   const { createUserWithEmailAndPassword, signInWithGoogle } = useAuth();
   const formik = useFormik({
     initialValues: {
-      email: '',
-      password: '',
+      fName: "",
+      lName: "",
+      email: "",
+      password: "",
       policy: true,
-      submit: null
+      submit: null,
     },
     validationSchema: Yup.object({
-      email: Yup
-        .string()
-        .email('Must be a valid email')
+      fName: Yup.string().max(255).required("First name is required"),
+      lName: Yup.string().max(255).required("First name is required"),
+      email: Yup.string()
+        .email("Must be a valid email")
         .max(255)
-        .required('Email is required'),
-      password: Yup
-        .string()
-        .min(7)
-        .max(255)
-        .required('Password is required'),
-      policy: Yup
-        .boolean()
-        .oneOf([true], 'This field must be checked')
+        .required("Email is required"),
+      password: Yup.string().min(7).max(255).required("Password is required"),
+      policy: Yup.boolean().oneOf([true], "This field must be checked"),
     }),
     onSubmit: async (values, helpers) => {
       try {
-        await createUserWithEmailAndPassword(values.email, values.password);
+        // await createUserWithEmailAndPassword(values.email, values.password)
 
-        if (isMounted()) {
-          const returnUrl = router.query.returnUrl || '/dashboard';
-          router.push(returnUrl);
-        }
+        console.log(values);
+        firebase
+          .auth()
+          .createUserWithEmailAndPassword(values.email, values.password)
+          .then((userCredential) => {
+            // Signed in
+            const user = userCredential.user;
+
+            sessionStorage.setItem("userId", user.uid);
+            sessionStorage.setItem("userEmail", user.email);
+
+            const returnUrl = router.query.returnUrl || "/dashboard";
+            router.push(returnUrl);
+
+            firebase
+              .auth()
+              .currentUser.updateProfile({
+                displayName: `${values.fName} ${values.lName}`,
+                photoURL: "https://example.com/jane-q-user/profile.jpg",
+              })
+              .then(() => {
+                console.log(`Profile updated!`, firebase.auth().currentUser);
+              })
+              .catch((error) => {
+                console.log(`Profile updated!`, firebase.auth().currentUser);
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+
+        // if (isMounted()) {
+        //   const returnUrl = router.query.returnUrl || '/dashboard';
+        //   router.push(returnUrl);
+        // }
       } catch (err) {
         console.error(err);
 
@@ -57,12 +142,13 @@ export const FirebaseRegister = (props) => {
           helpers.setSubmitting(false);
         }
       }
-    }
+    },
   });
 
   const handleGoogleClick = async () => {
     try {
-      await signInWithGoogle();
+      const provider = new firebase.auth.GoogleAuthProvider();
+      return firebase.auth().signInWithPopup(provider);
     } catch (err) {
       console.error(err);
     }
@@ -70,17 +156,17 @@ export const FirebaseRegister = (props) => {
 
   return (
     <div {...props}>
-      <Button
+      {/* <Button
         fullWidth
         onClick={handleGoogleClick}
         size="large"
         sx={{
-          backgroundColor: 'common.white',
-          color: 'common.black',
-          '&:hover': {
-            backgroundColor: 'common.white',
-            color: 'common.black'
-          }
+          backgroundColor: "common.white",
+          color: "common.black",
+          "&:hover": {
+            backgroundColor: "common.white",
+            color: "common.black",
+          },
         }}
         variant="contained"
       >
@@ -91,32 +177,49 @@ export const FirebaseRegister = (props) => {
           sx={{ mr: 1 }}
         />
         Google
-      </Button>
+      </Button> */}
       <Box
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          mt: 2
+          alignItems: "center",
+          display: "flex",
+          mt: 2,
         }}
       >
-        <Box sx={{ flexGrow: 1 }}>
+        {/* <Box sx={{ flexGrow: 1 }}>
           <Divider orientation="horizontal" />
         </Box>
-        <Typography
-          color="textSecondary"
-          sx={{ m: 2 }}
-          variant="body1"
-        >
+        <Typography color="textSecondary" sx={{ m: 2 }} variant="body1">
           OR
         </Typography>
         <Box sx={{ flexGrow: 1 }}>
           <Divider orientation="horizontal" />
-        </Box>
+        </Box> */}
       </Box>
-      <form
-        noValidate
-        onSubmit={formik.handleSubmit}
-      >
+      <form noValidate onSubmit={formik.handleSubmit}>
+        <TextField
+          error={Boolean(formik.touched.fName && formik.errors.fName)}
+          fullWidth
+          helperText={formik.touched.fName && formik.errors.fName}
+          label="First Name"
+          margin="normal"
+          name="fName"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          type="text"
+          value={formik.values.fName}
+        />
+        <TextField
+          error={Boolean(formik.touched.lName && formik.errors.lName)}
+          fullWidth
+          helperText={formik.touched.lName && formik.errors.lName}
+          label="Last Name"
+          margin="normal"
+          name="lName"
+          onBlur={formik.handleBlur}
+          onChange={formik.handleChange}
+          type="text"
+          value={formik.values.lName}
+        />
         <TextField
           error={Boolean(formik.touched.email && formik.errors.email)}
           fullWidth
@@ -143,10 +246,10 @@ export const FirebaseRegister = (props) => {
         />
         <Box
           sx={{
-            alignItems: 'center',
-            display: 'flex',
+            alignItems: "center",
+            display: "flex",
             ml: -1,
-            mt: 2
+            mt: 2,
           }}
         >
           <Checkbox
@@ -154,30 +257,19 @@ export const FirebaseRegister = (props) => {
             name="policy"
             onChange={formik.handleChange}
           />
-          <Typography
-            color="textSecondary"
-            variant="body2"
-          >
-            I have read the
-            {' '}
-            <Link
-              component="a"
-              href="#"
-            >
+          <Typography color="textSecondary" variant="body2">
+            I have read the{" "}
+            <Link component="a" href="#">
               Terms and Conditions
             </Link>
           </Typography>
         </Box>
         {Boolean(formik.touched.policy && formik.errors.policy) && (
-          <FormHelperText error>
-            {formik.errors.policy}
-          </FormHelperText>
+          <FormHelperText error>{formik.errors.policy}</FormHelperText>
         )}
         {formik.errors.submit && (
           <Box sx={{ mt: 3 }}>
-            <FormHelperText error>
-              {formik.errors.submit}
-            </FormHelperText>
+            <FormHelperText error>{formik.errors.submit}</FormHelperText>
           </Box>
         )}
         <Box sx={{ mt: 2 }}>

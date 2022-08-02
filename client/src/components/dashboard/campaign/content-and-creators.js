@@ -30,14 +30,37 @@ import AspectRatio from "@mui/joy/AspectRatio";
 import Sheet from "@mui/joy/Sheet";
 import CreatorLevelCard from "./cards/creator-level-card";
 import InfoIcon from "@mui/icons-material/Info";
+import ContentFormatCard from "./cards/content-format-card";
 
-export default function ContentAndCreators() {
-  const [value, setValue] = React.useState(0);
-  const [description, setDescription] = useState("");
+import { useDispatch, useSelector } from "react-redux";
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
+import {
+  imageContents,
+  videoContents,
+  videoDurationContents,
+  creatorLevels,
+  contentFormatContents,
+} from "../../../content-data/data";
+import { useRouter } from "next/router";
+
+export default function ContentAndCreators({
+  content,
+  setContent,
+  genderC,
+  setGenderC,
+}) {
+  const { male, female, nonBinary } = genderC;
+  const router = useRouter();
+  const { campaignId } = router.query;
+  const campaign = useSelector((state) => state.campaign);
+
+  const handleGenderChange = (event) => {
+    setGenderC({
+      ...genderC,
+      [event.target.name]: event.target.checked,
+    });
   };
+
   return (
     <>
       <Container
@@ -50,7 +73,7 @@ export default function ContentAndCreators() {
           </Button>
         </NextLink>
         <Typography variant="h5" sx={{ mt: 3 }}>
-          New Campaign: Name of the test
+          {`${campaignId ? "Edit" : "New"} Campaign`}: {campaign?.campaignName}
         </Typography>
 
         <Card sx={{ mt: 4 }}>
@@ -59,8 +82,14 @@ export default function ContentAndCreators() {
             <Box sx={{ width: "100%", py: 2 }}>
               <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                 <Tabs
-                  value={value}
-                  onChange={handleChange}
+                  name="contentType"
+                  value={content?.contentType}
+                  onChange={(e, newValue) => {
+                    {
+                      console.log(newValue);
+                      setContent({ ...content, contentType: newValue });
+                    }
+                  }}
                   aria-label="basic tabs example"
                 >
                   <Tab
@@ -91,103 +120,73 @@ export default function ContentAndCreators() {
                   />
                 </Tabs>
               </Box>
-              <TabPanel value={value} index={0}>
+              <TabPanel value={content?.contentType} index={0}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <PricingCard
-                      title="Selfie with creators"
-                      price="20.00"
-                      description="Selfies with content creators"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <PricingCard
-                      title="Selfie with creators"
-                      price="20.00"
-                      description="Selfies with content creators"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <PricingCard
-                      title="Selfie with creators"
-                      price="20.00"
-                      description="Selfies with content creators"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <PricingCard
-                      title="Selfie with creators"
-                      price="20.00"
-                      description="Selfies with content creators"
-                    />
-                  </Grid>
+                  {imageContents.map((item, index) => {
+                    return (
+                      <Grid item xs={12} md={6} lg={3}>
+                        <PricingCard
+                          name="imageContent"
+                          onClick={() => {
+                            console.log(item);
+                            setContent({ ...content, imageContent: item });
+                          }}
+                          selected={content?.imageContent === item}
+                          title={item.title}
+                          description={item.description}
+                          price={item.price.toFixed(2)}
+                        />
+                      </Grid>
+                    );
+                  })}
                 </Grid>
               </TabPanel>
-              <TabPanel value={value} index={1}>
+              <TabPanel value={content?.contentType} index={1}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <PricingCard
-                      title="Product demo"
-                      price="60.00"
-                      description="Detailed on-camera demonstration"
-                    />
-                  </Grid>
-                  <Grid item xs={12} sm={6} lg={3}>
-                    <PricingCard
-                      title="Product demo"
-                      price="60.00"
-                      description="Detailed on-camera demonstration"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <PricingCard
-                      title="Product demo"
-                      price="60.00"
-                      description="Detailed on-camera demonstration"
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <PricingCard
-                      title="Product demo"
-                      price="60.00"
-                      description="Detailed on-camera demonstration"
-                    />
-                  </Grid>
+                  {videoContents.map((item, index) => {
+                    return (
+                      <Grid item xs={12} md={6} lg={3}>
+                        <PricingCard
+                          name="videoContent"
+                          onClick={(e) =>
+                            setContent({ ...content, videoContent: item })
+                          }
+                          selected={content?.videoContent === item}
+                          title={item.title}
+                          description={item.description}
+                          price={item.price.toFixed(2)}
+                        />
+                      </Grid>
+                    );
+                  })}
                 </Grid>
               </TabPanel>
             </Box>
           </CardContent>
         </Card>
       </Container>
-      {value == 1 && (
+      {content?.contentType == 1 && (
         <Container maxWidth="md">
           <Card sx={{ mt: 2 }}>
             <CardContent>
               <Typography variant="h6">Video Duration</Typography>
               <Box sx={{ width: "100%", py: 4 }}>
                 <Grid container spacing={2}>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <VideoTimeCard
-                      time="15 seconds"
-                      icon={<AccessTime fontSize="large" />}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <VideoTimeCard
-                      banner="Save 30%"
-                      time="30 seconds"
-                      price="+$18.00"
-                      icon={<MoreTime fontSize="large" />}
-                    />
-                  </Grid>
-                  <Grid item xs={12} md={6} lg={3}>
-                    <VideoTimeCard
-                      banner="Save 50%"
-                      time="60 seconds"
-                      price="+$30.00"
-                      icon={<MoreTime fontSize="large" />}
-                    />
-                  </Grid>
+                  {videoDurationContents.map((item, index) => (
+                    <Grid item xs={12} md={6} lg={3}>
+                      <VideoTimeCard
+                        name="videoDuration"
+                        onClick={(e) =>
+                          setContent({ ...content, videoDuration: item })
+                        }
+                        selected={content?.videoDuration === item}
+                        banner={item.banner}
+                        time={item.time}
+                        price={item.price.toFixed(2)}
+                        icon={item.icon}
+                      />
+                    </Grid>
+                  ))}
                 </Grid>
               </Box>
             </CardContent>
@@ -201,65 +200,21 @@ export default function ContentAndCreators() {
             <Typography variant="h6">Content Format</Typography>
             <Box sx={{ width: "100%", py: 4 }}>
               <Grid container spacing={2}>
-                <Grid item>
-                  <Card
-                    variant="outlined"
-                    align="center"
-                    style={{
-                      height: "100px",
-                      width: "120px",
-                    }}
-                  >
-                    <CardContent>
-                      <Typography variant="secondary">Any</Typography>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item>
-                  <Card
-                    variant="outlined"
-                    align="center"
-                    style={{
-                      height: "192px",
-                      width: "108px",
-                    }}
-                  >
-                    <CardContent>
-                      <div>Portrait</div>
-                      <div>9:16</div>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item>
-                  <Card
-                    variant="outlined"
-                    align="center"
-                    style={{
-                      height: "108px",
-                      width: "192px",
-                    }}
-                  >
-                    <CardContent>
-                      <div>Landscape</div>
-                      <div>16:9</div>
-                    </CardContent>
-                  </Card>
-                </Grid>
-                <Grid item>
-                  <Card
-                    variant="outlined"
-                    align="center"
-                    style={{
-                      height: "100px",
-                      width: "100px",
-                    }}
-                  >
-                    <CardContent>
-                      <div>Square</div>
-                      <div>1:1</div>
-                    </CardContent>
-                  </Card>
-                </Grid>
+                {contentFormatContents.map((item, index) => (
+                  <Grid item>
+                    <ContentFormatCard
+                      name="contentFormat"
+                      onClick={(e) =>
+                        setContent({ ...content, contentFormat: item })
+                      }
+                      selected={content?.contentFormat === item}
+                      title={item.title}
+                      ratio={item.ratio}
+                      height={item.height}
+                      width={item.width}
+                    />
+                  </Grid>
+                ))}
               </Grid>
             </Box>
           </CardContent>
@@ -271,8 +226,11 @@ export default function ContentAndCreators() {
             <Typography variant="h6">Content Description</Typography>
             <Box sx={{ width: "100%", pt: 4 }}>
               <TextField
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
+                name="contentDescription"
+                value={content?.contentDescription}
+                onChange={(e) =>
+                  setContent({ ...content, contentDescription: e.target.value })
+                }
                 fullWidth
                 rows={3}
                 id="outlined-textarea"
@@ -283,7 +241,7 @@ export default function ContentAndCreators() {
               />
               <div
                 style={{ marginTop: "20px" }}
-              >{`Characters: ${description.length}/600`}</div>
+              >{`Characters: ${content?.contentDescription?.length}/600`}</div>
               <div style={{ marginTop: "30px" }}>
                 Recommendations on what to mention in the description:
               </div>
@@ -314,26 +272,54 @@ export default function ContentAndCreators() {
 
             <Box sx={{ width: "100%", py: 4 }}>
               <Grid container spacing={2}>
-                <Grid item xs={12} md={6} lg={3}>
-                  <CreatorLevelCard title="Level 1" />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <CreatorLevelCard title="Level 2" price="+$4.50" />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <CreatorLevelCard title="Level 3" price="+$9.00" />
-                </Grid>
-                <Grid item xs={12} md={6} lg={3}>
-                  <CreatorLevelCard title="Pro Level" price="+$15.00" />
-                </Grid>
+                {creatorLevels.map((item, index) => (
+                  <Grid item xs={12} md={6} lg={3}>
+                    <CreatorLevelCard
+                      name="creatorLevel"
+                      onClick={(e) =>
+                        setContent({ ...content, creatorLevel: item })
+                      }
+                      selected={content?.creatorLevel === item}
+                      title={item.title}
+                      price={item.price}
+                    />
+                  </Grid>
+                ))}
               </Grid>
             </Box>
             <Box sx={{ width: "100%", pt: 4 }}>
               <div>Gender</div>
               <FormGroup row>
-                <FormControlLabel control={<Checkbox />} label="Male" />
-                <FormControlLabel control={<Checkbox />} label="Female" />
-                <FormControlLabel control={<Checkbox />} label="Non Binary" />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={male}
+                      name="male"
+                      onChange={handleGenderChange}
+                    />
+                  }
+                  label="Male"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={female}
+                      name="female"
+                      onChange={handleGenderChange}
+                    />
+                  }
+                  label="Female"
+                />
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      checked={nonBinary}
+                      name="nonBinary"
+                      onChange={handleGenderChange}
+                    />
+                  }
+                  label="Non Binary"
+                />
               </FormGroup>
             </Box>
           </CardContent>

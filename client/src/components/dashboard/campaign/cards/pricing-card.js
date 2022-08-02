@@ -9,9 +9,17 @@ import {
 } from "@mui/material";
 import React from "react";
 
-function PricingCard({ title, price, description }) {
+function PricingCard({ title, price, description, selected, onClick }) {
   return (
-    <Card variant="outlined" align="center">
+    <Card
+      variant="outlined"
+      align="center"
+      style={{
+        borderColor: selected ? "#5048E5" : "#E6E8F0",
+        backgroundColor: selected ? "#dcdaf9" : "white",
+      }}
+      onClick={onClick}
+    >
       <CardContent>
         <Grid container spacing={1}>
           <Grid item xs={12}>

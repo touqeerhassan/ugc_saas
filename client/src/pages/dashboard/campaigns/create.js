@@ -61,37 +61,193 @@ import Payment from "../../../components/dashboard/campaign/payment";
 import ContentAndCreatorsSidebar from "../../../components/dashboard/campaign/sidebars/content-and-creators-sidebar";
 import SummarySidebar from "../../../components/dashboard/campaign/sidebars/summary-sidebar";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  ADD_CAMPAIGN,
+  ADD_CONTENT,
+  ADD_PRODUCT_INFO,
+  FETCH_CAMPAIGN_DATA,
+} from "../../../store/campaign/actions";
+import { useAuth } from "../../../hooks/use-auth";
+import { API_SERVICE } from "../../../config";
+import {
+  imageContents,
+  videoContents,
+  videoDurationContents,
+  creatorLevels,
+  contentFormatContents,
+} from "../../../content-data/data";
+
+import { useRouter } from "next/router";
+
 const BlogPostCreate = () => {
-  //Global
-  // const [productInfo, setProductInfo] = useState({});
-  const [productInfo, setProductInfo] = useState({
-    brand: "Sortwind",
-    campaignName: "Test Campaign",
-    product: {
-      cover: "/static/mock-images/covers/cover_4.jpeg",
-      name: "Test",
-      price: "12",
-      categories: ["Sports", "Clothing"],
-      selectedCategory: "Sports",
-      link: "https://google.com",
-      handlingTime: "2",
-      shippingTime: "4",
-    },
-  });
+  const campaign = useSelector((state) => state.campaign);
+  const dispatch = useDispatch();
+  const router = useRouter();
+  const { campaignId } = router.query;
+  const { user } = useAuth();
+  const [toggler, setToggler] = useState(false);
 
   //React - Stepper
   const [activeStep, setActiveStep] = React.useState(0);
 
+  const editCampaign = async () => {
+    let {
+      brand,
+      campaignName,
+      product,
+      content,
+      selectedPayment,
+      gender,
+      shipping,
+      tax,
+    } = campaign;
+    try {
+      const response = await fetch(
+        `${API_SERVICE}/edit_campaign/${campaignId}/${user?.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            brand,
+            campaignName,
+            product: product._id,
+            content: {
+              contentType: content?.contentType,
+              imageContent: content?.imageContent?.id,
+              videoContent: content?.videoContent?.id,
+              videoDuration: content?.videoDuration?.id,
+              contentFormat: content?.contentFormat?.id,
+              contentDescription: content?.contentDescription,
+              creatorLevel: content?.creatorLevel?.id,
+              noOfCreators: content?.noOfCreators,
+            },
+            payment: selectedPayment,
+            gender,
+            shipping,
+            tax,
+            userId: user?.id,
+          }),
+        }
+      );
+      if (response.status === 200) {
+        console.log(response);
+        alert("Campaign Data Edited");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addCampaign = async () => {
+    let {
+      brand,
+      campaignName,
+      product,
+      content,
+      selectedPayment,
+      gender,
+      shipping,
+      tax,
+    } = campaign;
+    try {
+      const response = await fetch(`${API_SERVICE}/add_campaign`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          brand,
+          campaignName,
+          product: product._id,
+          content: {
+            contentType: content?.contentType,
+            imageContent: content?.imageContent?.id,
+            videoContent: content?.videoContent?.id,
+            videoDuration: content?.videoDuration?.id,
+            contentFormat: content?.contentFormat?.id,
+            contentDescription: content?.contentDescription,
+            creatorLevel: content?.creatorLevel?.id,
+            noOfCreators: content?.noOfCreators,
+          },
+          payment: selectedPayment,
+          gender,
+          shipping,
+          tax,
+          userId: user?.id,
+        }),
+      });
+      if (response.status === 200) {
+        console.log(response);
+        alert("Campaign Created Successfully");
+        // router.push("/dashboard/campaigns");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const handleNext = (pageNumber) => {
-    console.log(productInfo);
-    console.log("Hello");
-    console.log(pageNumber);
-    // if (pageNumber == 0) {
-    //   let product = products.find((item) => item.name === selectedProduct);
-    //   setProductInfo({ brand, campaignName, product });
-    // } else if (pageNumber == 1) {
-    //   console.log("page 2");
-    // }
+    if (pageNumber === 0) {
+      if (!brand || !campaignName || !selectedProduct) return;
+      dispatch({
+        type: ADD_CAMPAIGN,
+        payload: {
+          brand,
+          campaignName,
+          product: products.find((product) => product._id === selectedProduct),
+        },
+      });
+    } else if (pageNumber === 1) {
+      if (!selectedPayment) return;
+      dispatch({
+        type: ADD_PRODUCT_INFO,
+        payload: {
+          selectedPayment,
+          shipping,
+          tax,
+        },
+      });
+    } else if (pageNumber === 2) {
+      let gender;
+      if (genderC.male) {
+        gender = "male";
+      } else if (genderC.female) {
+        gender = "female";
+      } else {
+        gender = "nonBinary";
+      }
+      console.log(gender);
+      if (!content || !gender) return;
+      dispatch({
+        type: ADD_CONTENT,
+        payload: {
+          content,
+          gender,
+        },
+      });
+    } else if (pageNumber === 3) {
+      if (!content) return;
+      dispatch({
+        type: ADD_CONTENT,
+        payload: {
+          content,
+          gender,
+        },
+      });
+    } else if (pageNumber === 4) {
+      console.log(campaign);
+      if (!campaignId) {
+        addCampaign();
+      } else {
+        editCampaign();
+      }
+    }
+
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
   };
 
@@ -102,24 +258,98 @@ const BlogPostCreate = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const addProduct = (product) => {
-    console.log(products);
-    console.log(product);
-    setProducts([...products, product]);
-  };
-
   const handleReset = () => {
     setActiveStep(0);
   };
 
-  const [brand, setBrand] = useState("");
-  const [selectedProduct, setSelectedProduct] = useState("");
-  const [campaignName, setCampaignName] = useState("");
+  //Page - 1
+  const [brand, setBrand] = useState(campaign?.brand);
+  const [selectedProduct, setSelectedProduct] = useState(campaign?.product);
+  const [campaignName, setCampaignName] = useState(campaign.campaignName);
   const [products, setProducts] = useState([]);
+
+  const fetchSingleProduct = async (productId) => {
+    try {
+      const response = await fetch(
+        `${API_SERVICE}/get_product_by_id/${productId}/${user?.id}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      const data = await response.json();
+      console.log(data);
+      return data;
+    } catch (err) {
+      console.log(err);
+    }
+  };
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`${API_SERVICE}/get_products/${user?.id}`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      setProducts(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const addProduct = async (product) => {
+    try {
+      const response = await fetch(`${API_SERVICE}/add_product`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...product,
+          category: product?.selectedCategory,
+          userId: user?.id,
+        }),
+      });
+      const data = response.json();
+      setToggler(!toggler);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  //Page - 2
+  const [selectedPayment, setSelectedPayment] = useState(
+    campaign?.selectedPayment || "reimbursement"
+  );
+  const [shipping, setShipping] = useState(campaign?.shipping || 0);
+  const [tax, setTax] = useState(campaign?.tax || 0);
+
+  //Page - 3
+  const [content, setContent] = useState({
+    ...campaign?.content,
+  });
+  const [genderC, setGenderC] = React.useState({
+    male: true,
+    female: false,
+    nonBinary: false,
+  });
 
   useEffect(() => {
     gtm.push({ event: "page_view" });
+    console.log(campaign);
   }, []);
+
+  useEffect(() => {
+    fetchProducts();
+  }, [user?.id, toggler]);
 
   return (
     <>
@@ -178,16 +408,68 @@ const BlogPostCreate = () => {
               )}
               {activeStep === 1 && (
                 <ProductInformation
-                  productInfo={productInfo}
-                ></ProductInformation>
+                  tax={tax}
+                  setTax={setTax}
+                  selectedPayment={selectedPayment}
+                  setSelectedPayment={setSelectedPayment}
+                  shipping={shipping}
+                  setShipping={setShipping}
+                />
               )}
-              {activeStep === 2 && <ContentAndCreators />}
-              {activeStep === 3 && <Summary />}
+              {activeStep === 2 && (
+                <ContentAndCreators
+                  content={content}
+                  setContent={setContent}
+                  genderC={genderC}
+                  setGenderC={setGenderC}
+                />
+              )}
+              {activeStep === 3 && (
+                <Summary content={content} setContent={setContent} />
+              )}
               {activeStep === 4 && <Payment />}
               {activeStep === steps.length && (
                 <>
-                  You've created your campaign Click here to go back to
-                  Dashboard
+                  <Container
+                    maxWidth="md"
+                    // style={{ margin: "0 20px", padding: "0 50px" }}
+                  >
+                    <Typography variant="h5" sx={{ mt: 3 }}>
+                      Campaign created
+                    </Typography>
+
+                    <Card sx={{ mt: 4 }} variant="outlined">
+                      <CardContent>
+                        <div
+                          style={{
+                            fontSize: "20px",
+                            fontWeight: "bold",
+                            marginBottom: "10px",
+                          }}
+                        >
+                          Campaign created successfully
+                        </div>
+                        <div style={{ fontSize: "16px", color: "gray" }}>
+                          Click the below button to go back to your dashboard
+                        </div>
+                        <NextLink href="/dashboard/campaigns">
+                          <Button
+                            style={{
+                              borderRadius: "5px",
+                              // color: "white",
+                              // backgroundColor: "black",
+                              padding: "5px 20px",
+                              marginTop: "20px",
+                              fontSize: "16px",
+                            }}
+                            variant="contained"
+                          >
+                            Go to Dashboard
+                          </Button>
+                        </NextLink>
+                      </CardContent>
+                    </Card>
+                  </Container>
                 </>
               )}
               <Card variant="outlined" sx={{ m: 3 }}>
@@ -240,7 +522,12 @@ const BlogPostCreate = () => {
             <Divider orientation="vertical" />
           </Grid>
           <Grid item xs={1.98}>
-            {activeStep === 2 && <ContentAndCreatorsSidebar />}
+            {activeStep === 2 && (
+              <ContentAndCreatorsSidebar
+                content={content}
+                setContent={setContent}
+              />
+            )}
             {activeStep === 4 && <SummarySidebar />}
           </Grid>
         </>

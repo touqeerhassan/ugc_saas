@@ -37,6 +37,15 @@ import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
 import InputAdornment from "@mui/material/InputAdornment";
 import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
 
+import { useDispatch, useSelector } from "react-redux";
+import {
+  ADD_CAMPAIGN,
+  ADD_CONTENT,
+  ADD_PRODUCT_INFO,
+} from "../../../store/campaign/actions";
+import { useAuth } from "../../../hooks/use-auth";
+import { API_SERVICE } from "../../../config";
+
 const ProductDescription = ({ title, value }) => (
   <Box sx={{ pb: 2 }}>
     <Typography variant="secondary">{title}</Typography>
@@ -44,10 +53,20 @@ const ProductDescription = ({ title, value }) => (
   </Box>
 );
 
-function ProductInformation({ productInfo }) {
-  const [selectedPayment, setSelectedPayment] = useState("reimbursement");
-  const [shipping, setShipping] = useState("");
-  const [tax, setTax] = useState("");
+function ProductInformation({
+  selectedPayment,
+  setSelectedPayment,
+  shipping,
+  setShipping,
+  tax,
+  setTax,
+}) {
+  const campaign = useSelector((state) => state.campaign);
+  console.log(campaign);
+  const dispatch = useDispatch();
+
+  const { user } = useAuth();
+
   return (
     <>
       <Container
@@ -61,7 +80,7 @@ function ProductInformation({ productInfo }) {
         </NextLink>
         <Typography variant="h5" sx={{ mt: 3 }}>
           Campaign Details:
-          {` ${productInfo.campaignName || " No product selected"} `}
+          {` ${campaign?.campaignName || "No Name"} `}
         </Typography>
 
         <Card sx={{ mt: 4 }}>
@@ -80,10 +99,10 @@ function ProductInformation({ productInfo }) {
                 <Typography variant="h6">Product Information</Typography>
               </Grid>
               <Grid item xs={4}>
-                {productInfo.product?.cover ? (
+                {campaign?.product?.cover ? (
                   <Box
                     sx={{
-                      backgroundImage: `url(${productInfo.product?.cover})`,
+                      backgroundImage: `url(${campaign?.product?.cover})`,
                       backgroundPosition: "center",
                       // backgroundSize: "cover",
                       borderRadius: 1,
@@ -129,36 +148,38 @@ function ProductInformation({ productInfo }) {
                 <Box sx={{ m: 3 }}>
                   <ProductDescription
                     title="Brand"
-                    value={productInfo.brand || "No brand selected"}
+                    value={campaign?.brand || "No brand added"}
                   />
                   <ProductDescription
                     title="Product Name(visible for creators)"
-                    value={productInfo.product?.name || "No product selected"}
+                    value={campaign?.product?.name || "No product name"}
                   />
                   <ProductDescription
                     title="Product Price"
-                    value={`$${productInfo.product?.price || "0"}`}
+                    value={`$${campaign?.product?.price || "0"}`}
                   />
                   <ProductDescription
                     title="Category"
-                    value={
-                      productInfo.product?.category || "No product selected"
-                    }
+                    value={campaign?.product?.category || "No product category"}
                   />
                   <ProductDescription
                     title="External Website Link"
-                    value={productInfo.product?.link || "No product selected"}
+                    value={
+                      campaign?.product?.link || "No product external link"
+                    }
                   />
                   <ProductDescription
                     title="Max. Handling Time"
                     value={
-                      productInfo.product?.handlingTime || "No product selected"
+                      campaign?.product?.handlingTime ||
+                      "Max. Handling Time not added"
                     }
                   />
                   <ProductDescription
                     title="Max. Shipping Time"
                     value={
-                      productInfo.product?.shippingTime || "No product selected"
+                      campaign?.product?.shippingTime ||
+                      "Max. Shipping Time not added"
                     }
                   />
                 </Box>
@@ -174,7 +195,11 @@ function ProductInformation({ productInfo }) {
                     value={selectedPayment}
                     aria-labelledby="demo-row-radio-buttons-group-label"
                     name="row-radio-buttons-group"
-                    onChange={(e) => setSelectedPayment(e.target.value)}
+                    onChange={(e) => {
+                      setShipping("");
+                      setTax("");
+                      setSelectedPayment(e.target.value);
+                    }}
                   >
                     <FormControlLabel
                       value="reimbursement"
@@ -194,6 +219,7 @@ function ProductInformation({ productInfo }) {
                 <>
                   <Grid item xs={6}>
                     <TextField
+                      value={shipping}
                       fullWidth
                       id="input-with-icon-textfield"
                       label="Shipping Cost"
@@ -211,6 +237,7 @@ function ProductInformation({ productInfo }) {
                   </Grid>
                   <Grid item xs={6}>
                     <TextField
+                      value={tax}
                       fullWidth
                       onChange={(e) => setTax(e.target.value)}
                       id="input-with-icon-textfield"

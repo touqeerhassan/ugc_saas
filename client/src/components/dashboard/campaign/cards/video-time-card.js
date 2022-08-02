@@ -11,9 +11,17 @@ import {
 
 import React from "react";
 
-function VideoTimeCard({ icon, time, banner, price }) {
+function VideoTimeCard({ icon, time, banner, price, selected, onClick }) {
   return (
-    <Card variant="outlined" align="center">
+    <Card
+      onClick={onClick}
+      variant="outlined"
+      align="center"
+      style={{
+        borderColor: selected ? "#5048E5" : "#E6E8F0",
+        backgroundColor: selected ? "#dcdaf9" : "white",
+      }}
+    >
       <CardContent>
         <Grid container>
           <Grid item xs={12}>
@@ -49,10 +57,12 @@ function VideoTimeCard({ icon, time, banner, price }) {
             {icon}
           </Grid>
           <Grid item xs={12}>
-            <div style={{ fontSize: "12px" }}>{time}</div>
+            <div style={{ fontSize: "12px" }}>{`${time} seconds`}</div>
           </Grid>
           <Grid item xs={12}>
-            <div style={{ fontSize: "20px" }}>{price || "Included"}</div>
+            <div style={{ fontSize: "20px" }}>
+              {price ? `+$${price}` : "Included"}
+            </div>
           </Grid>
         </Grid>
       </CardContent>

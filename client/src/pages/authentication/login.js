@@ -12,6 +12,7 @@ import { JWTLogin } from "../../components/authentication/jwt-login";
 import { Logo } from "../../components/logo";
 import { useAuth } from "../../hooks/use-auth";
 import { gtm } from "../../lib/gtm";
+import firebase from "../../lib/firebase";
 
 const platformIcons = {
   Amplify: "/static/icons/amplify.svg",
@@ -110,10 +111,10 @@ const Login = () => {
                 mt: 3,
               }}
             >
-              {platform === "Amplify" && <AmplifyLogin />}
-              {platform === "Auth0" && <Auth0Login />}
+              {/* {platform === "Amplify" && <AmplifyLogin />} */}
+              {/* {platform === "Auth0" && <Auth0Login />} */}
               {platform === "Firebase" && <FirebaseLogin />}
-              {platform === "JWT" && <JWTLogin />}
+              {/* {platform === "JWT" && <JWTLogin />} */}
             </Box>
             <Divider sx={{ my: 3 }} />
             <NextLink

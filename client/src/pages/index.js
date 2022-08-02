@@ -16,9 +16,11 @@ const Home = () => {
   useEffect(() => {
     gtm.push({ event: "page_view" });
     if (!user) {
+      console.log(user);
       window.location.href = "/authentication/login?returnUrl=%2Fdashboard";
+    } else {
+      window.location.href = "/dashboard";
     }
-    window.location.href = "/dashboard";
   }, [user]);
 
   return (

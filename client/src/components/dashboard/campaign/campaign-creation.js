@@ -35,6 +35,7 @@ import { FileDropzone } from "../../file-dropzone";
 import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
 import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
+import { useRouter } from "next/router";
 
 function CreateCampaign({
   brand,
@@ -48,11 +49,13 @@ function CreateCampaign({
   addProduct,
 }) {
   const [open, setOpen] = useState(false);
+  const router = useRouter();
+  const { campaignId } = router.query;
 
   const [newProduct, setNewProduct] = useState({
     cover: "/static/mock-images/covers/cover_4.jpeg",
     name: "",
-    price: "",
+    price: 0,
     categories: ["Sports", "Clothing"],
     selectedCategory: "",
     link: "",
@@ -100,7 +103,7 @@ function CreateCampaign({
           </Button>
         </NextLink>
         <Typography variant="h3" sx={{ mt: 3 }}>
-          New Campaign
+          {`${campaignId ? "Edit" : "New"} Campaign`}
         </Typography>
 
         <Card sx={{ mt: 4 }}>
@@ -129,8 +132,8 @@ function CreateCampaign({
                     label={selectedProduct}
                     onChange={handleProductChange}
                   >
-                    {products.map((product, index) => (
-                      <MenuItem key={index} value={product.name}>
+                    {products.map((product) => (
+                      <MenuItem key={product._id} value={product._id}>
                         {product.name}
                       </MenuItem>
                     ))}
@@ -233,6 +236,7 @@ function CreateCampaign({
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  type={Number}
                   name="price"
                   value={newProduct.price}
                   onChange={handleNewProductChange}

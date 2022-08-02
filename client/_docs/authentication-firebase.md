@@ -34,13 +34,13 @@ the `firebaseConfig` object found in the `src/config.js` file.
 
 ```js
 export const firebaseConfig = {
-  apiKey: '',
-  appId: '',
-  authDomain: '',
-  databaseURL: '',
-  messagingSenderId: '',
-  projectId: '',
-  storageBucket: ''
+  apiKey: "",
+  appId: "",
+  authDomain: "",
+  databaseURL: "",
+  messagingSenderId: "",
+  projectId: "",
+  storageBucket: "",
 };
 ```
 
@@ -65,13 +65,13 @@ authentication server). To make use of Amplify simply follow these steps:
 Open `src/pages/_app.js` file and replace the following line:
 
 ```js
-import { AuthConsumer, AuthProvider } from '../contexts/jwt-context';
+import { AuthConsumer, AuthProvider } from "../contexts/jwt-context";
 ```
 
 with
 
 ```js
-import { AuthConsumer, AuthProvider } from '../contexts/firebase-auth-context';
+import { AuthConsumer, AuthProvider } from "../contexts/firebase-auth-context";
 ```
 
 ### Step 2. Replace the hook context
@@ -79,13 +79,13 @@ import { AuthConsumer, AuthProvider } from '../contexts/firebase-auth-context';
 Open `src/hooks/use-auth.js` file and replace the following line:
 
 ```js
-import { AuthContext } from '../contexts/jwt-context';
+import { AuthContext } from "../contexts/jwt-context";
 ```
 
 with
 
 ```js
-import { AuthContext } from '../contexts/firebase-auth-context';
+import { AuthContext } from "../contexts/firebase-auth-context";
 ```
 
 ## How to use auth
@@ -98,16 +98,12 @@ needed.
 
 ```jsx
 // src/pages/index.js
-import { useAuth } from '../hooks/use-auth';
+import { useAuth } from "../hooks/use-auth";
 
 const Home = () => {
   const { user } = useAuth();
 
-  return (
-    <div>
-      Email: {user.email}
-    </div>
-  );
+  return <div>Email: {user.email}</div>;
 };
 ```
 
@@ -117,21 +113,19 @@ const Home = () => {
 
 ```jsx
 // src/pages/index.js
-import { useAuth } from '../hooks/use-auth';
+import { useAuth } from "../hooks/use-auth";
 
 const Home = () => {
   const { signInWithEmailAndPassword } = useAuth();
-  
+
   const handleLogin = () => {
     // Email and password
-    signInWithEmailAndPassword('demo@devias.io', 'Password123!');
+    signInWithEmailAndPassword("demo@devias.io", "Password123!");
   };
 
   return (
     <div>
-      <button onClick={handleLogin}>
-        Login
-      </button>
+      <button onClick={handleLogin}>Login</button>
     </div>
   );
 };

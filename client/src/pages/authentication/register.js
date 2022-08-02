@@ -22,7 +22,7 @@ const platformIcons = {
 
 const Register = () => {
   const router = useRouter();
-  const { platform } = useAuth();
+  // const { platform } = useAuth();
   const { disableGuard } = router.query;
 
   useEffect(() => {
@@ -110,10 +110,10 @@ const Register = () => {
                 mt: 3,
               }}
             >
-              {platform === "Amplify" && <AmplifyRegister />}
-              {platform === "Auth0" && <Auth0Register />}
-              {platform === "Firebase" && <FirebaseRegister />}
-              {platform === "JWT" && <JWTRegister />}
+              {/* {platform === "Amplify" && <AmplifyRegister />} */}
+              {/* {platform === "Auth0" && <Auth0Register />} */}
+              <FirebaseRegister />
+              {/* {platform === "JWT" && <JWTRegister />} */}
             </Box>
             <Divider sx={{ my: 3 }} />
             <NextLink
