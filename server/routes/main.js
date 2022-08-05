@@ -219,7 +219,14 @@ router.post("/add_campaign", (req, res) => {
   });
 });
 
-// Get all the campaigns
+router.get("/get_all_campaigns", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  Campaign.find()
+    .populate("product")
+    .then((p) => res.status(200).json(p))
+    .catch((error) => res.status(400).json(error));
+});
+// Get all the campaigns of a user
 router.get("/get_campaigns/:userId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 

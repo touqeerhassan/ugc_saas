@@ -20,11 +20,14 @@ import StayCurrentPortraitIcon from "@mui/icons-material/StayCurrentPortrait";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
+import { API_SERVICE } from "../../config";
+
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
 import { Cog as CogIcon } from "../../icons/cog";
 import { gtm } from "../../lib/gtm";
 import { Search as SearchIcon } from "../../icons/search";
+import JobCard from "../../components/dashboard/jobscreator/job-card";
 
 const sortOptions = [
   {
@@ -38,6 +41,7 @@ const sortOptions = [
 ];
 
 const Finance = () => {
+  const [campaigns, setCampaigns] = useState([]);
   const [sort, setSort] = useState("desc");
   const [filters, setFilters] = useState({
     query: "",
@@ -61,6 +65,30 @@ const Finance = () => {
     const value = event.target.value;
     setSort(value);
   };
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await fetch(`${API_SERVICE}/get_all_campaigns`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        // console.log(response);
+        const data = await response.json();
+        console.log(data);
+        setCampaigns(data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
 
   return (
     <>
@@ -133,273 +161,11 @@ const Finance = () => {
             </Grid>
           </Box>
           <Grid container spacing={3}>
-            <Grid item xs={6} sm={6}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6} sm={4}>
-                      <img
-                        style={{ width: "100%", marginTop: "5px" }}
-                        src="https://5.imimg.com/data5/CO/XW/MY-44197581/ladies-stylish-purse-500x500.jpg"
-                        alt="Image"
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={8}>
-                      <Typography sx={{ float: "right" }}>
-                        Earning <br />
-                        <span style={{ color: "blue", fontWeight: "bold" }}>
-                          $59.00
-                        </span>
-                      </Typography>
-                      <Typography variant="h6" sx={{ float: "left" }}>
-                        Leather Small Handbag <br />{" "}
-                        <span style={{ fontSize: "15px" }}>$20.00</span>
-                      </Typography>
-
-                      <br />
-                      <br />
-
-                      <Chip
-                        color="primary"
-                        label="Free product"
-                        variant="outlined"
-                        size="small"
-                        sx={{ mt: 2 }}
-                      />
-
-                      <Stack direction="row" sx={{ mt: 3 }} spacing={1}>
-                        <VideocamIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Product Demo Video
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <StayCurrentPortraitIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Vertical Video (single or more)
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <AccessTimeIcon color="primary" />
-                        <Typography variant="subtitle2">30 sec</Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 2 }} spacing={1}>
-                        <Button size="small" variant="contained" fullWidth>
-                          Take this job
-                        </Button>
-                        <IconButton color="error" component="label">
-                          <FavoriteIcon />
-                        </IconButton>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={6} sm={6}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6} sm={4}>
-                      <img
-                        style={{ width: "100%", marginTop: "5px" }}
-                        src="https://5.imimg.com/data5/CO/XW/MY-44197581/ladies-stylish-purse-500x500.jpg"
-                        alt="Image"
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={8}>
-                      <Typography sx={{ float: "right" }}>
-                        Earning <br />
-                        <span style={{ color: "blue", fontWeight: "bold" }}>
-                          $59.00
-                        </span>
-                      </Typography>
-                      <Typography variant="h6" sx={{ float: "left" }}>
-                        Leather Small Handbag <br />{" "}
-                        <span style={{ fontSize: "15px" }}>$20.00</span>
-                      </Typography>
-
-                      <br />
-                      <br />
-
-                      <Chip
-                        color="primary"
-                        label="Free product"
-                        variant="outlined"
-                        size="small"
-                        sx={{ mt: 2 }}
-                      />
-
-                      <Stack direction="row" sx={{ mt: 3 }} spacing={1}>
-                        <VideocamIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Product Demo Video
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <StayCurrentPortraitIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Vertical Video (single or more)
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <AccessTimeIcon color="primary" />
-                        <Typography variant="subtitle2">30 sec</Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 2 }} spacing={1}>
-                        <Button size="small" variant="contained" fullWidth>
-                          Take this job
-                        </Button>
-                        <IconButton color="error" component="label">
-                          <FavoriteIcon />
-                        </IconButton>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={6} sm={6}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6} sm={4}>
-                      <img
-                        style={{ width: "100%", marginTop: "5px" }}
-                        src="https://5.imimg.com/data5/CO/XW/MY-44197581/ladies-stylish-purse-500x500.jpg"
-                        alt="Image"
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={8}>
-                      <Typography sx={{ float: "right" }}>
-                        Earning <br />
-                        <span style={{ color: "blue", fontWeight: "bold" }}>
-                          $59.00
-                        </span>
-                      </Typography>
-                      <Typography variant="h6" sx={{ float: "left" }}>
-                        Leather Small Handbag <br />{" "}
-                        <span style={{ fontSize: "15px" }}>$20.00</span>
-                      </Typography>
-
-                      <br />
-                      <br />
-
-                      <Chip
-                        color="primary"
-                        label="Free product"
-                        variant="outlined"
-                        size="small"
-                        sx={{ mt: 2 }}
-                      />
-
-                      <Stack direction="row" sx={{ mt: 3 }} spacing={1}>
-                        <VideocamIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Product Demo Video
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <StayCurrentPortraitIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Vertical Video (single or more)
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <AccessTimeIcon color="primary" />
-                        <Typography variant="subtitle2">30 sec</Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 2 }} spacing={1}>
-                        <Button size="small" variant="contained" fullWidth>
-                          Take this job
-                        </Button>
-                        <IconButton color="error" component="label">
-                          <FavoriteIcon />
-                        </IconButton>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
-
-            <Grid item xs={6} sm={6}>
-              <Card variant="outlined">
-                <CardContent>
-                  <Grid container spacing={1}>
-                    <Grid item xs={6} sm={4}>
-                      <img
-                        style={{ width: "100%", marginTop: "5px" }}
-                        src="https://5.imimg.com/data5/CO/XW/MY-44197581/ladies-stylish-purse-500x500.jpg"
-                        alt="Image"
-                      />
-                    </Grid>
-                    <Grid item xs={6} sm={8}>
-                      <Typography sx={{ float: "right" }}>
-                        Earning <br />
-                        <span style={{ color: "blue", fontWeight: "bold" }}>
-                          $59.00
-                        </span>
-                      </Typography>
-                      <Typography variant="h6" sx={{ float: "left" }}>
-                        Leather Small Handbag <br />{" "}
-                        <span style={{ fontSize: "15px" }}>$20.00</span>
-                      </Typography>
-
-                      <br />
-                      <br />
-
-                      <Chip
-                        color="primary"
-                        label="Free product"
-                        variant="outlined"
-                        size="small"
-                        sx={{ mt: 2 }}
-                      />
-
-                      <Stack direction="row" sx={{ mt: 3 }} spacing={1}>
-                        <VideocamIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Product Demo Video
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <StayCurrentPortraitIcon color="primary" />
-                        <Typography variant="subtitle2">
-                          Vertical Video (single or more)
-                        </Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
-                        <AccessTimeIcon color="primary" />
-                        <Typography variant="subtitle2">30 sec</Typography>
-                      </Stack>
-
-                      <Stack direction="row" sx={{ mt: 2 }} spacing={1}>
-                        <Button size="small" variant="contained" fullWidth>
-                          Take this job
-                        </Button>
-                        <IconButton color="error" component="label">
-                          <FavoriteIcon />
-                        </IconButton>
-                      </Stack>
-                    </Grid>
-                  </Grid>
-                </CardContent>
-              </Card>
-            </Grid>
+            {campaigns.map((campaign) => (
+              <Grid item xs={12} md={6} key={campaign._id}>
+                <JobCard campaign={campaign} />
+              </Grid>
+            ))}
           </Grid>
         </Container>
       </Box>

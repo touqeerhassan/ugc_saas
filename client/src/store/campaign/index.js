@@ -8,7 +8,7 @@ import {
 
 const defaultCampaign = {
   brand: "",
-  product: {},
+  product: "",
   campaignName: "",
   selectedPayment: "reimbursement",
   shipping: 0,
@@ -21,7 +21,7 @@ const defaultCampaign = {
     contentFormat: {},
     contentDescription: "",
     creatorLevel: {},
-    noOfCreators: 0,
+    noOfCreators: 1,
   },
   gender: "male",
 };

@@ -4,6 +4,8 @@ import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+import { v4 as uuid } from "uuid";
+
 const steps = [
   "Campaign Creation",
   "Product Information",
@@ -36,6 +38,7 @@ import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
 import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
 import { useRouter } from "next/router";
+import { storage } from "../../../lib/firebase";
 
 function CreateCampaign({
   brand,
@@ -52,8 +55,10 @@ function CreateCampaign({
   const router = useRouter();
   const { campaignId } = router.query;
 
+  // const [file, setFile] = useState(null);
+
   const [newProduct, setNewProduct] = useState({
-    cover: "/static/mock-images/covers/cover_4.jpeg",
+    cover: "",
     name: "",
     price: 0,
     categories: ["Sports", "Clothing"],
@@ -67,6 +72,41 @@ function CreateCampaign({
     gtm.push({ event: "page_view" });
   }, []);
 
+  const uploadImage = (file) => {
+    if (file === null) return;
+    console.log(newProduct?.cover);
+
+    if (newProduct?.cover) {
+      const desertRef = storage.refFromURL(newProduct?.cover);
+
+      desertRef
+        .delete()
+        .then(function () {
+          // File deleted successfully
+          console.log("Deleted");
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+          console.log(error);
+        });
+    }
+
+    const name = uuid();
+    storage
+      .ref(`/products/${name}`)
+      .put(file)
+      .on("state_changed", alert("success"), alert, () => {
+        storage
+          .ref("products")
+          .child(name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            setNewProduct({ ...newProduct, cover: url });
+          });
+      });
+  };
+
   const handleNewProductChange = (event) => {
     setNewProduct({ ...newProduct, [event.target.name]: event.target.value });
   };
@@ -77,7 +117,8 @@ function CreateCampaign({
 
   const handleDropCover = async ([file]) => {
     const data = await fileToBase64(file);
-    setNewProduct({ ...newProduct, cover: data });
+    // setNewProduct({ ...newProduct, cover: data });
+    uploadImage(file);
   };
 
   const handleRemove = () => {
@@ -164,10 +205,10 @@ function CreateCampaign({
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    {newProduct.cover ? (
+                    {newProduct?.cover ? (
                       <Box
                         sx={{
-                          backgroundImage: `url(${newProduct.cover})`,
+                          backgroundImage: `url(${newProduct?.cover})`,
                           backgroundPosition: "center",
                           backgroundSize: "cover",
                           borderRadius: 1,
@@ -208,7 +249,7 @@ function CreateCampaign({
                     <Button
                       onClick={handleRemove}
                       sx={{ mt: 3 }}
-                      disabled={!newProduct.cover}
+                      disabled={!newProduct?.cover}
                     >
                       Remove photo
                     </Button>
@@ -228,7 +269,7 @@ function CreateCampaign({
               <Grid item xs={12}>
                 <TextField
                   name="name"
-                  value={newProduct.name}
+                  value={newProduct?.name}
                   onChange={handleNewProductChange}
                   fullWidth
                   label="Name"
@@ -238,7 +279,7 @@ function CreateCampaign({
                 <TextField
                   type={Number}
                   name="price"
-                  value={newProduct.price}
+                  value={newProduct?.price}
                   onChange={handleNewProductChange}
                   fullWidth
                   label="Price"
@@ -253,11 +294,11 @@ function CreateCampaign({
                     labelId="demo-simple-select-label"
                     id="demo-simple-select"
                     name="selectedCategory"
-                    value={newProduct.selectedCategory}
-                    label={newProduct.selectedCategory}
+                    value={newProduct?.selectedCategory}
+                    label={newProduct?.selectedCategory}
                     onChange={handleNewProductChange}
                   >
-                    {newProduct.categories?.map((category, index) => (
+                    {newProduct?.categories?.map((category, index) => (
                       <MenuItem key={index} value={category}>
                         {category}
                       </MenuItem>
@@ -268,7 +309,7 @@ function CreateCampaign({
               <Grid item xs={12}>
                 <TextField
                   name="link"
-                  value={newProduct.link}
+                  value={newProduct?.link}
                   onChange={handleNewProductChange}
                   fullWidth
                   label="External Website Link"
@@ -277,7 +318,7 @@ function CreateCampaign({
               <Grid item xs={12} md={6}>
                 <TextField
                   name="handlingTime"
-                  value={newProduct.handlingTime}
+                  value={newProduct?.handlingTime}
                   onChange={handleNewProductChange}
                   fullWidth
                   label="Max. handling time(days)"
@@ -286,7 +327,7 @@ function CreateCampaign({
               <Grid item xs={12} md={6}>
                 <TextField
                   name="shippingTime"
-                  value={newProduct.shippingTime}
+                  value={newProduct?.shippingTime}
                   onChange={handleNewProductChange}
                   fullWidth
                   label="Max. shipping time(days)"

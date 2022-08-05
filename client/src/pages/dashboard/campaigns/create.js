@@ -6,6 +6,7 @@ import Step from "@mui/material/Step";
 import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import { storage } from "firebase";
 
 const steps = [
   "Campaign Creation",
@@ -136,6 +137,7 @@ const BlogPostCreate = () => {
       if (response.status === 200) {
         console.log(response);
         alert("Campaign Data Edited");
+        router.push("/dashboard/campaigns");
       }
     } catch (err) {
       console.log(err);
@@ -184,7 +186,7 @@ const BlogPostCreate = () => {
       if (response.status === 200) {
         console.log(response);
         alert("Campaign Created Successfully");
-        // router.push("/dashboard/campaigns");
+        router.push("/dashboard/campaigns");
       }
     } catch (err) {
       console.log(err);
@@ -265,7 +267,7 @@ const BlogPostCreate = () => {
   //Page - 1
   const [brand, setBrand] = useState(campaign?.brand);
   const [selectedProduct, setSelectedProduct] = useState(campaign?.product);
-  const [campaignName, setCampaignName] = useState(campaign.campaignName);
+  const [campaignName, setCampaignName] = useState(campaign?.campaignName);
   const [products, setProducts] = useState([]);
 
   const fetchSingleProduct = async (productId) => {
@@ -435,9 +437,9 @@ const BlogPostCreate = () => {
                     // style={{ margin: "0 20px", padding: "0 50px" }}
                   >
                     <Typography variant="h5" sx={{ mt: 3 }}>
-                      Campaign created
+                      Campaign {campaignId ? "Edited" : "Created"} Successfully
                     </Typography>
-
+                    {/* 
                     <Card sx={{ mt: 4 }} variant="outlined">
                       <CardContent>
                         <div
@@ -468,7 +470,7 @@ const BlogPostCreate = () => {
                           </Button>
                         </NextLink>
                       </CardContent>
-                    </Card>
+                    </Card> */}
                   </Container>
                 </>
               )}

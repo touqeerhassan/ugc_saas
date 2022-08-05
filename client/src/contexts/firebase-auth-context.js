@@ -41,6 +41,7 @@ export const AuthProvider = (props) => {
       firebase.auth().onAuthStateChanged((user) => {
         console.log(user);
         if (user) {
+          console.log(user);
           // Here you should extract the complete user profile to make it available in your entire app.
           // The auth state only provides basic information.
           dispatch({
