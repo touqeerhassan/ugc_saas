@@ -42,18 +42,33 @@ import { FileDropzone } from "../../file-dropzone";
 
 import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
+import { useSelector, useDispatch } from "react-redux";
+import { useAuth } from "../../../hooks/use-auth";
+import { API_SERVICE } from "../../../config";
 
-export default function Disclaimer({ children, onClick }) {
+export default function Disclaimer({ onClick, onEdit }) {
   const [cover, setCover] = useState("/static/mock-images/covers/cover_4.jpeg");
-  const [info, setInfo] = useState("");
+  const creator = useSelector((state) => state.creator);
+  const { user } = useAuth();
 
-  const handleDropCover = async ([file]) => {
-    const data = await fileToBase64(file);
-    setCover(data);
-  };
-
-  const handleRemove = () => {
-    setCover(null);
+  const addCreator = async () => {
+    try {
+      const response = await fetch(`${API_SERVICE}/add_creator`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...creator, userId: user?.id }),
+      });
+      if (response.status === 200) {
+        console.log(response);
+        alert("Submitted for Review");
+        // router.push("/dashboard");
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
@@ -86,7 +101,11 @@ export default function Disclaimer({ children, onClick }) {
                 }}
               >
                 <Typography variant="h5">Personal Information</Typography>
-                <Typography variant="secondary" sx={{ color: "gray" }}>
+                <Typography
+                  variant="secondary"
+                  sx={{ color: "gray" }}
+                  onClick={() => onEdit(0)}
+                >
                   Edit
                 </Typography>
               </Grid>
@@ -109,23 +128,33 @@ export default function Disclaimer({ children, onClick }) {
               </Grid>
               <Grid item xs={12} md={6}>
                 <div style={{ fontWeight: "bold" }}>First name</div>
-                <div style={{ color: "gray" }}>Shivanshu</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.first || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} md={6}>
                 <div style={{ fontWeight: "bold" }}>Last name</div>
-                <div style={{ color: "gray" }}>Gupta</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.last || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} md={6}>
                 <div style={{ fontWeight: "bold" }}>Date of Birth</div>
-                <div style={{ color: "gray" }}>01/01/1999</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.DOB || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} md={6}>
                 <div style={{ fontWeight: "bold" }}>Gender</div>
-                <div style={{ color: "gray" }}>Male</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.gender || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} md={6}>
                 <div style={{ fontWeight: "bold" }}>Phone Number</div>
-                <div style={{ color: "gray" }}>+91 2873646361</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.contact || "Not provided"}
+                </div>
               </Grid>
 
               <Grid
@@ -139,30 +168,50 @@ export default function Disclaimer({ children, onClick }) {
                 }}
               >
                 <Typography variant="h5">Address</Typography>
-                <Typography variant="secondary" sx={{ color: "gray" }}>
+                <Typography
+                  variant="secondary"
+                  sx={{ color: "gray" }}
+                  onClick={() => onEdit(0)}
+                >
                   Edit
                 </Typography>
               </Grid>
 
               <Grid item xs={12}>
                 <div style={{ fontWeight: "bold" }}>Country</div>
-                <div style={{ color: "gray" }}>USA</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.address?.country || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12}>
-                <div style={{ fontWeight: "bold" }}>Address</div>
-                <div style={{ color: "gray" }}>B20293, Sherlock Lane</div>
+                <div style={{ fontWeight: "bold" }}>Address Line 1</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.address?.line1 || "Not provided"}
+                </div>
+              </Grid>
+              <Grid item xs={12}>
+                <div style={{ fontWeight: "bold" }}>Address Line 2</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.address?.line2 || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12}>
                 <div style={{ fontWeight: "bold" }}>City/Town</div>
-                <div style={{ color: "gray" }}>Falls Church</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.address?.city || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} md={6}>
                 <div style={{ fontWeight: "bold" }}>State</div>
-                <div style={{ color: "gray" }}>Georgia</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.address?.state || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} md={6}>
                 <div style={{ fontWeight: "bold" }}>Zip Code</div>
-                <div style={{ color: "gray" }}>28388</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.address?.zip || "Not provided"}
+                </div>
               </Grid>
 
               <Grid
@@ -176,34 +225,50 @@ export default function Disclaimer({ children, onClick }) {
                 }}
               >
                 <Typography variant="h5">Social Media Links</Typography>
-                <Typography variant="secondary" sx={{ color: "gray" }}>
+                <Typography
+                  variant="secondary"
+                  sx={{ color: "gray" }}
+                  onClick={() => onEdit(2)}
+                >
                   Edit
                 </Typography>
               </Grid>
 
               <Grid item xs={12} sx={{ display: "flex" }}>
                 <InstagramIcon sx={{ mr: 2 }}></InstagramIcon>
-                <div style={{ color: "gray" }}>Not provided</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.social?.instagram || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} sx={{ display: "flex" }}>
                 <FacebookIcon sx={{ mr: 2 }}></FacebookIcon>
-                <div style={{ color: "gray" }}>Not provided</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.social?.facebook || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} sx={{ display: "flex" }}>
                 <TwitterIcon sx={{ mr: 2 }}></TwitterIcon>
-                <div style={{ color: "gray" }}>Not provided</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.social?.twitter || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} sx={{ display: "flex" }}>
                 <YouTubeIcon sx={{ mr: 2 }}></YouTubeIcon>
-                <div style={{ color: "gray" }}>Not provided</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.social?.youtube || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} sx={{ display: "flex" }}>
                 <FilterDramaIcon sx={{ mr: 2 }}></FilterDramaIcon>
-                <div style={{ color: "gray" }}>Not provided</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.social?.amazon || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12} sx={{ display: "flex" }}>
                 <LanguageIcon sx={{ mr: 2 }}></LanguageIcon>
-                <div style={{ color: "gray" }}>Not provided</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.social?.website || "Not provided"}
+                </div>
               </Grid>
 
               <Grid
@@ -217,22 +282,32 @@ export default function Disclaimer({ children, onClick }) {
                 }}
               >
                 <Typography variant="h5">Categories</Typography>
-                <Typography variant="secondary" sx={{ color: "gray" }}>
+                <Typography
+                  variant="secondary"
+                  sx={{ color: "gray" }}
+                  onClick={() => onEdit(3)}
+                >
                   Edit
                 </Typography>
               </Grid>
 
               <Grid item xs={12}>
                 <div style={{ fontWeight: "bold" }}>Primary Category</div>
-                <div style={{ color: "gray" }}>Electronics</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.categories?.primary || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12}>
                 <div style={{ fontWeight: "bold" }}>Secondary Category</div>
-                <div style={{ color: "gray" }}>Sports</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.categories?.secondary || "Not provided"}
+                </div>
               </Grid>
               <Grid item xs={12}>
                 <div style={{ fontWeight: "bold" }}>Third Category</div>
-                <div style={{ color: "gray" }}>Food & Beverages</div>
+                <div style={{ color: "gray" }}>
+                  {creator?.categories?.tertiary || "Not provided"}
+                </div>
               </Grid>
 
               <Grid
@@ -258,7 +333,11 @@ export default function Disclaimer({ children, onClick }) {
                 <Typography variant="secondary" sx={{ fontWeight: "bold" }}>
                   Image Certification
                 </Typography>
-                <Typography variant="secondary" sx={{ color: "gray" }}>
+                <Typography
+                  variant="secondary"
+                  sx={{ color: "gray" }}
+                  onClick={() => onEdit(4)}
+                >
                   Edit
                 </Typography>
               </Grid>
@@ -270,14 +349,18 @@ export default function Disclaimer({ children, onClick }) {
                     height: "100px",
                   }}
                 >
-                  <CardMedia
-                    backgroundSize="contain"
-                    height="100%"
-                    width="100%"
-                    component="img"
-                    image={cover}
-                    alt="green iguana"
-                  />
+                  {creator?.brandSelfie ? (
+                    <CardMedia
+                      backgroundSize="contain"
+                      height="100%"
+                      width="100%"
+                      component="img"
+                      image={creator?.brandSelfie}
+                      alt="green iguana"
+                    />
+                  ) : (
+                    <div style={{ color: "gray" }}>Not provided</div>
+                  )}
                 </Box>
               </Grid>
 
@@ -294,18 +377,43 @@ export default function Disclaimer({ children, onClick }) {
                 <Typography variant="secondary" sx={{ fontWeight: "bold" }}>
                   Video Certification
                 </Typography>
-                <Typography variant="secondary" sx={{ color: "gray" }}>
+                <Typography
+                  variant="secondary"
+                  sx={{ color: "gray" }}
+                  onClick={() => onEdit(5)}
+                >
                   Edit
                 </Typography>
               </Grid>
 
               <Grid item xs={12}>
-                <div style={{ color: "gray" }}>Not provided</div>
+                <Box
+                  sx={{
+                    width: "200px",
+                    height: "150px",
+                  }}
+                >
+                  {creator?.productDemo ? (
+                    <video
+                      controls
+                      height="100%"
+                      width="100%"
+                      component="video"
+                      src={creator?.productDemo}
+                    />
+                  ) : (
+                    <div style={{ color: "gray" }}>Not provided</div>
+                  )}
+                </Box>
               </Grid>
 
               <Grid item xs={12}>
                 <Button
-                  onClick={onClick}
+                  onClick={async () => {
+                    console.log("Hello");
+                    await addCreator();
+                    onClick();
+                  }}
                   fullWidth
                   sx={{ backgroundColor: "black", color: "white" }}
                 >

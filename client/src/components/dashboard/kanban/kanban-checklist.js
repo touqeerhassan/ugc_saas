@@ -1,6 +1,6 @@
-import { Fragment, useState } from 'react';
-import PropTypes from 'prop-types';
-import toast from 'react-hot-toast';
+import { Fragment, useState } from "react";
+import PropTypes from "prop-types";
+import toast from "react-hot-toast";
 import {
   Box,
   Button,
@@ -11,16 +11,16 @@ import {
   Input,
   LinearProgress,
   OutlinedInput,
-  Typography
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { deleteChecklist, updateChecklist } from '../../../slices/kanban';
-import { useDispatch } from '../../../store';
-import { KanbanCheckItem } from './kanban-check-item';
-import { KanbanCheckItemAdd } from './kanban-check-item-add';
-import { Trash as TrashIcon } from '../../../icons/trash';
+  Typography,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { deleteChecklist, updateChecklist } from "../../../slices/kanban";
+import { useDispatch, useSelector } from "react-redux";
+import { KanbanCheckItem } from "./kanban-check-item";
+import { KanbanCheckItemAdd } from "./kanban-check-item-add";
+import { Trash as TrashIcon } from "../../../icons/trash";
 
-const KanbanChecklistRoot = styled('div')``;
+const KanbanChecklistRoot = styled("div")``;
 
 export const KanbanChecklist = (props) => {
   const { card, checklist, ...other } = props;
@@ -47,10 +47,10 @@ export const KanbanChecklist = (props) => {
 
       setEditingName(false);
       await dispatch(updateChecklist(card.id, checklist.id, { name }));
-      toast.success('Checklist updated!');
+      toast.success("Checklist updated!");
     } catch (err) {
       console.error(err);
-      toast.error('Something went wrong!');
+      toast.error("Something went wrong!");
     }
   };
 
@@ -62,10 +62,10 @@ export const KanbanChecklist = (props) => {
   const handleDelete = async () => {
     try {
       await dispatch(deleteChecklist(card.id, checklist.id));
-      toast.success('Checklist deleted!');
+      toast.success("Checklist deleted!");
     } catch (err) {
       console.error(err);
-      toast.error('Something went wrong!');
+      toast.error("Something went wrong!");
     }
   };
 
@@ -82,12 +82,11 @@ export const KanbanChecklist = (props) => {
   };
 
   const totalCheckItems = checklist.checkItems.length;
-  const completedCheckItems = (checklist
-    .checkItems
-    .filter((checkItem) => checkItem.state === 'complete')).length;
-  const completePercentage = totalCheckItems === 0
-    ? 100
-    : (completedCheckItems / totalCheckItems) * 100;
+  const completedCheckItems = checklist.checkItems.filter(
+    (checkItem) => checkItem.state === "complete"
+  ).length;
+  const completePercentage =
+    totalCheckItems === 0 ? 100 : (completedCheckItems / totalCheckItems) * 100;
 
   return (
     <KanbanChecklistRoot {...other}>
@@ -95,105 +94,91 @@ export const KanbanChecklist = (props) => {
         <Box sx={{ p: 3 }}>
           <Box
             sx={{
-              alignItems: 'center',
-              display: 'flex'
+              alignItems: "center",
+              display: "flex",
             }}
           >
-            {editingName
-              ? (
-                <Box
+            {editingName ? (
+              <Box
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                  width: "100%",
+                }}
+              >
+                <OutlinedInput
+                  onChange={handleNameChange}
+                  value={name}
                   sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    width: '100%'
+                    flexGrow: 1,
+                    "& .MuiInputBase-input": {
+                      px: 2,
+                      py: 1,
+                    },
                   }}
+                />
+                <Button
+                  onClick={handleNameSave}
+                  size="small"
+                  sx={{ ml: 2 }}
+                  variant="contained"
                 >
-                  <OutlinedInput
-                    onChange={handleNameChange}
-                    value={name}
-                    sx={{
-                      flexGrow: 1,
-                      '& .MuiInputBase-input': {
-                        px: 2,
-                        py: 1
-                      }
-                    }}
-                  />
-                  <Button
-                    onClick={handleNameSave}
-                    size="small"
-                    sx={{ ml: 2 }}
-                    variant="contained"
-                  >
-                    Save
-                  </Button>
-                  <Button
-                    onClick={handleCancel}
-                    size="small"
-                    sx={{ ml: 2 }}
-                  >
-                    Cancel
-                  </Button>
-                </Box>
-              )
-              : (
-                <Box
+                  Save
+                </Button>
+                <Button onClick={handleCancel} size="small" sx={{ ml: 2 }}>
+                  Cancel
+                </Button>
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                  flexGrow: 1,
+                }}
+              >
+                <Input
+                  disableUnderline
+                  fullWidth
+                  onClick={handleNameEdit}
+                  value={checklist.name}
                   sx={{
-                    alignItems: 'center',
-                    display: 'flex',
-                    flexGrow: 1
+                    borderColor: "transparent",
+                    borderRadius: 1,
+                    borderStyle: "solid",
+                    borderWidth: 1,
+                    cursor: "text",
+                    m: "-1px",
+                    "&:hover": {
+                      backgroundColor: "action.selected",
+                    },
+                    "& .MuiInputBase-input": {
+                      fontWeight: 500,
+                      px: 2,
+                      py: 1,
+                    },
                   }}
-                >
-                  <Input
-                    disableUnderline
-                    fullWidth
-                    onClick={handleNameEdit}
-                    value={checklist.name}
-                    sx={{
-                      borderColor: 'transparent',
-                      borderRadius: 1,
-                      borderStyle: 'solid',
-                      borderWidth: 1,
-                      cursor: 'text',
-                      m: '-1px',
-                      '&:hover': {
-                        backgroundColor: 'action.selected'
-                      },
-                      '& .MuiInputBase-input': {
-                        fontWeight: 500,
-                        px: 2,
-                        py: 1
-                      }
-                    }}
-                  />
-                  <IconButton
-                    onClick={handleDelete}
-                    sx={{ ml: 2 }}
-                    size="small"
-                  >
-                    <TrashIcon fontSize="small" />
-                  </IconButton>
-                </Box>
-              )}
+                />
+                <IconButton onClick={handleDelete} sx={{ ml: 2 }} size="small">
+                  <TrashIcon fontSize="small" />
+                </IconButton>
+              </Box>
+            )}
           </Box>
           <Box
             sx={{
-              alignItems: 'center',
-              display: 'flex',
-              mt: 3
+              alignItems: "center",
+              display: "flex",
+              mt: 3,
             }}
           >
-            <Typography
-              color="textSecondary"
-              variant="caption"
-            >
-              {Math.round(completePercentage)}
-              %
+            <Typography color="textSecondary" variant="caption">
+              {Math.round(completePercentage)}%
             </Typography>
             <Box
               sx={{
                 flexGrow: 1,
-                ml: 2
+                ml: 2,
               }}
             >
               <LinearProgress
@@ -201,9 +186,9 @@ export const KanbanChecklist = (props) => {
                 sx={{
                   borderRadius: 1,
                   height: 8,
-                  '& .MuiLinearProgress-bar': {
-                    borderRadius: 'inherit'
-                  }
+                  "& .MuiLinearProgress-bar": {
+                    borderRadius: "inherit",
+                  },
                 }}
                 value={completePercentage}
                 variant="determinate"
@@ -227,10 +212,7 @@ export const KanbanChecklist = (props) => {
           </Fragment>
         ))}
         <CardActions>
-          <KanbanCheckItemAdd
-            cardId={card.id}
-            checklistId={checklist.id}
-          />
+          <KanbanCheckItemAdd cardId={card.id} checklistId={checklist.id} />
         </CardActions>
       </Card>
     </KanbanChecklistRoot>
@@ -238,7 +220,7 @@ export const KanbanChecklist = (props) => {
 };
 
 KanbanChecklist.propTypes = {
-    card: PropTypes.object.isRequired,
-    checklist: PropTypes.object.isRequired,
-  sx: PropTypes.object
+  card: PropTypes.object.isRequired,
+  checklist: PropTypes.object.isRequired,
+  sx: PropTypes.object,
 };

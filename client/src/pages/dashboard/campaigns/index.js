@@ -40,7 +40,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import NextLink from "next/link";
 
 import { useDispatch } from "react-redux";
-import { FETCH_CAMPAIGN_DATA } from "../../../store/campaign/actions";
+import { FETCH_CAMPAIGN_DATA } from "../../../store/actions";
 import {
   imageContents,
   videoContents,

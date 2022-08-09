@@ -24,9 +24,9 @@ import { createTheme } from "../theme";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 import "../i18n";
 import { createStore } from "redux";
-import campaignApp from "../store/campaign";
+import reducer from "../store/reducers";
 
-const store = createStore(campaignApp);
+const store = createStore(reducer);
 
 Router.events.on("routeChangeStart", nProgress.start);
 Router.events.on("routeChangeError", nProgress.done);

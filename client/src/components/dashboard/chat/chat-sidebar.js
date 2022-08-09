@@ -1,35 +1,43 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import NextLink from 'next/link';
-import PropTypes from 'prop-types';
-import { Box, Button, Drawer, IconButton, List, Typography, useMediaQuery } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { chatApi } from '../../../__fake-api__/chat-api';
-import { Plus as PlusIcon } from '../../../icons/plus';
-import { X as XIcon } from '../../../icons/x';
-import { useSelector } from '../../../store';
-import { Scrollbar } from '../../scrollbar';
-import { ChatContactSearch } from './chat-contact-search';
-import { ChatThreadItem } from './chat-thread-item';
+import { useState } from "react";
+import { useRouter } from "next/router";
+import NextLink from "next/link";
+import PropTypes from "prop-types";
+import {
+  Box,
+  Button,
+  Drawer,
+  IconButton,
+  List,
+  Typography,
+  useMediaQuery,
+} from "@mui/material";
+import { styled } from "@mui/material/styles";
+import { chatApi } from "../../../__fake-api__/chat-api";
+import { Plus as PlusIcon } from "../../../icons/plus";
+import { X as XIcon } from "../../../icons/x";
+import { useDispatch, useSelector } from "react-redux";
+import { Scrollbar } from "../../scrollbar";
+import { ChatContactSearch } from "./chat-contact-search";
+import { ChatThreadItem } from "./chat-thread-item";
 
 const ChatSidebarDesktop = styled(Drawer)({
   flexShrink: 0,
   width: 380,
-  '& .MuiDrawer-paper': {
-    position: 'relative',
-    width: 380
-  }
+  "& .MuiDrawer-paper": {
+    position: "relative",
+    width: 380,
+  },
 });
 
 const ChatSidebarMobile = styled(Drawer)({
-  maxWidth: '100%',
+  maxWidth: "100%",
   width: 380,
-  '& .MuiDrawer-paper': {
-    height: 'calc(100% - 64px)',
-    maxWidth: '100%',
+  "& .MuiDrawer-paper": {
+    height: "calc(100% - 64px)",
+    maxWidth: "100%",
     top: 64,
-    width: 380
-  }
+    width: 380,
+  },
 });
 
 export const ChatSidebar = (props) => {
@@ -37,9 +45,9 @@ export const ChatSidebar = (props) => {
   const router = useRouter();
   const { threads, activeThreadId } = useSelector((state) => state.chat);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
-  const mdUp = useMediaQuery((theme) => theme.breakpoints.up('md'));
+  const mdUp = useMediaQuery((theme) => theme.breakpoints.up("md"));
 
   const handleGroupClick = () => {
     if (!mdUp) {
@@ -49,7 +57,7 @@ export const ChatSidebar = (props) => {
 
   const handleSearchClickAway = () => {
     setIsSearchFocused(false);
-    setSearchQuery('');
+    setSearchQuery("");
   };
 
   const handleSearchChange = async (event) => {
@@ -76,7 +84,7 @@ export const ChatSidebar = (props) => {
 
   const handleSearchSelect = (result) => {
     setIsSearchFocused(false);
-    setSearchQuery('');
+    setSearchQuery("");
 
     if (!mdUp) {
       onClose?.();
@@ -89,16 +97,16 @@ export const ChatSidebar = (props) => {
     const thread = threads.byId[threadId];
     let threadKey;
 
-    if (thread.type === 'GROUP') {
+    if (thread.type === "GROUP") {
       threadKey = thread.id;
     } else {
       // We hardcode the current user ID because the mocked that is not in sync
       // with the auth provider.
       // When implementing this app with a real database, replace this
       // ID with the ID from Auth Context.
-      threadKey =
-        thread.participantIds.find((participantId) => (participantId
-          !== '5e86809283e28b96d2d38537'));
+      threadKey = thread.participantIds.find(
+        (participantId) => participantId !== "5e86809283e28b96d2d38537"
+      );
     }
 
     if (!mdUp) {
@@ -112,19 +120,14 @@ export const ChatSidebar = (props) => {
     <div>
       <Box
         sx={{
-          alignItems: 'center',
-          display: 'flex',
-          p: 2
+          alignItems: "center",
+          display: "flex",
+          p: 2,
         }}
       >
-        <Typography variant="h5">
-          Chats
-        </Typography>
+        <Typography variant="h5">Chats</Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <NextLink
-          href="/dashboard/chat?compose=true"
-          passHref
-        >
+        <NextLink href="/dashboard/chat?compose=true" passHref>
           <Button
             component="a"
             onClick={handleGroupClick}
@@ -138,9 +141,9 @@ export const ChatSidebar = (props) => {
           onClick={onClose}
           sx={{
             display: {
-              sm: 'none'
+              sm: "none",
             },
-            ml: 2
+            ml: 2,
           }}
         >
           <XIcon fontSize="small" />
@@ -157,10 +160,10 @@ export const ChatSidebar = (props) => {
       />
       <Box
         sx={{
-          borderTopColor: 'divider',
-          borderTopStyle: 'solid',
+          borderTopColor: "divider",
+          borderTopStyle: "solid",
           borderTopWidth: 1,
-          display: isSearchFocused ? 'none' : 'block'
+          display: isSearchFocused ? "none" : "block",
         }}
       >
         <Scrollbar>
@@ -186,7 +189,8 @@ export const ChatSidebar = (props) => {
         open={open}
         SlideProps={{ container: containerRef?.current }}
         variant="persistent"
-        {...other}>
+        {...other}
+      >
         {content}
       </ChatSidebarDesktop>
     );
@@ -200,7 +204,8 @@ export const ChatSidebar = (props) => {
       open={open}
       SlideProps={{ container: containerRef?.current }}
       variant="temporary"
-      {...other}>
+      {...other}
+    >
       {content}
     </ChatSidebarMobile>
   );
@@ -209,5 +214,5 @@ export const ChatSidebar = (props) => {
 ChatSidebar.propTypes = {
   containerRef: PropTypes.any,
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };

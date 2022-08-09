@@ -49,7 +49,7 @@ import {
   ADD_CAMPAIGN,
   ADD_CONTENT,
   ADD_PRODUCT_INFO,
-} from "../../../store/campaign/actions";
+} from "../../../store/actions";
 import { useAuth } from "../../../hooks/use-auth";
 import { API_SERVICE } from "../../../config";
 import { useRouter } from "next/router";

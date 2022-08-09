@@ -7,45 +7,62 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import NextLink from "next/link";
 
-import {
-  Checkbox,
-  Container,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
-import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import ImageIcon from "@mui/icons-material/Image";
-import RectangleIcon from "@mui/icons-material/RectangleOutlined";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import AccessTime from "@mui/icons-material/AccessTime";
-import MoreTime from "@mui/icons-material/moreTime";
-import InfoIcon from "@mui/icons-material/Info";
-
+import Videocam from "@mui/icons-material/Videocam";
+import { CircularProgress, Container, Grid, IconButton } from "@mui/material";
 import { FileDropzone } from "../../file-dropzone";
-
 import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
 
-export default function SampleVideo({ children }) {
-  const [cover, setCover] = useState("");
-  const [info, setInfo] = useState("");
+import { storage } from "../../../lib/firebase";
+import { v4 as uuid } from "uuid";
 
+export default function SampleVideo({ cover, setCover }) {
+  const [loading, setLoading] = useState(false);
   const handleDropCover = async ([file]) => {
-    const data = await fileToBase64(file);
-    console.log(data);
-    setCover(data);
+    console.log(file);
+    uploadVideo(file);
+  };
+
+  const uploadVideo = (file) => {
+    console.log(file);
+    if (file === null) return;
+    setLoading(true);
+    console.log(cover);
+
+    if (cover) {
+      const desertRef = storage.refFromURL(cover);
+      desertRef
+        .delete()
+        .then(function () {
+          // File deleted successfully
+          console.log("Deleted");
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+          console.log(error);
+        });
+    }
+
+    const name = uuid();
+    storage
+      .ref(`ugcsass/product-demos/${name}`)
+      .put(file)
+      .on("state_changed", alert("success"), alert, () => {
+        storage
+          .ref("ugcsass")
+          .child("product-demos")
+          .child(name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            setCover(url);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      });
+    console.log("Here");
+    setLoading(false);
   };
 
   const handleRemove = () => {
@@ -76,8 +93,10 @@ export default function SampleVideo({ children }) {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    {cover ? (
-                      <video src={cover} width="560" height="315">
+                    {loading ? (
+                      <CircularProgress align="center" />
+                    ) : cover ? (
+                      <video src={cover} width="560" height="315" controls>
                         Your browser does not support the video tag.
                       </video>
                     ) : (
@@ -99,7 +118,7 @@ export default function SampleVideo({ children }) {
                           color="textSecondary"
                           variant="h6"
                         >
-                          Select a product image
+                          Select a product demo video
                         </Typography>
                         <Typography
                           align="center"
@@ -107,16 +126,17 @@ export default function SampleVideo({ children }) {
                           sx={{ mt: 1 }}
                           variant="subtitle1"
                         >
-                          Image used for the your product cover
+                          Video used for the product demo
                         </Typography>
                       </Box>
                     )}
+
                     <Button
                       onClick={handleRemove}
                       sx={{ mt: 3 }}
                       disabled={!cover}
                     >
-                      Remove photo
+                      Remove video
                     </Button>
                     <Box sx={{ mt: 3 }}>
                       <FileDropzone
@@ -145,8 +165,6 @@ export default function SampleVideo({ children }) {
                 ></iframe>
               </Grid>
             </Grid>
-
-            {children}
           </CardContent>
         </Card>
       </Container>

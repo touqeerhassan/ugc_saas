@@ -7,48 +7,54 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import NextLink from "next/link";
 
-import {
-  Checkbox,
-  Container,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
-import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import ImageIcon from "@mui/icons-material/Image";
-import RectangleIcon from "@mui/icons-material/RectangleOutlined";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import AccessTime from "@mui/icons-material/AccessTime";
-import MoreTime from "@mui/icons-material/moreTime";
-import InfoIcon from "@mui/icons-material/Info";
-
+import { Container, Grid } from "@mui/material";
 import { FileDropzone } from "../../file-dropzone";
+import { storage } from "../../../lib/firebase";
+import { v4 as uuid } from "uuid";
 
-import { gtm } from "../../../lib/gtm";
-import { fileToBase64 } from "../../../utils/file-to-base64";
-
-export default function SamplePhoto({ children }) {
-  const [cover, setCover] = useState("/static/mock-images/covers/cover_4.jpeg");
-  const [info, setInfo] = useState("");
-
+export default function SamplePhoto({ brandSelfie, setBrandSelfie }) {
+  const cover = "/static/images/covers/cover_4.jpg";
   const handleDropCover = async ([file]) => {
-    const data = await fileToBase64(file);
-    setCover(data);
+    uploadImage(file);
+  };
+
+  const uploadImage = (file) => {
+    if (file === null) return;
+    console.log(brandSelfie);
+
+    if (brandSelfie) {
+      const desertRef = storage.refFromURL(brandSelfie);
+      desertRef
+        .delete()
+        .then(function () {
+          // File deleted successfully
+          console.log("Deleted");
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+          console.log(error);
+        });
+    }
+
+    const name = uuid();
+    storage
+      .ref(`ugcsass/brand-selfies/${name}`)
+      .put(file)
+      .on("state_changed", alert("success"), alert, () => {
+        storage
+          .ref("ugcsass")
+          .child("brand-selfies")
+          .child(name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            setBrandSelfie(url);
+          });
+      });
   };
 
   const handleRemove = () => {
-    setCover(null);
+    setBrandSelfie(null);
   };
 
   return (
@@ -71,10 +77,10 @@ export default function SamplePhoto({ children }) {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    {cover ? (
+                    {brandSelfie ? (
                       <Box
                         sx={{
-                          backgroundImage: `url(${cover})`,
+                          backgroundImage: `url(${brandSelfie})`,
                           backgroundPosition: "center",
                           backgroundSize: "cover",
                           borderRadius: 1,
@@ -115,7 +121,7 @@ export default function SamplePhoto({ children }) {
                     <Button
                       onClick={handleRemove}
                       sx={{ mt: 3 }}
-                      disabled={!cover}
+                      disabled={!brandSelfie}
                     >
                       Remove photo
                     </Button>
@@ -135,47 +141,39 @@ export default function SamplePhoto({ children }) {
                 </Typography>
               </Grid>
               <Grid item xs={4}>
-                {cover && (
-                  <Box
-                    sx={{
-                      backgroundImage: `url(${cover})`,
-                      backgroundPosition: "center",
-                      backgroundSize: "cover",
-                      borderRadius: 1,
-                      height: 150,
-                    }}
-                  />
-                )}
+                <Box
+                  sx={{
+                    backgroundImage: `url(/static/mock-images/covers/cover_4.jpeg)`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    borderRadius: 1,
+                    height: 150,
+                  }}
+                />
               </Grid>
               <Grid item xs={4}>
-                {cover && (
-                  <Box
-                    sx={{
-                      backgroundImage: `url(${cover})`,
-                      backgroundPosition: "center",
-                      backgroundSize: "cover",
-                      borderRadius: 1,
-                      height: 150,
-                    }}
-                  />
-                )}
+                <Box
+                  sx={{
+                    backgroundImage: `url(/static/mock-images/covers/cover_5.jpeg)`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    borderRadius: 1,
+                    height: 150,
+                  }}
+                />
               </Grid>
               <Grid item xs={4}>
-                {cover && (
-                  <Box
-                    sx={{
-                      backgroundImage: `url(${cover})`,
-                      backgroundPosition: "center",
-                      backgroundSize: "cover",
-                      borderRadius: 1,
-                      height: 150,
-                    }}
-                  />
-                )}
+                <Box
+                  sx={{
+                    backgroundImage: `url(/static/mock-images/covers/cover_6.jpeg)`,
+                    backgroundPosition: "center",
+                    backgroundSize: "cover",
+                    borderRadius: 1,
+                    height: 150,
+                  }}
+                />
               </Grid>
             </Grid>
-
-            {children}
           </CardContent>
         </Card>
       </Container>

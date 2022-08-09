@@ -38,16 +38,7 @@ import { FileDropzone } from "../../file-dropzone";
 import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
 
-export default function Categories({ children }) {
-  const [state, setState] = useState({
-    categories: ["electronics", "fashion", "home", "sports", "travel", "other"],
-    primary: "",
-    secondary: "",
-    third: "",
-  });
-  const handleChange = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
+export default function Categories({ state, handleChange, categories }) {
   return (
     <>
       <Container
@@ -83,7 +74,7 @@ export default function Categories({ children }) {
                     <MenuItem value="">
                       <em>Please select a category</em>
                     </MenuItem>
-                    {state.categories?.map((category, index) => (
+                    {categories?.map((category, index) => (
                       <MenuItem key={index} value={category}>
                         {category.charAt(0).toUpperCase() + category.slice(1)}
                       </MenuItem>
@@ -107,7 +98,7 @@ export default function Categories({ children }) {
                     <MenuItem value="">
                       <em>Please select a category</em>
                     </MenuItem>
-                    {state.categories?.map((category, index) => (
+                    {categories?.map((category, index) => (
                       <MenuItem key={index} value={category}>
                         {category.charAt(0).toUpperCase() + category.slice(1)}
                       </MenuItem>
@@ -119,20 +110,20 @@ export default function Categories({ children }) {
               <Grid item xs={12}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-filled-label">
-                    Third
+                    Tertiary
                   </InputLabel>
                   <Select
                     label="Please select a category"
-                    name="third"
+                    name="tertiary"
                     labelId="demo-simple-select-filled-label"
                     id="demo-simple-select-filled"
-                    value={state.third}
+                    value={state.tertiary}
                     onChange={handleChange}
                   >
                     <MenuItem value="">
                       <em>Please select a category</em>
                     </MenuItem>
-                    {state.categories?.map((category, index) => (
+                    {categories?.map((category, index) => (
                       <MenuItem key={index} value={category}>
                         {category.charAt(0).toUpperCase() + category.slice(1)}
                       </MenuItem>
@@ -141,8 +132,6 @@ export default function Categories({ children }) {
                 </FormControl>
               </Grid>
             </Grid>
-
-            {children}
           </CardContent>
         </Card>
       </Container>

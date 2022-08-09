@@ -1,10 +1,9 @@
-import { combineReducers } from "redux";
 import {
   ADD_CAMPAIGN,
   ADD_PRODUCT_INFO,
   ADD_CONTENT,
   FETCH_CAMPAIGN_DATA,
-} from "./actions";
+} from "../actions";
 
 const defaultCampaign = {
   brand: "",
@@ -79,8 +78,4 @@ function campaign(state = defaultCampaign, action) {
   }
 }
 
-const campaignApp = combineReducers({
-  campaign,
-});
-
-export default campaignApp;
+export default campaign;

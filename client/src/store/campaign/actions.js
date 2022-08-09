@@ -1,4 +1,0 @@
-export const ADD_CAMPAIGN = "ADD_CAMPAIGN";
-export const ADD_PRODUCT_INFO = "ADD_PRODUCT_INFO";
-export const ADD_CONTENT = "ADD_CONTENT";
-export const FETCH_CAMPAIGN_DATA = "FETCH_CAMPAIGN_DATA";

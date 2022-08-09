@@ -7,48 +7,61 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import NextLink from "next/link";
 
-import {
-  Checkbox,
-  Container,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  Grid,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-} from "@mui/material";
-import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import ImageIcon from "@mui/icons-material/Image";
-import RectangleIcon from "@mui/icons-material/RectangleOutlined";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import AccessTime from "@mui/icons-material/AccessTime";
-import MoreTime from "@mui/icons-material/moreTime";
-import InfoIcon from "@mui/icons-material/Info";
-
+import { Container, Grid, TextField } from "@mui/material";
 import { FileDropzone } from "../../file-dropzone";
+import { storage } from "../../../lib/firebase";
 
-import { gtm } from "../../../lib/gtm";
-import { fileToBase64 } from "../../../utils/file-to-base64";
+import { v4 as uuid } from "uuid";
 
-export default function About({ children }) {
-  const [cover, setCover] = useState("/static/mock-images/covers/cover_4.jpeg");
-  const [info, setInfo] = useState("");
-
+export default function About({
+  profile,
+  setProfile,
+  specialization,
+  setSpecialization,
+}) {
   const handleDropCover = async ([file]) => {
-    const data = await fileToBase64(file);
-    setCover(data);
+    // const data = await fileToBase64(file);
+    uploadImage(file);
   };
 
   const handleRemove = () => {
-    setCover(null);
+    setProfile(null);
+  };
+
+  const uploadImage = (file) => {
+    if (file === null) return;
+    console.log(profile);
+
+    if (profile) {
+      const desertRef = storage.refFromURL(profile);
+
+      desertRef
+        .delete()
+        .then(function () {
+          // File deleted successfully
+          console.log("Deleted");
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+          console.log(error);
+        });
+    }
+
+    const name = uuid();
+    storage
+      .ref(`ugcsass/creator-profiles/${name}`)
+      .put(file)
+      .on("state_changed", alert("success"), alert, () => {
+        storage
+          .ref("ugcsass")
+          .child("creator-profiles")
+          .child(name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            setProfile(url);
+          });
+      });
   };
 
   return (
@@ -73,10 +86,10 @@ export default function About({ children }) {
               <Grid item xs={12}>
                 <Card>
                   <CardContent>
-                    {cover ? (
+                    {profile ? (
                       <Box
                         sx={{
-                          backgroundImage: `url(${cover})`,
+                          backgroundImage: `url(${profile})`,
                           backgroundPosition: "center",
                           backgroundSize: "cover",
                           borderRadius: 1,
@@ -110,14 +123,14 @@ export default function About({ children }) {
                           sx={{ mt: 1 }}
                           variant="subtitle1"
                         >
-                          Image used for the your product cover
+                          Image used for the your product profile
                         </Typography>
                       </Box>
                     )}
                     <Button
                       onClick={handleRemove}
                       sx={{ mt: 3 }}
-                      disabled={!cover}
+                      disabled={!profile}
                     >
                       Remove photo
                     </Button>
@@ -143,14 +156,12 @@ export default function About({ children }) {
                   fullWidth
                   multiline="true"
                   rows={4}
-                  value={info}
-                  name="info"
-                  onChange={(e) => setInfo(e.target.value)}
+                  value={specialization}
+                  name="specialization"
+                  onChange={(e) => setSpecialization(e.target.value)}
                 ></TextField>
               </Grid>
             </Grid>
-
-            {children}
           </CardContent>
         </Card>
       </Container>

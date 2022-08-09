@@ -40,18 +40,7 @@ import FilterDramaIcon from "@mui/icons-material/FilterDrama";
 import LanguageIcon from "@mui/icons-material/Language";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
-export default function SocialMedia({ children }) {
-  const [state, setState] = useState({
-    instagram: "",
-    facebook: "",
-    twitter: "",
-    youtube: "",
-    amazon: "",
-    website: "",
-  });
-  const handleChange = (e) => {
-    setState({ ...state, [e.target.name]: e.target.value });
-  };
+export default function SocialMedia({ state, handleChange }) {
   return (
     <>
       <Container
@@ -164,7 +153,6 @@ export default function SocialMedia({ children }) {
                 />
               </Grid>
             </Grid>
-            {children}
           </CardContent>
         </Card>
       </Container>

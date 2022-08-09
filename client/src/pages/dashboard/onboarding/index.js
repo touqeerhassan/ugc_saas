@@ -7,6 +7,15 @@ import StepLabel from "@mui/material/StepLabel";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 
+import {
+  ADD_BASIC_DETAILS,
+  ADD_PROFILE_SPECIALIZATION,
+  ADD_SOCIAL,
+  ADD_CATEGORIES,
+  ADD_BRAND_SELFIE,
+  ADD_PRODUCT_DEMO,
+} from "../../../store/actions";
+
 const steps = [
   "Personal Information",
   "About me",
@@ -19,31 +28,10 @@ const steps = [
 const nextSteps = ["Disclaimer", "Summary"];
 //Page - 1
 import { useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Head from "next/head";
 import NextLink from "next/link";
-import {
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  IconButton,
-  TextField,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
-  Stack,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  FormLabel,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Divider,
-  CardActions,
-} from "@mui/material";
+import { Card, CardContent, Container, Grid, CardActions } from "@mui/material";
 import { FileDropzone } from "../../../components/file-dropzone";
 import { QuillEditor } from "../../../components/quill-editor";
 import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
@@ -52,17 +40,7 @@ import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
 
 //Page - 2
-import Input from "@mui/material/Input";
-import InputAdornment from "@mui/material/InputAdornment";
-import AccountCircle from "@mui/icons-material/AccountCircle";
-import AttachMoneyIcon from "@mui/icons-material/AttachMoney";
-import CreateCampaign from "../../../components/dashboard/campaign/campaign-creation";
-import ProductInformation from "../../../components/dashboard/campaign/product-info";
-import ContentAndCreators from "../../../components/dashboard/campaign/content-and-creators";
-import Summary from "../../../components/dashboard/campaign/summary";
-import Payment from "../../../components/dashboard/campaign/payment";
-import ContentAndCreatorsSidebar from "../../../components/dashboard/campaign/sidebars/content-and-creators-sidebar";
-import SummarySidebar from "../../../components/dashboard/campaign/sidebars/summary-sidebar";
+
 import PersonalInformation from "../../../components/dashboard/onboarding/personal-information";
 import About from "../../../components/dashboard/onboarding/about";
 import SocialMedia from "../../../components/dashboard/onboarding/social-media";
@@ -77,6 +55,60 @@ const BlogPostCreate = () => {
   const [activeStep, setActiveStep] = React.useState(0);
   const [nextStep, setNextStep] = React.useState(0);
   const [skipped, setSkipped] = React.useState(new Set());
+
+  const creator = useSelector((state) => state.creator);
+  const dispatch = useDispatch();
+
+  //Page - 1
+  const [personalInfo, setPersonalInfo] = useState({
+    first: creator?.first,
+    last: creator?.last,
+    DOB: creator?.DOB,
+    gender: creator?.gender,
+    contact: creator?.contact,
+    country: creator?.address?.country,
+    address1: creator?.address?.line1,
+    address2: creator?.address?.line2,
+    city: creator?.address?.city,
+    state: creator?.address?.state,
+    zip: creator?.address?.zip,
+  });
+
+  const handlePersonalInfoChange = (event) => {
+    console.log(typeof event.target.value);
+    setPersonalInfo({
+      ...personalInfo,
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  //Page - 2
+  const [profile, setProfile] = useState(creator?.profile);
+  const [specialization, setSpecialization] = useState(creator?.specialization);
+
+  //Page - 3
+  const [social, setSocial] = useState(creator?.social);
+
+  const handleSocialChange = (e) => {
+    setSocial({ ...state, [e.target.name]: e.target.value });
+  };
+
+  //Page - 4
+  const [categories, setCategories] = useState({
+    primary: "",
+    secondary: "",
+    tertiary: "",
+  });
+
+  const handleCategoryChange = (e) => {
+    setCategories({ ...categories, [e.target.name]: e.target.value });
+  };
+
+  //Page - 5
+  const [brandSelfie, setBrandSelfie] = useState(creator?.brandSelfie);
+
+  //Page - 6
+  const [productDemo, setProductDemo] = useState(creator?.productDemo);
 
   const isStepOptional = (step) => {
     return (
@@ -95,9 +127,68 @@ const BlogPostCreate = () => {
 
   const handleNext = () => {
     let newSkipped = skipped;
+
     if (isStepSkipped(activeStep)) {
       newSkipped = new Set(newSkipped.values());
       newSkipped.delete(activeStep);
+    }
+
+    if (activeStep === 0) {
+      console.log("Hello");
+      dispatch({
+        type: ADD_BASIC_DETAILS,
+        payload: {
+          first: personalInfo.first,
+          last: personalInfo.last,
+          DOB: personalInfo.DOB,
+          gender: personalInfo.gender,
+          contact: personalInfo.contact,
+          address: {
+            country: personalInfo.country,
+            line1: personalInfo.address1,
+            line2: personalInfo.address2,
+            city: personalInfo.city,
+            state: personalInfo.state,
+            zip: personalInfo.zip,
+          },
+        },
+      });
+    } else if (activeStep === 1) {
+      dispatch({
+        type: ADD_PROFILE_SPECIALIZATION,
+        payload: {
+          profile: profile,
+          specialization: specialization,
+        },
+      });
+    } else if (activeStep == 2) {
+      dispatch({
+        type: ADD_SOCIAL,
+        payload: {
+          social: social,
+        },
+      });
+    } else if (activeStep == 3) {
+      dispatch({
+        type: ADD_CATEGORIES,
+        payload: {
+          categories: categories,
+        },
+      });
+    } else if (activeStep == 4) {
+      dispatch({
+        type: ADD_BRAND_SELFIE,
+        payload: {
+          brandSelfie: brandSelfie,
+        },
+      });
+    } else if (activeStep == 5) {
+      dispatch({
+        type: ADD_PRODUCT_DEMO,
+        payload: {
+          productDemo: productDemo,
+        },
+      });
     }
 
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -170,17 +261,54 @@ const BlogPostCreate = () => {
               }}
             >
               <></>
-              {activeStep === 0 && <PersonalInformation />}
-              {activeStep === 1 && <About />}
-              {activeStep === 2 && <SocialMedia />}
-              {activeStep === 3 && <Categories />}
-              {activeStep === 4 && <SamplePhoto />}
-              {activeStep === 5 && <SampleVideo />}
+              {activeStep === 0 && (
+                <PersonalInformation
+                  state={personalInfo}
+                  handleChange={handlePersonalInfoChange}
+                />
+              )}
+              {activeStep === 1 && (
+                <About
+                  profile={profile}
+                  setProfile={setProfile}
+                  specialization={specialization}
+                  setSpecialization={setSpecialization}
+                />
+              )}
+              {activeStep === 2 && (
+                <SocialMedia state={social} handleChange={handleSocialChange} />
+              )}
+              {activeStep === 3 && (
+                <Categories
+                  state={categories}
+                  handleChange={handleCategoryChange}
+                  categories={[
+                    "electronics",
+                    "fashion",
+                    "home",
+                    "sports",
+                    "travel",
+                    "other",
+                  ]}
+                />
+              )}
+              {activeStep === 4 && (
+                <SamplePhoto
+                  brandSelfie={brandSelfie}
+                  setBrandSelfie={setBrandSelfie}
+                />
+              )}
+              {activeStep === 5 && (
+                <SampleVideo cover={productDemo} setCover={setProductDemo} />
+              )}
               {activeStep === steps.length && nextStep === 0 && (
                 <Disclaimer onClick={() => setNextStep(nextStep + 1)} />
               )}
               {activeStep === steps.length && nextStep === 1 && (
-                <ProfileSummary onClick={() => setNextStep(nextStep + 1)} />
+                <ProfileSummary
+                  onEdit={(pageNumber) => setActiveStep(pageNumber)}
+                  onClick={() => setNextStep(nextStep + 1)}
+                />
               )}
               {activeStep === steps.length && nextStep === 2 && (
                 <ProfilePendingReview

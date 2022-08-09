@@ -1,15 +1,19 @@
 import { useRouter } from "next/router";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useReducer } from "react";
 import {
   Box,
   Button,
   Checkbox,
   Divider,
+  FormControl,
   FormHelperText,
+  InputLabel,
   Link,
+  MenuItem,
+  Select,
   TextField,
   Typography,
 } from "@mui/material";
@@ -75,6 +79,7 @@ export const FirebaseRegister = (props) => {
   const isMounted = useMounted();
   const router = useRouter();
   const { createUserWithEmailAndPassword, signInWithGoogle } = useAuth();
+  const [userType, setUserType] = useState("");
   const formik = useFormik({
     initialValues: {
       fName: "",
@@ -96,6 +101,7 @@ export const FirebaseRegister = (props) => {
     }),
     onSubmit: async (values, helpers) => {
       try {
+        console.log("Trying");
         // await createUserWithEmailAndPassword(values.email, values.password)
 
         console.log(values);
@@ -110,7 +116,6 @@ export const FirebaseRegister = (props) => {
             sessionStorage.setItem("userEmail", user.email);
 
             const returnUrl = router.query.returnUrl || "/dashboard";
-            router.push(returnUrl);
 
             firebase
               .auth()
@@ -124,6 +129,12 @@ export const FirebaseRegister = (props) => {
               .catch((error) => {
                 console.log(`Profile updated!`, firebase.auth().currentUser);
               });
+            console.log(userType);
+            if (userType === "creator") {
+              router.push("/dashboard/onboarding");
+            } else {
+              router.push(returnUrl);
+            }
           })
           .catch((err) => {
             console.log(err);
@@ -220,6 +231,20 @@ export const FirebaseRegister = (props) => {
           type="text"
           value={formik.values.lName}
         />
+        <FormControl fullWidth sx={{ margin: "16px 0" }}>
+          <InputLabel id="demo-simple-select-label">User Type</InputLabel>
+          <Select
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            value={userType}
+            label="User Type"
+            onChange={(e) => setUserType(e.target.value)}
+          >
+            <MenuItem value="brand">Brand</MenuItem>
+            <MenuItem value="creator">Creator</MenuItem>
+          </Select>
+        </FormControl>
+
         <TextField
           error={Boolean(formik.touched.email && formik.errors.email)}
           fullWidth

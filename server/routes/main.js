@@ -6,6 +6,7 @@ const { v4: uuidv4 } = require("uuid");
 const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Campaign = require("../models/Campaign");
+const Creator = require("../models/Creator");
 
 // Test route
 router.get("/test", (req, res) => {
@@ -236,39 +237,6 @@ router.get("/get_campaigns/:userId", async (req, res) => {
   });
 });
 
-// Get all the orders based on their type
-// router.get("/get_orders_by_type/:userId/:type", async (req, res) => {
-//   res.setHeader("Content-Type", "application/json");
-
-//   Order.find(
-//     { userId: req.params.userId, type: parseInt(req.params.type) },
-//     (err, orders) => {
-//       if (err) res.status(400).json(`Error: ${err}`);
-//       else {
-//         console.log(orders);
-//         res.status(200).json(orders);
-//       }
-//     }
-//   );
-// });
-
-// Get all the orders based on their status and type
-// router.get("/get_orders_by_status/:userId/:status/:type", async (req, res) => {
-//   res.setHeader("Content-Type", "application/json");
-
-//   Order.find(
-//     {
-//       userId: req.params.userId,
-//       status: parseInt(req.params.status),
-//       type: parseInt(req.params.type),
-//     },
-//     (err, orders) => {
-//       if (err) res.status(400).json(`Error: ${err}`);
-//       else res.status(200).json(orders);
-//     }
-//   );
-// });
-
 // Delete a campaign
 router.delete("/delete_campaign/:campaignId/:userId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
@@ -296,6 +264,70 @@ router.patch("/edit_campaign/:orderId/:userId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
   Campaign.updateOne(
+    { _id: req.params.orderId, userId: req.params.userId },
+    {
+      $set: req.body,
+    },
+    (err) => {
+      if (err) res.status(400).json(`Error: ${err}`);
+      else res.status(200).send("Edited a campaign");
+    }
+  );
+});
+
+module.exports = router;
+
+// Creators
+// Add a new creator
+router.post("/add_creator", (req, res) => {
+  console.log(req.body);
+
+  res.setHeader("Content-Type", "application/json");
+
+  const newCreator = new Creator({
+    ...req.body,
+  });
+
+  newCreator.save((err) => {
+    console.log(err);
+    if (err) res.status(400).json(`Error: ${err}`);
+    else res.status(200).send("added a new creator");
+  });
+});
+
+router.get("/get_all_creators", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  Creator.find()
+    .then((p) => res.status(200).json(p))
+    .catch((error) => res.status(400).json(error));
+});
+
+// Delete a campaign
+router.delete("/delete_creator/:campaignId/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Creator.deleteOne(
+    { _id: req.params.campaignId, userId: req.params.userId },
+    (err) => {
+      if (err) res.status(400).json(`Error: ${err}`);
+      else res.status(200).send("Deleted one creator successfully!");
+    }
+  );
+});
+
+// Get a single creator
+router.get("/get_creator_by_id/:campaignId/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  Creator.findOne({ _id: req.params.campaignId, userId: req.params.userId })
+    .then((order) => res.status(200).send(order))
+    .catch((error) => res.status(400).json(`Error: ${err}`));
+});
+
+//Patch a campaign
+router.patch("/edit_creator/:orderId/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Creator.updateOne(
     { _id: req.params.orderId, userId: req.params.userId },
     {
       $set: req.body,

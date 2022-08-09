@@ -32,29 +32,9 @@ import VideocamIcon from "@mui/icons-material/Videocam";
 import AccessTime from "@mui/icons-material/AccessTime";
 import MoreTime from "@mui/icons-material/moreTime";
 import InfoIcon from "@mui/icons-material/Info";
+import { useDispatch, useSelector } from "react-redux";
 
-export default function PersonalInformation({ children }) {
-  const [description, setDescription] = useState("");
-  const [creators, setCreators] = useState(1);
-  const cover = "/static/mock-images/covers/cover_4.jpeg";
-
-  const [state, setState] = useState({
-    first: "Shivanshu",
-    last: "Gupta",
-    DOB: "",
-    gender: "male",
-    contact: "",
-    country: "in",
-    address1: "",
-    address2: "",
-    city: "",
-    state: "ca",
-    zip: "",
-  });
-  const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.value });
-  };
-
+export default function PersonalInformation({ state, handleChange }) {
   return (
     <>
       <Container
@@ -120,9 +100,9 @@ export default function PersonalInformation({ children }) {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem value="male">Male</MenuItem>
-                    <MenuItem value="female">Female</MenuItem>
-                    <MenuItem value="other">Other</MenuItem>
+                    <MenuItem value="Male">Male</MenuItem>
+                    <MenuItem value="Female">Female</MenuItem>
+                    <MenuItem value="Other">Other</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -132,6 +112,7 @@ export default function PersonalInformation({ children }) {
                   label="Contact"
                   id="outlined-start-adornment"
                   value={state.contact}
+                  onChange={handleChange}
                   name="contact"
                   InputProps={{
                     startAdornment: (
@@ -164,18 +145,15 @@ export default function PersonalInformation({ children }) {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem value="in">India</MenuItem>
-                    <MenuItem value="us">USA</MenuItem>
-                    <MenuItem value="jp">Japan</MenuItem>
+                    <MenuItem value="India">India</MenuItem>
+                    <MenuItem value="USA">USA</MenuItem>
+                    <MenuItem value="Japan">Japan</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   label="Address line 1"
                   name="address1"
                   value={state.address1}
@@ -185,9 +163,6 @@ export default function PersonalInformation({ children }) {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   label="Address line 2"
                   name="address2"
                   value={state.address2}
@@ -197,9 +172,6 @@ export default function PersonalInformation({ children }) {
               <Grid item xs={12}>
                 <TextField
                   fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   label="City/Town"
                   name="city"
                   value={state.city}
@@ -222,19 +194,16 @@ export default function PersonalInformation({ children }) {
                     <MenuItem value="">
                       <em>None</em>
                     </MenuItem>
-                    <MenuItem value="ca">California</MenuItem>
-                    <MenuItem value="fl">Florida</MenuItem>
-                    <MenuItem value="ga">Georgia</MenuItem>
-                    <MenuItem value="mi">Michigan</MenuItem>
+                    <MenuItem value="California">California</MenuItem>
+                    <MenuItem value="Florida">Florida</MenuItem>
+                    <MenuItem value="Georgia">Georgia</MenuItem>
+                    <MenuItem value="Michigan">Michigan</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
-                  InputLabelProps={{
-                    shrink: true,
-                  }}
                   label="Zip code"
                   name="zip"
                   value={state.zip}
@@ -242,7 +211,6 @@ export default function PersonalInformation({ children }) {
                 />
               </Grid>
             </Grid>
-            {children}
           </CardContent>
         </Card>
       </Container>

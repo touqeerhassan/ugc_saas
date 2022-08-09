@@ -93,11 +93,12 @@ function CreateCampaign({
 
     const name = uuid();
     storage
-      .ref(`/products/${name}`)
+      .ref(`ugcsass/products/${name}`)
       .put(file)
       .on("state_changed", alert("success"), alert, () => {
         storage
-          .ref("products")
+          .ref("ugcsass")
+          .child("products")
           .child(name)
           .getDownloadURL()
           .then((url) => {

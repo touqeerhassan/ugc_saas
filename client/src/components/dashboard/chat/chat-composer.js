@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
-import { Box, Divider } from '@mui/material';
-import { addMessage } from '../../../slices/chat';
-import { useDispatch } from '../../../store';
-import { ChatComposerToolbar } from './chat-composer-toolbar';
-import { ChatMessageAdd } from './chat-message-add';
+import { useState } from "react";
+import { useRouter } from "next/router";
+import { Box, Divider } from "@mui/material";
+import { addMessage } from "../../../slices/chat";
+import { useDispatch, useSelector } from "react-redux";
+import { ChatComposerToolbar } from "./chat-composer-toolbar";
+import { ChatMessageAdd } from "./chat-message-add";
 
 export const ChatComposer = (props) => {
   const dispatch = useDispatch();
@@ -13,7 +13,9 @@ export const ChatComposer = (props) => {
 
   const handleAddRecipient = (recipient) => {
     setRecipients((prevState) => {
-      const exists = prevState.find((_recipient) => _recipient.id === recipient.id);
+      const exists = prevState.find(
+        (_recipient) => _recipient.id === recipient.id
+      );
 
       if (!exists) {
         return [...recipients, recipient];
@@ -24,16 +26,20 @@ export const ChatComposer = (props) => {
   };
 
   const handleRemoveRecipient = (recipientId) => {
-    setRecipients((prevState) => prevState.filter((recipient) => recipient.id !== recipientId));
+    setRecipients((prevState) =>
+      prevState.filter((recipient) => recipient.id !== recipientId)
+    );
   };
 
   const handleSendMessage = async (body) => {
     try {
       // Handle send message and redirect to the new thread
-      const threadId = await dispatch(addMessage({
-        recipientIds: recipients.map((recipient) => recipient.id),
-        body
-      }));
+      const threadId = await dispatch(
+        addMessage({
+          recipientIds: recipients.map((recipient) => recipient.id),
+          body,
+        })
+      );
       router.push(`/dashboard/chat?threadKey=${threadId}`);
     } catch (err) {
       console.error(err);
@@ -43,11 +49,12 @@ export const ChatComposer = (props) => {
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        flexGrow: 1
+        display: "flex",
+        flexDirection: "column",
+        flexGrow: 1,
       }}
-      {...props}>
+      {...props}
+    >
       <ChatComposerToolbar
         onAddRecipient={handleAddRecipient}
         onRemoveRecipient={handleRemoveRecipient}
@@ -55,8 +62,8 @@ export const ChatComposer = (props) => {
       />
       <Box
         sx={{
-          backgroundColor: 'background.default',
-          flexGrow: 1
+          backgroundColor: "background.default",
+          flexGrow: 1,
         }}
       />
       <Divider />
