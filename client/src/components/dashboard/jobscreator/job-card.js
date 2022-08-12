@@ -23,19 +23,10 @@ import {
   contentFormatContents,
 } from "../../../content-data/data";
 import { Box } from "@mui/system";
+import { useAuth } from "../../../hooks/use-auth";
 
-function calcBudget(budget) {
-  let totalBudget = 0;
-  if (budget?.shipping) {
-    totalBudget += parseInt(budget.shipping);
-  } else if (budget?.tax) {
-    totalBudget += parseInt(budget.tax);
-  } else if (budget?.product?.price) {
-    totalBudget += parseInt(budget.product.price);
-  }
-}
-
-function JobCard({ campaign }) {
+function JobCard({ campaign, onClick }) {
+  const { user } = useAuth();
   return (
     <Card variant="outlined">
       <CardContent>
@@ -100,11 +91,7 @@ function JobCard({ campaign }) {
                 <Typography variant="subtitle2">
                   {`${campaign?.content?.contentType === 0 ? "Image" : "Video"}
                    orientation :
-                  ${
-                    contentFormatContents.find(
-                      (item) => item.id === campaign?.content?.contentFormat
-                    ).title
-                  }`}
+                  ${campaign?.content?.contentFormat?.title}`}
                 </Typography>
               </Stack>
               {campaign?.content?.contentType === 1 && (
@@ -112,17 +99,18 @@ function JobCard({ campaign }) {
                   <AccessTimeIcon color="primary" />
                   <Typography variant="subtitle2">
                     {`
-                    ${
-                      videoDurationContents.find(
-                        (item) => item.id === campaign?.content?.videoDuration
-                      ).time
-                    }
+                    ${campaign?.content?.videoDuration?.time}
                     sec`}
                   </Typography>
                 </Stack>
               )}
               <Stack direction="row" sx={{ mt: 2 }} spacing={1}>
-                <Button size="small" variant="contained" fullWidth>
+                <Button
+                  size="small"
+                  variant="contained"
+                  fullWidth
+                  onClick={onClick}
+                >
                   Take this job
                 </Button>
                 <IconButton color="error" component="label">

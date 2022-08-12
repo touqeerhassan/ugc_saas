@@ -105,6 +105,7 @@ export const FirebaseRegister = (props) => {
         // await createUserWithEmailAndPassword(values.email, values.password)
 
         console.log(values);
+        sessionStorage.setItem("userType", userType);
         firebase
           .auth()
           .createUserWithEmailAndPassword(values.email, values.password)

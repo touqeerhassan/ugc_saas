@@ -12,6 +12,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
+import AttachMoney from "@mui/icons-material/AttachMoney";
 import { Calendar as CalendarIcon } from "../../icons/calendar";
 import { Cash as CashIcon } from "../../icons/cash";
 import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
@@ -38,8 +39,9 @@ import { Logo } from "../logo";
 import { Scrollbar } from "../scrollbar";
 import { DashboardSidebarSection } from "./dashboard-sidebar-section";
 import { OrganizationPopover } from "./organization-popover";
+import { useAuth } from "../../hooks/use-auth";
 
-const getSections = (t) => [
+const brandSections = (t) => [
   {
     title: t("General"),
     items: [
@@ -52,6 +54,34 @@ const getSections = (t) => [
         title: t("Campaigns"),
         path: "/dashboard/campaigns",
         icon: <UsersIcon fontSize="small" />,
+      },
+      {
+        title: t("Creator Orders"),
+        path: "/dashboard/orders",
+        icon: <ChartBarIcon fontSize="small" />,
+      },
+      {
+        title: t("Brand select Creator"),
+        path: "/dashboard/creators",
+        icon: <ClipboardListIcon fontSize="small" />,
+      },
+      {
+        path: "/add-funds",
+        icon: <AttachMoney fontSize="small" />,
+        title: "Add Funds",
+      },
+    ],
+  },
+];
+
+const creatorSections = (t) => [
+  {
+    title: t("General"),
+    items: [
+      {
+        title: t("Overview"),
+        path: "/dashboard",
+        icon: <HomeIcon fontSize="small" />,
       },
       {
         title: t("Creators Onboarding"),
@@ -68,278 +98,26 @@ const getSections = (t) => [
         path: "/dashboard/orders",
         icon: <ChartBarIcon fontSize="small" />,
       },
-      {
-        title: t("Brand select Creator"),
-        path: "/dashboard/creators",
-        icon: <ClipboardListIcon fontSize="small" />,
-      }
     ],
   },
 ];
 
-// const getSections = (t) => [
-//   {
-//     title: t("General"),
-//     items: [
-//       {
-//         title: t("Overview"),
-//         path: "/dashboard",
-//         icon: <HomeIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Analytics"),
-//         path: "/dashboard/analytics",
-//         icon: <ChartBarIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Finance"),
-//         path: "/dashboard/finance",
-//         icon: <ChartPieIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Logistics"),
-//         path: "/dashboard/logistics",
-//         icon: <TruckIcon fontSize="small" />,
-//         chip: (
-//           <Chip
-//             color="secondary"
-//             label={
-//               <Typography
-//                 sx={{
-//                   fontSize: "10px",
-//                   fontWeight: "600",
-//                 }}
-//               >
-//                 NEW
-//               </Typography>
-//             }
-//             size="small"
-//           />
-//         ),
-//       },
-//       {
-//         title: t("Account"),
-//         path: "/dashboard/account",
-//         icon: <UserCircleIcon fontSize="small" />,
-//       },
-//     ],
-//   },
-//   {
-//     title: t("Management"),
-//     items: [
-//       {
-//         title: t("Customers"),
-//         path: "/dashboard/campaigns",
-//         icon: <UsersIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: t("List"),
-//             path: "/dashboard/campaigns",
-//           },
-//           // {
-//           //   title: t('Details'),
-//           //   path: '/dashboard/customers/1'
-//           // },
-//           // {
-//           //   title: t('Edit'),
-//           //   path: '/dashboard/customers/1/edit'
-//           // }
-//         ],
-//       },
-//       {
-//         title: t("Products"),
-//         path: "/dashboard/products",
-//         icon: <ShoppingBagIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: t("List"),
-//             path: "/dashboard/products",
-//           },
-//           {
-//             title: t("Create"),
-//             path: "/dashboard/products/new",
-//           },
-//         ],
-//       },
-//       {
-//         title: t("Orders"),
-//         icon: <ShoppingCartIcon fontSize="small" />,
-//         path: "/dashboard/orders",
-//         children: [
-//           {
-//             title: t("List"),
-//             path: "/dashboard/orders",
-//           },
-//           {
-//             title: t("Details"),
-//             path: "/dashboard/orders/1",
-//           },
-//         ],
-//       },
-//       {
-//         title: t("Invoices"),
-//         path: "/dashboard/invoices",
-//         icon: <ReceiptTaxIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: t("List"),
-//             path: "/dashboard/invoices",
-//           },
-//           {
-//             title: t("Details"),
-//             path: "/dashboard/invoices/1",
-//           },
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     title: t("Platforms"),
-//     items: [
-//       {
-//         title: t("Job Listings"),
-//         path: "/dashboard/jobs",
-//         icon: <OfficeBuildingIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: t("Browse"),
-//             path: "/dashboard/jobs",
-//           },
-//           {
-//             title: t("Details"),
-//             path: "/dashboard/jobs/companies/1",
-//           },
-//           {
-//             title: t("Create"),
-//             path: "/dashboard/jobs/new",
-//           },
-//         ],
-//       },
-//       {
-//         title: t("Social Media"),
-//         path: "/dashboard/social",
-//         icon: <ShareIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: t("Profile"),
-//             path: "/dashboard/social/profile",
-//           },
-//           {
-//             title: t("Feed"),
-//             path: "/dashboard/social/feed",
-//           },
-//         ],
-//       },
-//       {
-//         title: t("Blog"),
-//         path: "/blog",
-//         icon: <NewspaperIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: t("Post List"),
-//             path: "/blog",
-//           },
-//           {
-//             title: t("Post Details"),
-//             path: "/blog/1",
-//           },
-//           {
-//             title: t("Post Create"),
-//             path: "/blog/new",
-//           },
-//         ],
-//       },
-//     ],
-//   },
-//   {
-//     title: t("Apps"),
-//     items: [
-//       {
-//         title: t("Kanban"),
-//         path: "/dashboard/kanban",
-//         icon: <ClipboardListIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Mail"),
-//         path: "/dashboard/mail",
-//         icon: <MailIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Chat"),
-//         path: "/dashboard/chat",
-//         icon: <ChatAlt2Icon fontSize="small" />,
-//       },
-//       {
-//         title: t("Calendar"),
-//         path: "/dashboard/calendar",
-//         icon: <CalendarIcon fontSize="small" />,
-//       },
-//     ],
-//   },
-//   {
-//     title: t("Pages"),
-//     items: [
-//       {
-//         title: t("Auth"),
-//         path: "/authentication",
-//         icon: <LockClosedIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: t("Register"),
-//             path: "/authentication/register?disableGuard=true",
-//           },
-//           {
-//             title: t("Login"),
-//             path: "/authentication/login?disableGuard=true",
-//           },
-//         ],
-//       },
-//       {
-//         title: t("Pricing"),
-//         path: "/dashboard/pricing",
-//         icon: <CreditCardIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Checkout"),
-//         path: "/checkout",
-//         icon: <CashIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Contact"),
-//         path: "/contact",
-//         icon: <MailOpenIcon fontSize="small" />,
-//       },
-//       {
-//         title: t("Error"),
-//         path: "/error",
-//         icon: <XCircleIcon fontSize="small" />,
-//         children: [
-//           {
-//             title: "401",
-//             path: "/401",
-//           },
-//           {
-//             title: "404",
-//             path: "/404",
-//           },
-//           {
-//             title: "500",
-//             path: "/500",
-//           },
-//         ],
-//       },
-//     ],
-//   },
-// ];
-
 export const DashboardSidebar = (props) => {
+  const { user } = useAuth();
   const { onClose, open } = props;
+
   const router = useRouter();
   const { t } = useTranslation();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
     noSsr: true,
   });
-  const sections = useMemo(() => getSections(t), [t]);
+  const sections = useMemo(
+    () =>
+      user?.userData?.userType === "brand"
+        ? brandSections(t)
+        : creatorSections(t),
+    [t]
+  );
   const organizationsRef = useRef(null);
   const [openOrganizationsPopover, setOpenOrganizationsPopover] =
     useState(false);
@@ -359,6 +137,11 @@ export const DashboardSidebar = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [router.isReady, router.asPath]
   );
+
+  // useEffect(() => {}, [
+  //   user?.userData?.funds?.amount,
+  //   user?.userData?.funds?.currency,
+  // ]);
 
   const handleOpenOrganizationsPopover = () => {
     setOpenOrganizationsPopover(true);
@@ -399,6 +182,12 @@ export const DashboardSidebar = (props) => {
               </NextLink>
             </Box>
           </div>
+          {user?.userData?.userType === "brand" && (
+            <Typography sx={{ mx: 2, mb: 2 }}>
+              {`Wallet ${user?.userData?.funds?.amount}
+              ${user?.userData?.funds?.currency}`}
+            </Typography>
+          )}
           <Divider
             sx={{
               borderColor: "#2D3748",
@@ -425,25 +214,6 @@ export const DashboardSidebar = (props) => {
               borderColor: "#2D3748", // dark divider
             }}
           />
-          {/* <Box sx={{ p: 2 }}>
-            <Typography color="neutral.100" variant="subtitle2">
-              {t("Need Help?")}
-            </Typography>
-            <Typography color="neutral.500" variant="body2">
-              {t("Check our docs")}
-            </Typography>
-            <NextLink href="/docs/welcome" passHref>
-              <Button
-                color="secondary"
-                component="a"
-                fullWidth
-                sx={{ mt: 2 }}
-                variant="contained"
-              >
-                {t("Documentation")}
-              </Button>
-            </NextLink>
-          </Box> */}
         </Box>
       </Scrollbar>
       <OrganizationPopover

@@ -195,9 +195,10 @@ export const FirebaseLogin = (props) => {
           .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
+            console.log(user);
 
-            const returnUrl = router.query.returnUrl || "/dashboard";
-            router.push(returnUrl);
+            // const returnUrl = router.query.returnUrl || "/dashboard";
+            // router.push(returnUrl);
 
             sessionStorage.setItem("userId", user.uid);
             sessionStorage.setItem("userEmail", user.email);

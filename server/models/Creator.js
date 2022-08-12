@@ -77,6 +77,7 @@ const campaignSchema = new mongoose.Schema({
   },
   userId: {
     type: String,
+    unique: true,
     required: true,
   },
 });

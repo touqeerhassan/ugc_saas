@@ -30,20 +30,31 @@ const campaignSchema = new mongoose.Schema({
       type: Number,
     },
     imageContent: {
-      type: String,
+      title: String,
+      description: String,
+      price: Number,
     },
     videoContent: {
-      type: String,
+      title: String,
+      description: String,
+      price: Number,
     },
     videoDuration: {
-      type: String,
+      banner: String,
+      time: Number,
+      price: Number,
+      icon: Number,
     },
     contentFormat: {
-      type: String,
+      title: String,
+      height: String,
+      width: String,
+      ratio: String,
     },
-    contentDescription: { type: String },
+    contentDescription: { title: String, price: String },
     creatorLevel: {
-      type: String,
+      title: String,
+      price: Number,
     },
     noOfCreators: {
       type: Number,

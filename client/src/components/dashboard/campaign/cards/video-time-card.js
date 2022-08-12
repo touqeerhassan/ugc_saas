@@ -10,6 +10,8 @@ import {
 } from "@mui/material";
 
 import React from "react";
+import AccessTime from "@mui/icons-material/AccessTime";
+import MoreTime from "@mui/icons-material/MoreTime";
 
 function VideoTimeCard({ icon, time, banner, price, selected, onClick }) {
   return (
@@ -54,7 +56,11 @@ function VideoTimeCard({ icon, time, banner, price, selected, onClick }) {
             )}
           </Grid>
           <Grid item xs={12}>
-            {icon}
+            {icon === 0 ? (
+              <AccessTime fontSize="large" />
+            ) : (
+              <MoreTime fontSize="large" />
+            )}
           </Grid>
           <Grid item xs={12}>
             <div style={{ fontSize: "12px" }}>{`${time} seconds`}</div>

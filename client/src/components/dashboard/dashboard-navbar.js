@@ -10,6 +10,7 @@ import {
   IconButton,
   Toolbar,
   Tooltip,
+  Typography,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { Menu as MenuIcon } from "../../icons/menu";
@@ -22,6 +23,8 @@ import { Bell as BellIcon } from "../../icons/bell";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 import { Search as SearchIcon } from "../../icons/search";
 import { Users as UsersIcon } from "../../icons/users";
+import { deepPurple } from "@mui/material/colors";
+import { useAuth } from "../../hooks/use-auth";
 
 const languages = {
   en: "/static/icons/uk_flag.svg",
@@ -178,11 +181,7 @@ const AccountButton = () => {
   const anchorRef = useRef(null);
   const [openPopover, setOpenPopover] = useState(false);
   // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
-  const user = {
-    avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
-    name: "Anika Visser",
-  };
+  const { user } = useAuth();
 
   const handleOpenPopover = () => {
     setOpenPopover(true);
@@ -204,15 +203,24 @@ const AccountButton = () => {
           ml: 2,
         }}
       >
-        <Avatar
-          sx={{
-            height: 40,
-            width: 40,
-          }}
-          src={user.avatar}
-        >
-          <UserCircleIcon fontSize="small" />
-        </Avatar>
+        {user?.avatar ? (
+          <Avatar
+            src={user?.avatar}
+            sx={{
+              height: 40,
+              width: 40,
+            }}
+          >
+            <UserCircleIcon fontSize="small" />
+          </Avatar>
+        ) : (
+          <Avatar sx={{ bgcolor: deepPurple[500] }}>
+            {user &&
+              (user.name
+                ? user.name[0].toUpperCase()
+                : user.email[0].toUpperCase())}
+          </Avatar>
+        )}
       </Box>
       <AccountPopover
         anchorEl={anchorRef.current}
@@ -225,6 +233,8 @@ const AccountButton = () => {
 
 export const DashboardNavbar = (props) => {
   const { onOpenSidebar, ...other } = props;
+  const { user } = useAuth();
+  console.log(user?.userData);
 
   return (
     <>
@@ -262,6 +272,7 @@ export const DashboardNavbar = (props) => {
           {/* <LanguageButton />
           <ContentSearchButton />
           <ContactsButton /> */}
+
           <NotificationsButton />
           <AccountButton />
         </Toolbar>

@@ -17,6 +17,7 @@ import { useAuth } from "../../hooks/use-auth";
 import { Cog as CogIcon } from "../../icons/cog";
 import { UserCircle as UserCircleIcon } from "../../icons/user-circle";
 import { SwitchHorizontalOutlined as SwitchHorizontalOutlinedIcon } from "../../icons/switch-horizontal-outlined";
+import { deepPurple } from "@mui/material/colors";
 
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
@@ -24,11 +25,7 @@ export const AccountPopover = (props) => {
   const { logout } = useAuth();
   // To get the user from the authContext, you can use
   // `const { user } = useAuth();`
-  const user = {
-    avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
-    name: "Anika Visser",
-  };
-
+  const { user } = useAuth();
   const handleLogout = async () => {
     try {
       onClose?.();
@@ -61,23 +58,32 @@ export const AccountPopover = (props) => {
           display: "flex",
         }}
       >
-        <Avatar
-          src={user.avatar}
-          sx={{
-            height: 40,
-            width: 40,
-          }}
-        >
-          <UserCircleIcon fontSize="small" />
-        </Avatar>
+        {user?.avatar ? (
+          <Avatar
+            src={user?.avatar}
+            sx={{
+              height: 40,
+              width: 40,
+            }}
+          >
+            <UserCircleIcon fontSize="small" />
+          </Avatar>
+        ) : (
+          <Avatar sx={{ bgcolor: deepPurple[500] }}>
+            {user &&
+              (user.name
+                ? user.name[0].toUpperCase()
+                : user.email[0].toUpperCase())}
+          </Avatar>
+        )}
         <Box
           sx={{
             ml: 1,
           }}
         >
-          <Typography variant="body1">{user.name}</Typography>
+          <Typography variant="body1">{user?.name}</Typography>
           <Typography color="textSecondary" variant="body2">
-            Acme Inc
+            {user?.email}
           </Typography>
         </Box>
       </Box>

@@ -123,6 +123,10 @@ export default function ContentAndCreators({
               <TabPanel value={content?.contentType} index={0}>
                 <Grid container spacing={2}>
                   {imageContents.map((item, index) => {
+                    {
+                      /* console.log(content.imageContent, item); */
+                    }
+
                     return (
                       <Grid item xs={12} md={6} lg={3}>
                         <PricingCard
@@ -131,7 +135,10 @@ export default function ContentAndCreators({
                             console.log(item);
                             setContent({ ...content, imageContent: item });
                           }}
-                          selected={content?.imageContent === item}
+                          selected={
+                            JSON.stringify(content.imageContent) ===
+                            JSON.stringify(item)
+                          }
                           title={item.title}
                           description={item.description}
                           price={item.price.toFixed(2)}
@@ -151,7 +158,10 @@ export default function ContentAndCreators({
                           onClick={(e) =>
                             setContent({ ...content, videoContent: item })
                           }
-                          selected={content?.videoContent === item}
+                          selected={
+                            JSON.stringify(content.videoContent) ===
+                            JSON.stringify(item)
+                          }
                           title={item.title}
                           description={item.description}
                           price={item.price.toFixed(2)}
@@ -179,7 +189,10 @@ export default function ContentAndCreators({
                         onClick={(e) =>
                           setContent({ ...content, videoDuration: item })
                         }
-                        selected={content?.videoDuration === item}
+                        selected={
+                          JSON.stringify(content.videoDuration) ===
+                          JSON.stringify(item)
+                        }
                         banner={item.banner}
                         time={item.time}
                         price={item.price.toFixed(2)}
@@ -207,7 +220,10 @@ export default function ContentAndCreators({
                       onClick={(e) =>
                         setContent({ ...content, contentFormat: item })
                       }
-                      selected={content?.contentFormat === item}
+                      selected={
+                        JSON.stringify(content.contentFormat) ===
+                        JSON.stringify(item)
+                      }
                       title={item.title}
                       ratio={item.ratio}
                       height={item.height}
@@ -279,7 +295,10 @@ export default function ContentAndCreators({
                       onClick={(e) =>
                         setContent({ ...content, creatorLevel: item })
                       }
-                      selected={content?.creatorLevel === item}
+                      selected={
+                        JSON.stringify(content.creatorLevel) ===
+                        JSON.stringify(item)
+                      }
                       title={item.title}
                       price={item.price}
                     />

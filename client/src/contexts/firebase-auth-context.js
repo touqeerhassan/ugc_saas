@@ -1,6 +1,8 @@
 import { createContext, useEffect, useReducer } from "react";
 import PropTypes from "prop-types";
 import firebase from "../lib/firebase";
+import { API_SERVICE } from "../config";
+import { useRouter } from "next/router";
 
 const initialState = {
   isAuthenticated: false,
@@ -33,30 +35,86 @@ export const AuthContext = createContext({
 });
 
 export const AuthProvider = (props) => {
+  const router = useRouter();
   const { children } = props;
   const [state, dispatch] = useReducer(reducer, initialState);
 
   useEffect(
     () =>
-      firebase.auth().onAuthStateChanged((user) => {
+      firebase.auth().onAuthStateChanged(async (user) => {
         console.log(user);
         if (user) {
           console.log(user);
           // Here you should extract the complete user profile to make it available in your entire app.
           // The auth state only provides basic information.
-          dispatch({
-            type: "AUTH_STATE_CHANGED",
-            payload: {
-              isAuthenticated: true,
-              user: {
-                id: user.uid,
-                avatar: user.photoURL,
-                email: user.email,
-                name: user.name,
-                plan: "Premium",
+          try {
+            const response = await fetch(`${API_SERVICE}/add_user`, {
+              method: "POST",
+              headers: {
+                Accept: "application/json",
+                "Content-Type": "application/json",
               },
-            },
-          });
+              body: JSON.stringify({
+                userId: user?.uid,
+                userType:
+                  sessionStorage.getItem("userType") === "creator"
+                    ? "creator"
+                    : "brand",
+              }),
+            });
+            const data = await response.json();
+            console.log(data);
+
+            if (data.userType === "creator") {
+              const resp = await fetch(
+                `${API_SERVICE}/get_creator_by_id/${user.uid}`,
+                {
+                  method: "GET",
+                  headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              const creator = await resp.json();
+              console.log(creator);
+              dispatch({
+                type: "AUTH_STATE_CHANGED",
+                payload: {
+                  isAuthenticated: true,
+                  user: {
+                    id: user.uid,
+                    userData: data,
+                    // userType: data.userType,
+                    creator: creator,
+                    avatar: user.photoURL,
+                    email: user.email,
+                    name: user.displayName,
+                    plan: "Premium",
+                  },
+                },
+              });
+            } else {
+              dispatch({
+                type: "AUTH_STATE_CHANGED",
+                payload: {
+                  isAuthenticated: true,
+                  user: {
+                    id: user.uid,
+                    userData: data,
+                    avatar: user.photoURL,
+                    email: user.email,
+                    name: user.displayName,
+                    plan: "Premium",
+                  },
+                },
+              });
+            }
+            router.push("/dashboard");
+          } catch (err) {
+            console.log(err);
+          }
         } else {
           dispatch({
             type: "AUTH_STATE_CHANGED",

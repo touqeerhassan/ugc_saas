@@ -37,6 +37,7 @@ import { useAuth } from "../../../hooks/use-auth";
 import { API_SERVICE } from "../../../config";
 import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
+import VisibilityIcon from "@mui/icons-material/Visibility";
 import NextLink from "next/link";
 
 import { useDispatch } from "react-redux";
@@ -308,6 +309,20 @@ const CustomerList = () => {
                                 </TableCell>
 
                                 <TableCell align="center">
+                                  <Tooltip title="View">
+                                    <IconButton
+                                      onClick={() => {
+                                        console.log("Hello");
+                                        router.push(
+                                          `/dashboard/campaigns/${row._id}`
+                                        );
+                                      }}
+                                      aria-label="upload picture"
+                                      component="span"
+                                    >
+                                      <VisibilityIcon />
+                                    </IconButton>
+                                  </Tooltip>
                                   <Tooltip title="Edit">
                                     <IconButton
                                       color="primary"
@@ -319,41 +334,7 @@ const CustomerList = () => {
                                           brand: row?.brand,
                                           campaignName: row?.campaignName,
                                           product: row?.product,
-                                          content: {
-                                            contentType:
-                                              row?.content?.contentType,
-                                            imageContent: imageContents.find(
-                                              (imageContent) =>
-                                                imageContent.id ===
-                                                row?.content?.imageContent
-                                            ),
-                                            videoContent: videoContents.find(
-                                              (videoContent) =>
-                                                videoContent.id ===
-                                                row?.content?.videoContent
-                                            ),
-                                            videoDuration:
-                                              videoDurationContents.find(
-                                                (videoContent) =>
-                                                  videoContent.id ===
-                                                  row?.content?.videoDuration
-                                              ),
-                                            contentFormat:
-                                              contentFormatContents.find(
-                                                (videoContent) =>
-                                                  videoContent.id ===
-                                                  row?.content?.contentFormat
-                                              ),
-                                            creatorLevel: creatorLevels.find(
-                                              (videoContent) =>
-                                                videoContent.id ===
-                                                row?.content?.creatorLevel
-                                            ),
-                                            contentDescription:
-                                              row?.content?.contentDescription,
-                                            noOfCreators:
-                                              row?.content?.noOfCreators,
-                                          },
+                                          content: row?.content,
                                           selectedPayment: row?.payment,
                                           shipping: row?.shipping,
                                           tax: row?.tax,

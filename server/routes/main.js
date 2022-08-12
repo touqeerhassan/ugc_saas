@@ -7,6 +7,11 @@ const Order = require("../models/Order");
 const Product = require("../models/Product");
 const Campaign = require("../models/Campaign");
 const Creator = require("../models/Creator");
+const User = require("../models/User");
+const Bid = require("../models/Bid");
+
+//Controllers
+const fundsController = require("../controllers/fund");
 
 // Test route
 router.get("/test", (req, res) => {
@@ -215,8 +220,9 @@ router.post("/add_campaign", (req, res) => {
   });
 
   newCampaign.save((err) => {
-    if (err) res.status(400).json(`Error: ${err}`);
-    else res.status(200).send("created a new campaign");
+    if (err) {
+      res.status(400).json(`Error: ${err}`);
+    } else res.status(200).send("created a new campaign");
   });
 });
 
@@ -269,16 +275,18 @@ router.patch("/edit_campaign/:orderId/:userId", async (req, res) => {
       $set: req.body,
     },
     (err) => {
-      if (err) res.status(400).json(`Error: ${err}`);
-      else res.status(200).send("Edited a campaign");
+      if (err) {
+        console.log(err);
+        res.status(400).json(`Error: ${err}`);
+      } else res.status(200).send("Edited a campaign");
     }
   );
 });
 
 module.exports = router;
 
-// Creators
-// Add a new creator
+// User
+// Add a new user
 router.post("/add_creator", (req, res) => {
   console.log(req.body);
 
@@ -316,11 +324,18 @@ router.delete("/delete_creator/:campaignId/:userId", async (req, res) => {
 });
 
 // Get a single creator
-router.get("/get_creator_by_id/:campaignId/:userId", async (req, res) => {
+router.get("/get_creator_by_id/:userId", async (req, res) => {
+  console.log(req.params.userId);
   res.setHeader("Content-Type", "application/json");
-  Creator.findOne({ _id: req.params.campaignId, userId: req.params.userId })
-    .then((order) => res.status(200).send(order))
-    .catch((error) => res.status(400).json(`Error: ${err}`));
+  Creator.findOne({ userId: req.params.userId })
+    .then((order) => {
+      console.log(order);
+      res.status(200).json(order);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json(`Error: ${error}`);
+    });
 });
 
 //Patch a campaign
@@ -339,4 +354,182 @@ router.patch("/edit_creator/:orderId/:userId", async (req, res) => {
   );
 });
 
+module.exports = router;
+
+// Creators
+// Add a new creator
+router.post("/add_user", (req, res) => {
+  console.log(req.body);
+  const { userId, userType } = req.body;
+
+  res.setHeader("Content-Type", "application/json");
+
+  User.findOne({ userId }, (err, user) => {
+    console.log(err);
+    console.log(user);
+    if (err) res.status(400).json(`Error: ${err}`);
+    if (!user) {
+      const newUser = new User({
+        userId,
+        userType,
+        funds: {
+          amount: 0,
+          currency: "USD",
+        },
+      });
+      newUser.save((err, results) => {
+        console.log(err);
+        console.log(results);
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).send(results);
+      });
+    } else {
+      res.status(200).json(user);
+    }
+  });
+});
+
+// Get a single user
+router.get("/get_user_by_id/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  User.findOne({ userId: req.params.userId })
+    .then((user) => res.status(200).send(user))
+    .catch((error) => res.status(400).json(`Error: ${err}`));
+});
+
+//Patch a user
+router.patch("/edit_user/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Creator.updateOne(
+    { userId: req.params.userId },
+    {
+      $set: req.body,
+    },
+    (err) => {
+      if (err) res.status(400).json(`Error: ${err}`);
+      else res.status(200).send("Edited a user");
+    }
+  );
+});
+
+// Add a new bid
+router.post("/add_bid", (req, res) => {
+  // console.log(req.body);
+  const { campaign, creator, creatorLevel, price } = req.body;
+
+  res.setHeader("Content-Type", "application/json");
+
+  Bid.findOne({ campaign }, (err, bid) => {
+    // console.log(err);
+    // console.log(bid);
+    if (err) res.status(400).json(`Error: ${err}`);
+    if (!bid) {
+      const newBid = new Bid({
+        campaign,
+        creators: [
+          {
+            creator,
+            creatorLevel,
+            price,
+          },
+        ],
+        winningBid: {},
+      });
+      newBid.save((err, results) => {
+        console.log(err);
+        console.log(results);
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).send(results);
+      });
+    } else {
+      let index = bid.creators.findIndex((c) => c.creator == creator);
+
+      if (index !== -1) {
+        bid.creators[index] = {
+          creator,
+          creatorLevel,
+          price,
+        };
+      } else {
+        bid.creators.push({ creator, creatorLevel, price });
+      }
+
+      console.log(bid.creators);
+
+      bid.save((err, results) => {
+        // console.log(err);
+        // console.log(results);
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).send(results);
+      });
+    }
+  });
+});
+module.exports = router;
+
+router.get("/get_all_bids", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  Bid.find()
+    .then((p) => res.status(200).json(p))
+    .catch((error) => res.status(400).json(error));
+});
+
+router.get("/get_bid_by_campaign/:campaignId", async (req, res) => {
+  console.log(req.params.campaignId);
+  res.setHeader("Content-Type", "application/json");
+  Bid.findOne({ campaign: req.params.campaignId })
+    .populate("campaign creators.creator")
+    .then((p) => {
+      console.log(p);
+      res.status(200).json(p);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json(error);
+    });
+});
+
+router.get("/get_bids_by_creator/:creatorId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  Bid.find({ creators: { $elemMatch: { creator: req.params.creatorId } } })
+    .then((p) => res.status(200).json(p))
+    .catch((error) => res.status(400).json(error));
+});
+
+router.patch("/edit_bid/:bidId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Bid.updateOne(
+    { _id: req.params.bidId },
+    {
+      $set: {
+        winningBid: req.body.winningBid,
+      },
+    },
+    (err) => {
+      if (err) res.status(400).json(`Error: ${err}`);
+      else res.status(200).send("Edited a bid");
+    }
+  );
+});
+
+// Delete a bid
+router.delete("/delete_bid/:bidId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Bid.deleteOne(
+    { _id: req.params.campaignId, userId: req.params.userId },
+    (err) => {
+      if (err) res.status(400).json(`Error: ${err}`);
+      else res.status(200).send("Deleted one creator successfully!");
+    }
+  );
+});
+
+//Funds
+router.post("/create-payment-intent", fundsController.createPaymentIntent);
+router.post("/addFunds", fundsController.addFunds);
+// router.post("/buyProduct", fundsController.buyProduct);
+// router.get("/fetchCountries", countryController.fetchCountries);
 module.exports = router;
