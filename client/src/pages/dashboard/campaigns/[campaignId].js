@@ -39,6 +39,7 @@ const Creators = () => {
   const campaignId = router.query.campaignId;
   const [errorOpen, setErrorOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
+  const [selectedCreator, setSelectedCreator] = useState(null);
 
   const fetchBid = async () => {
     try {
@@ -62,6 +63,35 @@ const Creators = () => {
     }
   };
 
+  const addOrder = async (creator) => {
+    try {
+      const response = await fetch(`${API_SERVICE}/add_order`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          campaign: bid?.campaign?._id,
+          price: creator?.price,
+          status: 3,
+          demoImage: "",
+          demoVideo: "",
+          branduser: user?.id,
+          creatoruser: creator?.creator?.userId,
+        }),
+      });
+      if (response.status === 200) {
+        // const data = await response.json();
+        // console.log(data);
+        alert("Success");
+        router.push("/dashboard/campaigns/success");
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   useEffect(() => {
     gtm.push({ event: "page_view" });
   }, []);
@@ -72,6 +102,157 @@ const Creators = () => {
 
   return (
     <>
+      <Dialog onClose={() => setSuccessOpen(false)} open={successOpen}>
+        {/* <DialogTitle>Add your bid</DialogTitle> */}
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <Container
+              maxWidth="md"
+              // style={{ margin: "0 20px", padding: "0 50px" }}
+            >
+              <Typography variant="h5" sx={{ mt: 2 }}>
+                Creator Details
+              </Typography>
+
+              <Card sx={{ mt: 2 }} variant="outlined">
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={3}
+                    xs={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        {`Name: 
+                                      ${
+                                        selectedCreator?.creator?.first +
+                                        " " +
+                                        selectedCreator?.creator?.last
+                                      }`}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        {`Bid Price: $${parseInt(
+                          selectedCreator?.price
+                        ).toFixed(2)}`}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        {`Creator Level:
+                                      ${selectedCreator?.creatorLevel}`}
+                      </Typography>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        Are you sure you want to choose this creator?
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Button
+                        sx={{ mx: 2 }}
+                        variant="contained"
+                        onClick={() => {
+                          addOrder(selectedCreator);
+                        }}
+                      >
+                        Yes
+                      </Button>
+                      <Button
+                        variant="contained"
+                        sx={{ mx: 2 }}
+                        onClick={() => setSuccessOpen(false)}
+                      >
+                        No
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Container>
+          </Box>
+        </DialogContent>
+        {/* <DialogActions>
+                        <Button onClick={() => {}} color="primary">
+                          Submit
+                        </Button>
+                      </DialogActions> */}
+      </Dialog>
+
+      <Dialog onClose={() => setErrorOpen(false)} open={errorOpen}>
+        {/* <DialogTitle>Add your bid</DialogTitle> */}
+        <DialogContent>
+          <Box sx={{ mt: 2 }}>
+            <Container
+              maxWidth="md"
+              // style={{ margin: "0 20px", padding: "0 50px" }}
+            >
+              <Typography variant="h5" sx={{ mt: 2 }}>
+                Insufficient Funds
+              </Typography>
+
+              <Card sx={{ mt: 2 }} variant="outlined">
+                <CardContent>
+                  <Grid
+                    container
+                    spacing={3}
+                    xs={{
+                      display: "flex",
+                      justifyContent: "flex-start",
+                      alignItems: "center",
+                      flexDirection: "row",
+                    }}
+                  >
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        You don't have sufficient funds in your wallet. Click on
+                        the button below to add funds
+                      </Typography>
+                    </Grid>
+
+                    <Grid
+                      item
+                      xs={12}
+                      sx={{
+                        display: "flex",
+
+                        justifyContent: "center",
+                      }}
+                    >
+                      <Button
+                        sx={{ mx: 2 }}
+                        variant="contained"
+                        onClick={() => router.push("/add-funds")}
+                      >
+                        Add Funds
+                      </Button>
+                    </Grid>
+                  </Grid>
+                </CardContent>
+              </Card>
+            </Container>
+          </Box>
+        </DialogContent>
+        {/* <DialogActions>
+                        <Button onClick={() => {}} color="primary">
+                          Submit
+                        </Button>
+                      </DialogActions> */}
+      </Dialog>
       <Head>
         <title>Dashboard: Finance | Material Kit Pro</title>
       </Head>
@@ -159,6 +340,7 @@ const Creators = () => {
                           if (user?.userData?.funds?.amount < creator?.price) {
                             setErrorOpen(true);
                           } else {
+                            setSelectedCreator(creator);
                             setSuccessOpen(true);
                           }
                         }}
@@ -166,167 +348,6 @@ const Creators = () => {
                         Choose Creator
                       </Button>
                     </TableCell>
-                    <Dialog
-                      onClose={() => setSuccessOpen(false)}
-                      open={successOpen}
-                    >
-                      {/* <DialogTitle>Add your bid</DialogTitle> */}
-                      <DialogContent>
-                        <Box sx={{ mt: 2 }}>
-                          <Container
-                            maxWidth="md"
-                            // style={{ margin: "0 20px", padding: "0 50px" }}
-                          >
-                            <Typography variant="h5" sx={{ mt: 2 }}>
-                              Creator Details
-                            </Typography>
-
-                            <Card sx={{ mt: 2 }} variant="outlined">
-                              <CardContent>
-                                <Grid
-                                  container
-                                  spacing={3}
-                                  xs={{
-                                    display: "flex",
-                                    justifyContent: "flex-start",
-                                    alignItems: "center",
-                                    flexDirection: "row",
-                                  }}
-                                >
-                                  <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                      {`Name: 
-                                      ${
-                                        creator?.creator?.first +
-                                        " " +
-                                        creator?.creator?.last
-                                      }`}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                      {`Bid Price: $${parseInt(
-                                        creator?.price
-                                      ).toFixed(2)}`}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                      {`Creator Level:
-                                      ${creator?.creatorLevel}`}
-                                    </Typography>
-                                  </Grid>
-                                  <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                      Are you sure you want to choose this
-                                      creator?
-                                    </Typography>
-                                  </Grid>
-                                  <Grid
-                                    item
-                                    xs={12}
-                                    sx={{
-                                      display: "flex",
-
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <Button
-                                      sx={{ mx: 2 }}
-                                      variant="contained"
-                                      onClick={() =>
-                                        router.push(
-                                          "/dashboard/campaigns/success"
-                                        )
-                                      }
-                                    >
-                                      Yes
-                                    </Button>
-                                    <Button
-                                      variant="contained"
-                                      sx={{ mx: 2 }}
-                                      onClick={() => setSuccessOpen(false)}
-                                    >
-                                      No
-                                    </Button>
-                                  </Grid>
-                                </Grid>
-                              </CardContent>
-                            </Card>
-                          </Container>
-                        </Box>
-                      </DialogContent>
-                      {/* <DialogActions>
-                        <Button onClick={() => {}} color="primary">
-                          Submit
-                        </Button>
-                      </DialogActions> */}
-                    </Dialog>
-
-                    <Dialog
-                      onClose={() => setErrorOpen(false)}
-                      open={errorOpen}
-                    >
-                      {/* <DialogTitle>Add your bid</DialogTitle> */}
-                      <DialogContent>
-                        <Box sx={{ mt: 2 }}>
-                          <Container
-                            maxWidth="md"
-                            // style={{ margin: "0 20px", padding: "0 50px" }}
-                          >
-                            <Typography variant="h5" sx={{ mt: 2 }}>
-                              Insufficient Funds
-                            </Typography>
-
-                            <Card sx={{ mt: 2 }} variant="outlined">
-                              <CardContent>
-                                <Grid
-                                  container
-                                  spacing={3}
-                                  xs={{
-                                    display: "flex",
-                                    justifyContent: "flex-start",
-                                    alignItems: "center",
-                                    flexDirection: "row",
-                                  }}
-                                >
-                                  <Grid item xs={12}>
-                                    <Typography variant="h6">
-                                      You don't have sufficient funds in your
-                                      wallet. Click on the button below to add
-                                      funds
-                                    </Typography>
-                                  </Grid>
-
-                                  <Grid
-                                    item
-                                    xs={12}
-                                    sx={{
-                                      display: "flex",
-
-                                      justifyContent: "center",
-                                    }}
-                                  >
-                                    <Button
-                                      sx={{ mx: 2 }}
-                                      variant="contained"
-                                      onClick={() => router.push("/add-funds")}
-                                    >
-                                      Add Funds
-                                    </Button>
-                                  </Grid>
-                                </Grid>
-                              </CardContent>
-                            </Card>
-                          </Container>
-                        </Box>
-                      </DialogContent>
-                      {/* <DialogActions>
-                        <Button onClick={() => {}} color="primary">
-                          Submit
-                        </Button>
-                      </DialogActions> */}
-                    </Dialog>
                   </TableRow>
                 ))}
                 {/* <TableRow

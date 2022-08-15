@@ -1,69 +1,22 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
 
 const orderSchema = new mongoose.Schema({
-    // 1 : Dine in
-    // 2 : Delivery
-    // 3 : Pickup
-    type: {
-        type: Number,
-        required: true
-    },
-    invoiceNumber: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true
-    },
-    phone: {
-        type: String,
-        required: true
-    },
-    createdOn: {
-        type: String,
-        required: true
-    },
-    status: {
-        type: String,
-        required: true
-    },
-    orderDate: {
-        type: String,
-        required: true
-    },
-    amount: {
-        type: String,
-        required: true
-    },
+  // 1 : Complete
+  // 2 : Submitted
+  // 3 : Pending
+  // 4 : Rejected / Cancelled
 
-    // Dine in specific
-    waiter: {
-        type: String,
-        required: false
-    },
-    table: {
-        type: String,
-        required: false
-    },
+  campaign: { type: Schema.Types.ObjectId, ref: "campaign", required: true },
+  price: { type: Number, required: true },
+  status: { type: Number, required: true },
+  date: { type: Date, default: Date.now },
+  demoImage: { type: String },
+  demoVideo: { type: String },
+  branduser: { type: String, required: true },
+  creatoruser: { type: String, required: true },
+  review: { type: String },
+});
 
-    // Delivery and Pickup specific
-    from: {
-        type: String,
-        required: false
-    },
-
-
-    // These correspond to the user creating the profile
-    userId: {
-        type: String,
-        required: true
-    }
-})
-
-const order = mongoose.model('order', orderSchema)
-module.exports = order
+const order = mongoose.model("order", orderSchema);
+module.exports = order;

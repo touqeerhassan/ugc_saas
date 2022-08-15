@@ -27,90 +27,143 @@ router.post("/add_order", (req, res) => {
 
   const newOrder = new Order({
     ...req.body,
-    createdOn: new Date(),
+    date: new Date(),
   });
 
   newOrder.save((err) => {
-    if (err) res.status(400).json(`Error: ${err}`);
-    else res.status(200).send("created a new order");
+    if (err) {
+      console.log(err);
+      res.status(400).json(`Error: ${err}`);
+    } else res.status(200).send("created a new order");
   });
 });
 
 // Get all the orders
-router.get("/get_orders/:userId", async (req, res) => {
+router.get("/get_orders", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
-  Order.find({ userId: req.params.userId }, (err, orders) => {
+  Order.find({})
+    .populate("campaign campaign.product")
+    .then((p) => {
+      console.log(p);
+      res.status(200).json(p);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json(error);
+    });
+});
+
+// Get all the orders by brand user
+router.get("/get_orders/branduser/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Order.find({ branduser: req.params.userId })
+    .populate("campaign")
+
+    .then((p) => {
+      console.log(p);
+      res.status(200).json(p);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json(error);
+    });
+});
+
+// Get all the orders by creator user
+router.get("/get_orders/creatoruser/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Order.find({ creatoruser: req.params.userId })
+    .populate("campaign campaign.product")
+    .then((p) => {
+      console.log(p);
+      res.status(200).json(p);
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(400).json(error);
+    });
+});
+
+router.get(
+  "/get_orders_by_status/branduser/:userId/:status",
+  async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+
+    Order.find(
+      {
+        branduser: req.params.userId,
+        status: parseInt(req.params.status),
+      },
+      (err, orders) => {
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).json(orders);
+      }
+    );
+  }
+);
+
+router.get(
+  "/get_orders_by_status/creatoruser/:userId/:status",
+  async (req, res) => {
+    res.setHeader("Content-Type", "application/json");
+
+    Order.find(
+      {
+        creatoruser: req.params.userId,
+        status: parseInt(req.params.status),
+      },
+      (err, orders) => {
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).json(orders);
+      }
+    );
+  }
+);
+// Get all the orders based on their status and type
+// router.get("/get_orders_by_status/:status", async (req, res) => {
+//   res.setHeader("Content-Type", "application/json");
+
+//   Order.find(
+//     {
+//       status: parseInt(req.params.status),
+//     },
+//     (err, orders) => {
+//       if (err) res.status(400).json(`Error: ${err}`);
+//       else res.status(200).json(orders);
+//     }
+//   );
+// });
+
+// Delete an order
+router.delete("/delete_order/:orderId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Order.deleteOne({ _id: req.params.orderId }, (err) => {
     if (err) res.status(400).json(`Error: ${err}`);
-    else res.status(200).json(orders);
+    else res.status(200).send("Deleted one order successfully!");
   });
 });
 
-// Get all the orders based on their type
-router.get("/get_orders_by_type/:userId/:type", async (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-
-  Order.find(
-    { userId: req.params.userId, type: parseInt(req.params.type) },
-    (err, orders) => {
-      if (err) res.status(400).json(`Error: ${err}`);
-      else {
-        console.log(orders);
-        res.status(200).json(orders);
-      }
-    }
-  );
-});
-
-// Get all the orders based on their status and type
-router.get("/get_orders_by_status/:userId/:status/:type", async (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-
-  Order.find(
-    {
-      userId: req.params.userId,
-      status: parseInt(req.params.status),
-      type: parseInt(req.params.type),
-    },
-    (err, orders) => {
-      if (err) res.status(400).json(`Error: ${err}`);
-      else res.status(200).json(orders);
-    }
-  );
-});
-
-// Delete an order
-router.delete("/delete_order/:orderId/:userId", async (req, res) => {
-  res.setHeader("Content-Type", "application/json");
-
-  Order.deleteOne(
-    { _id: req.params.orderId, userId: req.params.userId },
-    (err) => {
-      if (err) res.status(400).json(`Error: ${err}`);
-      else res.status(200).send("Deleted one order successfully!");
-    }
-  );
-});
-
 // Get a single order
-router.get("/get_order_by_id/:orderId/:userId", async (req, res) => {
+router.get("/get_specific_order/:orderId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
-  Order.findOne(
-    { _id: req.params.orderId, userId: req.params.userId },
-    (err, order) => {
-      if (err) res.status(400).json(`Error: ${err}`);
-      else res.status(200).send(order);
-    }
-  );
+  Order.findOne({ _id: req.params.orderId }, (err, order) => {
+    if (err) res.status(400).json(`Error: ${err}`);
+    else res.status(200).send(order);
+  });
 });
 
 // Patch an order
-router.patch("/edit_order/:orderId/:userId", async (req, res) => {
+router.patch("/edit_order/:orderId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
+  console.log(req.body);
 
   Order.updateOne(
-    { _id: req.params.orderId, userId: req.params.userId },
+    { _id: req.params.orderId },
     {
       $set: req.body,
     },
