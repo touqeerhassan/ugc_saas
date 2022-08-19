@@ -162,7 +162,7 @@ const NotificationsButton = () => {
     <>
       <Tooltip title="Notifications">
         <IconButton ref={anchorRef} sx={{ ml: 1 }} onClick={handleOpenPopover}>
-          <Badge color="error" badgeContent={unread}>
+          <Badge color="error">
             <BellIcon fontSize="small" />
           </Badge>
         </IconButton>

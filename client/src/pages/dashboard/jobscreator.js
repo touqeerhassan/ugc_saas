@@ -160,8 +160,8 @@ const Finance = () => {
   };
 
   const handleSubmit = async () => {
-    if (parseInt(price) > 320) {
-      setMessage("Bid amount should be not greater than 320!");
+    if (parseInt(price) < totalBudget) {
+      setMessage("Bid amount should be greater than campaign budget!");
       setSeverity("error");
       setSnackbarOpen(true);
       return;

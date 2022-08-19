@@ -41,6 +41,9 @@ const Creators = () => {
   const [successOpen, setSuccessOpen] = useState(false);
   const [selectedCreator, setSelectedCreator] = useState(null);
 
+  const [q, setQ] = useState("");
+  const [searchParam] = useState(["creatorLevel"]);
+
   const fetchBid = async () => {
     try {
       const response = await fetch(
@@ -99,6 +102,38 @@ const Creators = () => {
   useEffect(() => {
     fetchBid();
   }, []);
+
+  function search(items) {
+    return items?.filter((item) => {
+      let value = item?.creator?.first
+        ?.toString()
+        .toLowerCase()
+        .indexOf(q.toLowerCase());
+      console.log(value);
+
+      if (value > -1) return true;
+
+      value = item?.creator?.last
+        ?.toString()
+        .toLowerCase()
+        .indexOf(q.toLowerCase());
+
+      if (value > -1) return true;
+
+      return searchParam.some((newItem) => {
+        console.log(item);
+        console.log(newItem);
+        return (
+          item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1
+        );
+      });
+    });
+  }
+
+  const handleSearch = (e) => {
+    // console.log(e.target.value);
+    setQ(e.target.value);
+  };
 
   return (
     <>
@@ -282,6 +317,8 @@ const Creators = () => {
                   variant="outlined"
                   size="small"
                   label="Search"
+                  value={q}
+                  onChange={handleSearch}
                 />
                 <Button
                   startIcon={<CogIcon fontSize="small" />}
@@ -294,6 +331,79 @@ const Creators = () => {
             </Grid>
           </Box>
 
+          <Grid container spacing={2}>
+            {search(bid?.creators)?.map((creator) => {
+              return (
+                <Grid item xs={12} sm={6} md={4} key={creator._id}>
+                  <Card
+                    variant="outlined"
+                    align="center"
+                    // style={{
+                    //   borderColor: selected ? "#5048E5" : "#E6E8F0",
+                    //   backgroundColor: selected ? "#dcdaf9" : "white",
+                    // }}
+                  >
+                    <CardContent>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <Avatar
+                            sx={{ width: 100, height: 100 }}
+                            alt={
+                              creator?.creator?.first[0] +
+                              creator?.creator?.last[0]
+                            }
+                            src={creator?.creator?.profile}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography
+                            variant="h6"
+                            sx={{ mt: 2 }}
+                            color="primary"
+                          >
+                            {creator?.creator?.first +
+                              " " +
+                              creator?.creator?.last}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="secondary" color="primary">
+                            {creator?.creatorLevel}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography variant="h5" sx={{ mt: 2 }}>
+                            {`$${parseInt(creator?.price).toFixed(2)}`}
+                          </Typography>
+                        </Grid>
+                        <Grid item xs={12} sx={{ mt: 3 }}>
+                          <Button
+                            fullWidth
+                            variant="contained"
+                            onClick={() => {
+                              console.log(user);
+                              console.log(creator?.price);
+                              if (
+                                user?.userData?.funds?.amount < creator?.price
+                              ) {
+                                setErrorOpen(true);
+                              } else {
+                                setSelectedCreator(creator);
+                                setSuccessOpen(true);
+                              }
+                            }}
+                          >
+                            Choose Creator
+                          </Button>
+                        </Grid>
+                      </Grid>
+                    </CardContent>
+                  </Card>
+                </Grid>
+              );
+            })}
+          </Grid>
+          {/* 
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
               <TableHead>
@@ -312,11 +422,6 @@ const Creators = () => {
                   >
                     <TableCell component="th" scope="row">
                       <Stack direction="row" spacing={1}>
-                        {/* <Avatar
-                          alt="Remy Sharp"
-                          src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8cHJvZmlsZXxlbnwwfHwwfHw%3D&w=1000&q=80"
-                        /> */}
-
                         <Typography sx={{ pt: 1 }} variant="p">
                           {creator?.creator?.first +
                             " " +
@@ -350,28 +455,9 @@ const Creators = () => {
                     </TableCell>
                   </TableRow>
                 ))}
-                {/* <TableRow
-                  key="1"
-                  sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">
-                    <Stack direction="row" spacing={1}>
-                      <Typography sx={{ pt: 1 }} variant="p">
-                        Test Name
-                      </Typography>
-                    </Stack>
-                  </TableCell>
-                  <TableCell align="center">PRO Level</TableCell>
-                  <TableCell align="center">$29.00</TableCell>
-                  <TableCell align="center">
-                    <Button variant="contained" size="small">
-                      Choose Creator
-                    </Button>
-                  </TableCell>
-                </TableRow> */}
               </TableBody>
             </Table>
-          </TableContainer>
+          </TableContainer> */}
         </Container>
       </Box>
     </>

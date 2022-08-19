@@ -26,15 +26,11 @@ export const AccountPopover = (props) => {
   // To get the user from the authContext, you can use
   // `const { user } = useAuth();`
   const { user } = useAuth();
+
   const handleLogout = async () => {
-    try {
-      onClose?.();
-      await logout();
-      router.push("/");
-    } catch (err) {
-      console.error(err);
-      toast.error("Unable to logout.");
-    }
+    await logout();
+    router.push("/");
+    toast.success("Logged out successfully");
   };
 
   return (

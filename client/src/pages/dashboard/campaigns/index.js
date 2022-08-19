@@ -167,14 +167,15 @@ const CustomerList = () => {
                     <Typography variant="h4">My Campaigns</Typography>
                   </Grid>
                   <Grid item>
-                    <Link href="/dashboard/campaigns/create">
-                      <Button
-                        startIcon={<PlusIcon fontSize="small" />}
-                        variant="contained"
-                      >
-                        Create Campaign
-                      </Button>
-                    </Link>
+                    <Button
+                      onClick={() => {
+                        router.push(`/dashboard/campaigns/create`);
+                      }}
+                      startIcon={<PlusIcon fontSize="small" />}
+                      variant="contained"
+                    >
+                      Create Campaign
+                    </Button>
                   </Grid>
                 </Grid>
 
