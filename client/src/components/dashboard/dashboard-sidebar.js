@@ -45,18 +45,18 @@ const brandSections = (t) => [
   {
     title: t("General"),
     items: [
-      {
-        title: t("Overview"),
-        path: "/dashboard",
-        icon: <HomeIcon fontSize="small" />,
-      },
+      // {
+      //   title: t("Overview"),
+      //   path: "/dashboard",
+      //   icon: <HomeIcon fontSize="small" />,
+      // },
       {
         title: t("Campaigns"),
         path: "/dashboard/campaigns",
         icon: <UsersIcon fontSize="small" />,
       },
       {
-        title: t("Creator Orders"),
+        title: t("Orders"),
         path: "/dashboard/orders",
         icon: <ChartBarIcon fontSize="small" />,
       },
@@ -78,23 +78,23 @@ const creatorSections = (t) => [
   {
     title: t("General"),
     items: [
-      {
-        title: t("Overview"),
-        path: "/dashboard",
-        icon: <HomeIcon fontSize="small" />,
-      },
-      {
-        title: t("Creators Onboarding"),
-        path: "/dashboard/onboarding",
-        icon: <UserCircleIcon fontSize="small" />,
-      },
+      // {
+      //   title: t("Overview"),
+      //   path: "/dashboard",
+      //   icon: <HomeIcon fontSize="small" />,
+      // },
+      // {
+      //   title: t("Creators Onboarding"),
+      //   path: "/dashboard/onboarding",
+      //   icon: <UserCircleIcon fontSize="small" />,
+      // },
       {
         title: t("Jobs for Creator"),
         path: "/dashboard/jobscreator",
         icon: <ShoppingBagIcon fontSize="small" />,
       },
       {
-        title: t("Creator Orders"),
+        title: t("Orders"),
         path: "/dashboard/orders",
         icon: <ChartBarIcon fontSize="small" />,
       },
@@ -170,24 +170,24 @@ export const DashboardSidebar = (props) => {
         >
           <div>
             <Box sx={{ p: 3 }}>
-              <NextLink href="/" passHref>
-                <a>
-                  <Logo
-                    sx={{
-                      height: 42,
-                      width: 42,
-                    }}
-                  />
-                </a>
-              </NextLink>
+              <center>
+                <NextLink href="/" passHref>
+                  <a>
+                    <img src="/static/cybrclik.png" alt="" width="50" />
+                  </a>
+                </NextLink>
+              </center>
             </Box>
           </div>
-          {user?.userData?.userType === "brand" && (
-            <Typography sx={{ mx: 2, mb: 2 }}>
-              {`Wallet ${user?.userData?.funds?.amount}
+          <center>
+            {user?.userData?.userType === "brand" && (
+              <Typography sx={{ mx: 2, mb: 2 }}>
+                {`Wallet ${user?.userData?.funds?.amount}
               ${user?.userData?.funds?.currency}`}
-            </Typography>
-          )}
+              </Typography>
+            )}
+          </center>
+
           <Divider
             sx={{
               borderColor: "#2D3748",

@@ -64,7 +64,7 @@ export default function Disclaimer({ onClick, onEdit }) {
       if (response.status === 200) {
         console.log(response);
         alert("Submitted for Review");
-        // router.push("/dashboard");
+        router.push("/dashboard/orders");
       }
     } catch (err) {
       console.log(err);

@@ -115,6 +115,7 @@ export const FirebaseRegister = (props) => {
 
             sessionStorage.setItem("userId", user.uid);
             sessionStorage.setItem("userEmail", user.email);
+            sessionStorage.setItem("loginType", "register");
 
             const returnUrl = router.query.returnUrl || "/dashboard";
 
@@ -122,7 +123,7 @@ export const FirebaseRegister = (props) => {
               .auth()
               .currentUser.updateProfile({
                 displayName: `${values.fName} ${values.lName}`,
-                photoURL: "https://example.com/jane-q-user/profile.jpg",
+                // photoURL: "https://example.com/jane-q-user/profile.jpg",
               })
               .then(() => {
                 console.log(`Profile updated!`, firebase.auth().currentUser);
@@ -130,12 +131,12 @@ export const FirebaseRegister = (props) => {
               .catch((error) => {
                 console.log(`Profile updated!`, firebase.auth().currentUser);
               });
-            console.log(userType);
-            if (userType === "creator") {
-              router.push("/dashboard/onboarding");
-            } else {
-              router.push(returnUrl);
-            }
+            // console.log(userType);
+            // if (userType === "creator") {
+            //   router.push("/dashboard/onboarding");
+            // } else {
+            //   router.push(returnUrl);
+            // }
           })
           .catch((err) => {
             console.log(err);

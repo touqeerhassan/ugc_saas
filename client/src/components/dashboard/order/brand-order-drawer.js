@@ -199,7 +199,7 @@ const OrderPreview = (props) => {
       {order?.campaign?.content?.contentType === 0 ? (
         <center>
           <img
-            style={{ width: "320x", marginTop: "5px" }}
+            style={{ width: "320px", marginTop: "5px" }}
             src={order?.demoImage}
             alt="Image"
           />

@@ -88,7 +88,7 @@ const Creators = () => {
         // const data = await response.json();
         // console.log(data);
         alert("Success");
-        router.push("/dashboard/campaigns/success");
+        router.push("/dashboard/orders");
       }
     } catch (err) {
       console.log(err);

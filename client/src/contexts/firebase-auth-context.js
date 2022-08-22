@@ -95,6 +95,12 @@ export const AuthProvider = (props) => {
                   },
                 },
               });
+
+              if (sessionStorage.loginType === "register") {
+                router.push("/dashboard/onboarding");
+              } else {
+                router.push("/dashboard/orders");
+              }
             } else {
               dispatch({
                 type: "AUTH_STATE_CHANGED",
@@ -110,8 +116,8 @@ export const AuthProvider = (props) => {
                   },
                 },
               });
+              router.push("/dashboard/orders");
             }
-            router.push("/dashboard");
           } catch (err) {
             console.log(err);
           }
@@ -124,6 +130,7 @@ export const AuthProvider = (props) => {
             },
           });
         }
+        sessionStorage.clear();
       }),
     [dispatch]
   );

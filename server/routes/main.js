@@ -43,7 +43,16 @@ router.get("/get_orders", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
   Order.find({})
-    .populate("campaign campaign.product")
+    .populate({
+      path: "campaign",
+      model: "campaign",
+      populate: [
+        {
+          path: "product",
+          model: "product",
+        },
+      ],
+    })
     .then((p) => {
       console.log(p);
       res.status(200).json(p);
@@ -59,8 +68,16 @@ router.get("/get_orders/branduser/:userId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
   Order.find({ branduser: req.params.userId })
-    .populate("campaign")
-
+    .populate({
+      path: "campaign",
+      model: "campaign",
+      populate: [
+        {
+          path: "product",
+          model: "product",
+        },
+      ],
+    })
     .then((p) => {
       console.log(p);
       res.status(200).json(p);
@@ -76,7 +93,16 @@ router.get("/get_orders/creatoruser/:userId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
   Order.find({ creatoruser: req.params.userId })
-    .populate("campaign campaign.product")
+    .populate({
+      path: "campaign",
+      model: "campaign",
+      populate: [
+        {
+          path: "product",
+          model: "product",
+        },
+      ],
+    })
     .then((p) => {
       console.log(p);
       res.status(200).json(p);

@@ -183,7 +183,7 @@ const OrderPreview = (props) => {
       });
     console.log("Here");
   };
-
+  console.log(order?.campaign?.product?.price);
   let productPrice = toDoublePrice(order?.campaign?.product?.price);
   let contentPrice = findContentPrice(
     order?.campaign?.content?.contentType,
