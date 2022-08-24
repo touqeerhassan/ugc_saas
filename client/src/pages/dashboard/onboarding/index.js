@@ -90,7 +90,7 @@ const BlogPostCreate = () => {
   const [social, setSocial] = useState(creator?.social);
 
   const handleSocialChange = (e) => {
-    setSocial({ ...state, [e.target.name]: e.target.value });
+    setSocial({ ...social, [e.target.name]: e.target.value });
   };
 
   //Page - 4

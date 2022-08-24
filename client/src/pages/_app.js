@@ -23,10 +23,7 @@ import { gtm } from "../lib/gtm";
 import { createTheme } from "../theme";
 import { createEmotionCache } from "../utils/create-emotion-cache";
 import "../i18n";
-import { createStore } from "redux";
-import reducer from "../store/reducers";
-
-const store = createStore(reducer);
+import { store } from "../store";
 
 Router.events.on("routeChangeStart", nProgress.start);
 Router.events.on("routeChangeError", nProgress.done);

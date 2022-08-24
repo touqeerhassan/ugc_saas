@@ -1,190 +1,186 @@
-import { subDays, subHours, subMinutes } from 'date-fns';
-import { createResourceId } from '../utils/create-resource-id';
-import { deepCopy } from '../utils/deep-copy';
+import { subDays, subHours, subMinutes } from "date-fns";
+import { createResourceId } from "../utils/create-resource-id";
+import { deepCopy } from "../utils/deep-copy";
 
 const now = new Date();
 
 const contacts = [
   {
-    id: '5e8891ab188cd2855e6029b7',
-    avatar: '/static/mock-images/avatars/avatar-alcides_antonio.png',
+    id: "5e8891ab188cd2855e6029b7",
+    avatar: "/static/mock-images/avatars/avatar-alcides_antonio.png",
     isActive: true,
     lastActivity: now.getTime(),
-    name: 'Alcides Antonio'
+    name: "Alcides Antonio",
   },
   {
-    id: '5e887a62195cc5aef7e8ca5d',
-    avatar: '/static/mock-images/avatars/avatar-marcus_finn.png',
+    id: "5e887a62195cc5aef7e8ca5d",
+    avatar: "/static/mock-images/avatars/avatar-marcus_finn.png",
     isActive: false,
     lastActivity: subHours(now, 2).getTime(),
-    name: 'Marcus Finn'
+    name: "Marcus Finn",
   },
   {
-    id: '5e887ac47eed253091be10cb',
-    avatar: '/static/mock-images/avatars/avatar-carson_darrin.png',
+    id: "5e887ac47eed253091be10cb",
+    avatar: "/static/mock-images/avatars/avatar-carson_darrin.png",
     isActive: false,
     lastActivity: subMinutes(now, 15).getTime(),
-    name: 'Carson Darrin'
+    name: "Carson Darrin",
   },
   {
-    id: '5e887b209c28ac3dd97f6db5',
-    avatar: '/static/mock-images/avatars/avatar-fran_perez.png',
+    id: "5e887b209c28ac3dd97f6db5",
+    avatar: "/static/mock-images/avatars/avatar-fran_perez.png",
     isActive: true,
     lastActivity: now.getTime(),
-    name: 'Fran Perez'
+    name: "Fran Perez",
   },
   {
-    id: '5e887b7602bdbc4dbb234b27',
-    avatar: '/static/mock-images/avatars/avatar-jie_yan_song.png',
+    id: "5e887b7602bdbc4dbb234b27",
+    avatar: "/static/mock-images/avatars/avatar-jie_yan_song.png",
     isActive: true,
     lastActivity: now.getTime(),
-    name: 'Jie Yan Song'
+    name: "Jie Yan Song",
   },
   {
-    id: '5e86805e2bafd54f66cc95c3',
-    avatar: '/static/mock-images/avatars/avatar-miron_vitold.png',
+    id: "5e86805e2bafd54f66cc95c3",
+    avatar: "/static/mock-images/avatars/avatar-miron_vitold.png",
     isActive: false,
     lastActivity: subHours(now, 1).getTime(),
-    name: 'Miron Vitold'
+    name: "Miron Vitold",
   },
   {
-    id: '5e887a1fbefd7938eea9c981',
-    avatar: '/static/mock-images/avatars/avatar-penjani_inyene.png',
+    id: "5e887a1fbefd7938eea9c981",
+    avatar: "/static/mock-images/avatars/avatar-penjani_inyene.png",
     isActive: false,
     lastActivity: subHours(now, 6).getTime(),
-    name: 'Penjani Inyene'
+    name: "Penjani Inyene",
   },
   {
-    id: '5e887d0b3d090c1b8f162003',
-    avatar: '/static/mock-images/avatars/avatar-omar_darboe.png',
+    id: "5e887d0b3d090c1b8f162003",
+    avatar: "/static/mock-images/avatars/avatar-omar_darboe.png",
     isActive: true,
     lastActivity: now.getTime(),
-    name: 'Omar Darobe'
+    name: "Omar Darobe",
   },
   {
-    id: '5e88792be2d4cfb4bf0971d9',
-    avatar: '/static/mock-images/avatars/avatar-siegbert_gottfried.png',
+    id: "5e88792be2d4cfb4bf0971d9",
+    avatar: "/static/mock-images/avatars/avatar-siegbert_gottfried.png",
     isActive: true,
     lastActivity: now.getTime(),
-    name: 'Siegbert Gottfried'
+    name: "Siegbert Gottfried",
   },
   {
-    id: '5e8877da9a65442b11551975',
-    avatar: '/static/mock-images/avatars/avatar-iulia_albu.png',
+    id: "5e8877da9a65442b11551975",
+    avatar: "/static/mock-images/avatars/avatar-iulia_albu.png",
     isActive: true,
     lastActivity: now.getTime(),
-    name: 'Iulia Albu'
+    name: "Iulia Albu",
   },
   {
-    id: '5e8680e60cba5019c5ca6fda',
-    avatar: '/static/mock-images/avatars/avatar-nasimiyu_danai.png',
+    id: "5e8680e60cba5019c5ca6fda",
+    avatar: "/static/mock-images/avatars/avatar-nasimiyu_danai.png",
     isActive: true,
     lastActivity: now.getTime(),
-    name: 'Nasimiyu Danai'
-  }
+    name: "Nasimiyu Danai",
+  },
 ];
 
 let threads = [
   {
-    id: '5e867eb9de721aecaccf4f7b',
+    id: "5e867eb9de721aecaccf4f7b",
     messages: [
       {
-        id: '5e867f0a5bc0ff2bfa07bfa6',
+        id: "5e867f0a5bc0ff2bfa07bfa6",
         attachments: [],
-        body: 'Hey, nice projects! I really liked the one in react. What\'s your quote on kinda similar project?',
-        contentType: 'text',
+        body: "Hey, nice projects! I really liked the one in react. What's your quote on kinda similar project?",
+        contentType: "text",
         createdAt: subDays(subHours(now, 10), 4).getTime(),
-        authorId: '5e86805e2bafd54f66cc95c3'
+        authorId: "5e86805e2bafd54f66cc95c3",
       },
       {
-        id: '5e867f167d5f78109ae9f2a4',
+        id: "5e867f167d5f78109ae9f2a4",
         attachments: [],
-        body: 'I would need to know more details, but my hourly rate stats at $35/hour. Thanks!',
-        contentType: 'text',
+        body: "I would need to know more details, but my hourly rate stats at $35/hour. Thanks!",
+        contentType: "text",
         createdAt: subDays(subHours(now, 2), 4).getTime(),
-        authorId: '5e86809283e28b96d2d38537'
+        authorId: "5e86809283e28b96d2d38537",
       },
       {
-        id: '5e867f1c9ca72084693528f4',
+        id: "5e867f1c9ca72084693528f4",
         attachments: [],
-        body: 'Well it\'s a really easy one, I\'m sure we can make it half of the price.',
-        contentType: 'text',
+        body: "Well it's a really easy one, I'm sure we can make it half of the price.",
+        contentType: "text",
         createdAt: subHours(now, 5).getTime(),
-        authorId: '5e86805e2bafd54f66cc95c3'
+        authorId: "5e86805e2bafd54f66cc95c3",
       },
       {
-        id: '5e867f22fd2e27a09849b4db',
+        id: "5e867f22fd2e27a09849b4db",
         attachments: [],
-        body: 'Then why don\'t you make it if it\'s that easy? Sorry I\'m not interetes, have fantastic day Adam!',
-        contentType: 'text',
+        body: "Then why don't you make it if it's that easy? Sorry I'm not interetes, have fantastic day Adam!",
+        contentType: "text",
         createdAt: subHours(now, 3).getTime(),
-        authorId: '5e86809283e28b96d2d38537'
+        authorId: "5e86809283e28b96d2d38537",
       },
       {
-        id: '5e867f28a34d45ac6eb5c41f',
+        id: "5e867f28a34d45ac6eb5c41f",
         attachments: [],
-        body: 'Last offer, $25 per hour',
-        contentType: 'text',
+        body: "Last offer, $25 per hour",
+        contentType: "text",
         createdAt: subHours(now, 2).getTime(),
-        authorId: '5e86805e2bafd54f66cc95c3'
+        authorId: "5e86805e2bafd54f66cc95c3",
       },
       {
-        id: '5e867f2dba984a3f78b33526',
+        id: "5e867f2dba984a3f78b33526",
         attachments: [],
-        body: '/static/mock-images/chat/media_1.png',
-        contentType: 'image',
+        body: "/static/mock-images/chat/media_1.png",
+        contentType: "image",
         createdAt: subHours(now, 1).getTime(),
-        authorId: '5e86805e2bafd54f66cc95c3'
-      }
+        authorId: "5e86805e2bafd54f66cc95c3",
+      },
     ],
-    participantIds: [
-      '5e86809283e28b96d2d38537',
-      '5e86805e2bafd54f66cc95c3'
-    ],
-    type: 'ONE_TO_ONE',
-    unreadCount: 2
+    participantIds: ["5e86809283e28b96d2d38537", "5e86805e2bafd54f66cc95c3"],
+    type: "ONE_TO_ONE",
+    unreadCount: 2,
   },
   {
-    id: '5e867fa7082c3c5921403a26',
+    id: "5e867fa7082c3c5921403a26",
     messages: [
       {
-        id: '5e867fc180837d901bd9bca1',
+        id: "5e867fc180837d901bd9bca1",
         attachments: [],
-        body: 'Hey, would you like to collaborate?',
-        contentType: 'text',
+        body: "Hey, would you like to collaborate?",
+        contentType: "text",
         createdAt: subDays(subMinutes(now, 6), 3).getTime(),
-        authorId: '5e8680e60cba5019c5ca6fda'
+        authorId: "5e8680e60cba5019c5ca6fda",
       },
       {
-        id: '5e8d6fb695df7971237fc173',
+        id: "5e8d6fb695df7971237fc173",
         attachments: [],
-        body: 'Hi, Merrile!',
-        contentType: 'text',
+        body: "Hi, Merrile!",
+        contentType: "text",
         createdAt: subDays(subMinutes(now, 5), 3).getTime(),
-        authorId: '5e86809283e28b96d2d38537'
+        authorId: "5e86809283e28b96d2d38537",
       },
       {
-        id: '58825a290eb4d4271a54f188',
+        id: "58825a290eb4d4271a54f188",
         attachments: [],
-        body: 'Hello everyone 😀',
-        contentType: 'text',
+        body: "Hello everyone 😀",
+        contentType: "text",
         createdAt: subDays(subMinutes(now, 2), 1).getTime(),
-        authorId: '5e8891ab188cd2855e6029b7'
-      }
+        authorId: "5e8891ab188cd2855e6029b7",
+      },
     ],
     participantIds: [
-      '5e86809283e28b96d2d38537',
-      '5e8680e60cba5019c5ca6fda',
-      '5e8891ab188cd2855e6029b7'
+      "5e86809283e28b96d2d38537",
+      "5e8680e60cba5019c5ca6fda",
+      "5e8891ab188cd2855e6029b7",
     ],
-    type: 'GROUP',
-    unreadCount: 0
-  }
+    type: "GROUP",
+    unreadCount: 0,
+  },
 ];
 
 const findThreadById = (threadId) => {
   const thread = threads.find((_threadId) => _threadId.id === threadId);
-
   return thread || null;
 };
 
@@ -216,14 +212,15 @@ class ChatApi {
 
         if (query) {
           const cleanQuery = query.toLowerCase().trim();
-          foundContacts =
-            foundContacts.filter((contact) => (contact.name.toLowerCase().includes(cleanQuery)));
+          foundContacts = foundContacts.filter((contact) =>
+            contact.name.toLowerCase().includes(cleanQuery)
+          );
         }
 
         resolve(deepCopy(foundContacts));
       } catch (err) {
-        console.error('[Chat Api]: ', err);
-        reject(new Error('Internal server error'));
+        console.error("[Chat Api]: ", err);
+        reject(new Error("Internal server error"));
       }
     });
   }
@@ -231,9 +228,9 @@ class ChatApi {
   getThreads() {
     // On server get current identity (user) from the request
     const user = {
-      id: '5e86809283e28b96d2d38537',
-      avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-      name: 'Anika Visser'
+      id: "5e86809283e28b96d2d38537",
+      avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
+      name: "Anika Visser",
     };
 
     const expandedThreads = threads.map((thread) => {
@@ -245,14 +242,14 @@ class ChatApi {
             id: contact.id,
             avatar: contact.avatar,
             lastActivity: contact.lastActivity,
-            name: contact.name
+            name: contact.name,
           });
         }
       });
 
       return {
         ...thread,
-        participants
+        participants,
       };
     });
 
@@ -262,16 +259,16 @@ class ChatApi {
   getThread(threadKey) {
     return new Promise((resolve, reject) => {
       if (!threadKey) {
-        reject(new Error('Thread key is required'));
+        reject(new Error("Thread key is required"));
         return;
       }
 
       try {
         // On server get current identity (user) from the request
         const user = {
-          id: '5e86809283e28b96d2d38537',
-          avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-          name: 'Anika Visser'
+          id: "5e86809283e28b96d2d38537",
+          avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
+          name: "Anika Visser",
         };
 
         let thread;
@@ -303,20 +300,20 @@ class ChatApi {
               id: contact.id,
               avatar: contact.avatar,
               lastActivity: contact.lastActivity,
-              name: contact.name
+              name: contact.name,
             });
           }
         });
 
         const expandedThread = {
           ...thread,
-          participants
+          participants,
         };
 
         resolve(deepCopy(expandedThread));
       } catch (err) {
-        console.error('[Chat Api]: ', err);
-        reject(new Error('Internal server error'));
+        console.error("[Chat Api]: ", err);
+        reject(new Error("Internal server error"));
       }
     });
   }
@@ -332,8 +329,8 @@ class ChatApi {
 
         resolve(true);
       } catch (err) {
-        console.error('[Chat Api]: ', err);
-        reject(new Error('Internal server error'));
+        console.error("[Chat Api]: ", err);
+        reject(new Error("Internal server error"));
       }
     });
   }
@@ -343,9 +340,9 @@ class ChatApi {
       try {
         // On server get current identity (user) from the request
         const user = {
-          id: '5e86809283e28b96d2d38537',
-          avatar: '/static/mock-images/avatars/avatar-anika_visser.png',
-          name: 'Anika Visser'
+          id: "5e86809283e28b96d2d38537",
+          avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
+          name: "Anika Visser",
         };
 
         let participants = [user];
@@ -360,7 +357,7 @@ class ChatApi {
                 id: contact.id,
                 avatar: contact.avatar,
                 lastActivity: contact.lastActivity,
-                name: contact.name
+                name: contact.name,
               });
             }
           });
@@ -369,7 +366,7 @@ class ChatApi {
 
           // If no contact found, the user is trying a shady route
           if (!contact) {
-            reject(new Error('Unable to find the contact'));
+            reject(new Error("Unable to find the contact"));
             return;
           }
 
@@ -377,14 +374,14 @@ class ChatApi {
             id: contact.id,
             avatar: contact.avatar,
             lastActivity: contact.lastActivity,
-            name: contact.name
+            name: contact.name,
           });
         }
 
         return resolve(participants);
       } catch (err) {
-        console.error('[Chat Api]: ', err);
-        reject(new Error('Internal server error'));
+        console.error("[Chat Api]: ", err);
+        reject(new Error("Internal server error"));
       }
     });
   }
@@ -393,13 +390,13 @@ class ChatApi {
     return new Promise((resolve, reject) => {
       try {
         if (!(threadId || recipientIds)) {
-          reject(new Error('Thread ID or recipient IDs has to be provided'));
+          reject(new Error("Thread ID or recipient IDs has to be provided"));
           return;
         }
 
         // On server get current identity (user) from the request
         const user = {
-          id: '5e86809283e28b96d2d38537'
+          id: "5e86809283e28b96d2d38537",
         };
 
         let thread;
@@ -411,7 +408,7 @@ class ChatApi {
           // If thread ID provided the thread has to exist.
 
           if (!thread) {
-            reject(new Error('Invalid thread id'));
+            reject(new Error("Invalid thread id"));
             return;
           }
         } else {
@@ -429,8 +426,8 @@ class ChatApi {
             id: createResourceId(),
             messages: [],
             participantIds,
-            type: participantIds.length === 2 ? 'ONE_TO_ONE' : 'GROUP',
-            unreadCount: 0
+            type: participantIds.length === 2 ? "ONE_TO_ONE" : "GROUP",
+            unreadCount: 0,
           };
 
           // Add the new thread to the DB
@@ -441,20 +438,20 @@ class ChatApi {
           id: createResourceId(),
           attachments: [],
           body,
-          contentType: 'text',
+          contentType: "text",
           createdAt: new Date().getTime(),
-          authorId: user.id
+          authorId: user.id,
         };
 
         thread.messages.push(message);
 
         resolve({
           threadId: thread.id,
-          message
+          message,
         });
       } catch (err) {
-        console.error('[Chat Api]: ', err);
-        reject(new Error('Internal server error'));
+        console.error("[Chat Api]: ", err);
+        reject(new Error("Internal server error"));
       }
     });
   }

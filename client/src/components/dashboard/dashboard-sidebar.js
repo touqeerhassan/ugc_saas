@@ -60,6 +60,11 @@ const brandSections = (t) => [
         path: "/dashboard/orders",
         icon: <ChartBarIcon fontSize="small" />,
       },
+      {
+        title: t("All Creators"),
+        path: "/dashboard/view-creators",
+        icon: <UsersIcon fontSize="small" />,
+      },
       // {
       //   title: t("Brand select Creator"),
       //   path: "/dashboard/creators",
@@ -68,7 +73,12 @@ const brandSections = (t) => [
       {
         path: "/add-funds",
         icon: <AttachMoney fontSize="small" />,
-        title: "Add Funds",
+        title: t("Add Funds"),
+      },
+      {
+        path: "/dashboard/chat",
+        icon: <AttachMoney fontSize="small" />,
+        title: t("Chat"),
       },
     ],
   },
@@ -97,6 +107,11 @@ const creatorSections = (t) => [
         title: t("Orders"),
         path: "/dashboard/orders",
         icon: <ChartBarIcon fontSize="small" />,
+      },
+      {
+        path: t("Chat"),
+        icon: <AttachMoney fontSize="small" />,
+        title: "Chat",
       },
     ],
   },

@@ -320,13 +320,13 @@ const Creators = () => {
                   value={q}
                   onChange={handleSearch}
                 />
-                <Button
+                {/* <Button
                   startIcon={<CogIcon fontSize="small" />}
                   sx={{ m: 1 }}
                   variant="outlined"
                 >
                   Filters
-                </Button>
+                </Button> */}
               </Grid>
             </Grid>
           </Box>
