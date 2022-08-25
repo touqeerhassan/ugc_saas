@@ -184,11 +184,29 @@ const Creators = () => {
                                       ${selectedCreator?.creatorLevel}`}
                       </Typography>
                     </Grid>
+
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        {`Platform Fee: $${(
+                          parseInt(selectedCreator?.price) * 0.03
+                        ).toFixed(2)} (3%)`}
+                      </Typography>
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Typography variant="h6">
+                        {`Final Cost: $${(
+                          parseInt(selectedCreator?.price) * 1.03
+                        ).toFixed(2)}`}
+                      </Typography>
+                    </Grid>
+
                     <Grid item xs={12}>
                       <Typography variant="h6">
                         Are you sure you want to choose this creator?
                       </Typography>
                     </Grid>
+
                     <Grid
                       item
                       xs={12}
@@ -384,7 +402,8 @@ const Creators = () => {
                               console.log(user);
                               console.log(creator?.price);
                               if (
-                                user?.userData?.funds?.amount < creator?.price
+                                user?.userData?.funds?.amount <
+                                creator?.price * 1.03
                               ) {
                                 setErrorOpen(true);
                               } else {
