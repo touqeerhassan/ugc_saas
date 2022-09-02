@@ -55,6 +55,8 @@ export const AuthProvider = (props) => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
+                name: user?.displayName,
+                email: user?.email,
                 userId: user?.uid,
                 userType:
                   sessionStorage.getItem("userType") === "creator"

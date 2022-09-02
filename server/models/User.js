@@ -11,6 +11,14 @@ const campaignSchema = new mongoose.Schema({
     type: String,
     default: "brand",
   },
+  name: {
+    type: String,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   funds: {
     currency: {
       type: String,

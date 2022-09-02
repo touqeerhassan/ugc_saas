@@ -439,7 +439,7 @@ module.exports = router;
 // Add a new creator
 router.post("/add_user", (req, res) => {
   console.log(req.body);
-  const { userId, userType } = req.body;
+  const { userId, userType, name, email } = req.body;
 
   res.setHeader("Content-Type", "application/json");
 
@@ -449,6 +449,8 @@ router.post("/add_user", (req, res) => {
     if (err) res.status(400).json(`Error: ${err}`);
     if (!user) {
       const newUser = new User({
+        name,
+        email,
         userId,
         userType,
         funds: {
@@ -466,6 +468,14 @@ router.post("/add_user", (req, res) => {
       res.status(200).json(user);
     }
   });
+});
+
+//Get All Users
+router.get("/get_all_users", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  User.find({})
+    .then((users) => res.status(200).send(users))
+    .catch((error) => res.status(400).json(`Error: ${err}`));
 });
 
 // Get a single user
