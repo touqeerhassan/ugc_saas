@@ -191,7 +191,7 @@ export const FirebaseLogin = (props) => {
 
             if (isMounted()) {
               let returnUrl = router.query.returnUrl || "/dashboard";
-              router.push(returnUrl);
+              router.push("/dashboard/users");
             }
           })
           .catch((err) => {
