@@ -48,6 +48,20 @@ export const AuthProvider = (props) => {
           // Here you should extract the complete user profile to make it available in your entire app.
           // The auth state only provides basic information.
           try {
+            if (sessionStorage.getItem("name") !== null) {
+              await firebase
+                .auth()
+                .currentUser.updateProfile({
+                  displayName: sessionStorage.getItem("name"),
+                })
+                .then(() => {
+                  console.log(`Profile updated!`, firebase.auth().currentUser);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            }
+
             const response = await fetch(`${API_SERVICE}/add_user`, {
               method: "POST",
               headers: {
@@ -55,7 +69,7 @@ export const AuthProvider = (props) => {
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                name: user?.displayName,
+                name: firebase.auth().currentUser?.displayName,
                 email: user?.email,
                 userId: user?.uid,
                 userType:

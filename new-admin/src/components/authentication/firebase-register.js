@@ -92,10 +92,7 @@ export const FirebaseRegister = (props) => {
     validationSchema: Yup.object({
       fName: Yup.string().max(255).required("First name is required"),
       lName: Yup.string().max(255).required("First name is required"),
-      email: Yup.string()
-        .email("Must be a valid email")
-        .max(255)
-        .required("Email is required"),
+      email: Yup.string().email("Must be a valid email").max(255).required("Email is required"),
       password: Yup.string().min(7).max(255).required("Password is required"),
       policy: Yup.boolean().oneOf([true], "This field must be checked"),
     }),
@@ -279,11 +276,7 @@ export const FirebaseRegister = (props) => {
             mt: 2,
           }}
         >
-          <Checkbox
-            checked={formik.values.policy}
-            name="policy"
-            onChange={formik.handleChange}
-          />
+          <Checkbox checked={formik.values.policy} name="policy" onChange={formik.handleChange} />
           <Typography color="textSecondary" variant="body2">
             I have read the{" "}
             <Link component="a" href="#">

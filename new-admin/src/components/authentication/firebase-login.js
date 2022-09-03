@@ -186,20 +186,17 @@ export const FirebaseLogin = (props) => {
             const user = userCredential.user;
             console.log(user);
 
-            // const returnUrl = router.query.returnUrl || "/dashboard";
-            // router.push(returnUrl);
-
             sessionStorage.setItem("userId", user.uid);
             sessionStorage.setItem("userEmail", user.email);
+
+            if (isMounted()) {
+              let returnUrl = router.query.returnUrl || "/dashboard";
+              router.push(returnUrl);
+            }
           })
           .catch((err) => {
             console.log(err);
           });
-
-        if (isMounted()) {
-          let returnUrl = router.query.returnUrl || "/dashboard";
-          router.push("/users");
-        }
       } catch (err) {
         console.error(err);
 

@@ -1,4 +1,6 @@
 /client/out
+/new-admin/out
+/admin/out
 
 # Logs
 logs

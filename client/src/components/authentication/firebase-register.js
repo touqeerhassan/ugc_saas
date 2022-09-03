@@ -106,6 +106,8 @@ export const FirebaseRegister = (props) => {
 
         console.log(values);
         sessionStorage.setItem("userType", userType);
+        sessionStorage.setItem("name", values.fName + " " + values.lName);
+        sessionStorage.setItem("loginType", "register");
         firebase
           .auth()
           .createUserWithEmailAndPassword(values.email, values.password)
@@ -115,22 +117,9 @@ export const FirebaseRegister = (props) => {
 
             sessionStorage.setItem("userId", user.uid);
             sessionStorage.setItem("userEmail", user.email);
-            sessionStorage.setItem("loginType", "register");
 
-            const returnUrl = router.query.returnUrl || "/dashboard";
+            // const returnUrl = router.query.returnUrl || "/dashboard";
 
-            firebase
-              .auth()
-              .currentUser.updateProfile({
-                displayName: `${values.fName} ${values.lName}`,
-                // photoURL: "https://example.com/jane-q-user/profile.jpg",
-              })
-              .then(() => {
-                console.log(`Profile updated!`, firebase.auth().currentUser);
-              })
-              .catch((error) => {
-                console.log(`Profile updated!`, firebase.auth().currentUser);
-              });
             // console.log(userType);
             // if (userType === "creator") {
             //   router.push("/dashboard/onboarding");
