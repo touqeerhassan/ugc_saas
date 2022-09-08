@@ -51,7 +51,7 @@ export default function About({
     storage
       .ref(`ugcsass/creator-profiles/${name}`)
       .put(file)
-      .on("state_changed", alert("success"), alert, () => {
+      .on("state_changed", alert("uploading"), alert, () => {
         storage
           .ref("ugcsass")
           .child("creator-profiles")

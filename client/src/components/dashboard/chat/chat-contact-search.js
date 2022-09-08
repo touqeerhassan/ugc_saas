@@ -1,5 +1,5 @@
-import { forwardRef } from 'react';
-import PropTypes from 'prop-types';
+import { forwardRef } from "react";
+import PropTypes from "prop-types";
 import {
   Avatar,
   Box,
@@ -10,13 +10,23 @@ import {
   ListItemAvatar,
   ListItemText,
   TextField,
-  Typography
-} from '@mui/material';
-import { Search as SearchIcon } from '../../../icons/search';
-import { Tip } from '../../tip';
+  Typography,
+} from "@mui/material";
+import { Search as SearchIcon } from "../../../icons/search";
+import { Tip } from "../../tip";
+import { getInitials } from "../../../utils/get-initials";
 
 export const ChatContactSearch = forwardRef((props, ref) => {
-  const { isFocused, onChange, onClickAway, onFocus, onSelect, query, results, ...other } = props;
+  const {
+    isFocused,
+    onChange,
+    onClickAway,
+    onFocus,
+    onSelect,
+    query,
+    results,
+    ...other
+  } = props;
 
   const handleSelect = (result) => {
     if (onSelect) {
@@ -28,10 +38,7 @@ export const ChatContactSearch = forwardRef((props, ref) => {
 
   return (
     <ClickAwayListener onClickAway={onClickAway}>
-      <Box
-        ref={ref}
-        sx={{ p: 2 }}
-        {...other}>
+      <Box ref={ref} sx={{ p: 2 }} {...other}>
         <TextField
           fullWidth
           onChange={onChange}
@@ -42,59 +49,58 @@ export const ChatContactSearch = forwardRef((props, ref) => {
               <InputAdornment position="start">
                 <SearchIcon fontSize="small" />
               </InputAdornment>
-            )
+            ),
           }}
           value={query}
         />
-        {(isFocused && !query) && (
+        {isFocused && !query && (
           <Box sx={{ py: 2 }}>
             <Tip message="Enter a contact name" />
           </Box>
         )}
-        {(displayResults && results.length === 0) && (
+        {displayResults && results.length === 0 && (
           <Box sx={{ py: 2 }}>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              We couldn&apos;t find any matches for &quot;{query}&quot;. Try checking for typos or using
-              complete words.
+            <Typography color="textSecondary" variant="body2">
+              We couldn&apos;t find any matches for &quot;{query}&quot;. Try
+              checking for typos or using complete words.
             </Typography>
           </Box>
         )}
-        {(displayResults && results.length > 0) && (
+        {displayResults && results.length > 0 && (
           <Box sx={{ py: 2 }}>
-            <Typography
-              color="textSecondary"
-              variant="subtitle2"
-            >
+            <Typography color="textSecondary" variant="subtitle2">
               Contacts
             </Typography>
             <List>
-              {results.map((result) => (
-                <ListItem
-                  button
-                  key={result.id}
-                  onClick={() => handleSelect(result)}
-                >
-                  <ListItemAvatar>
-                    <Avatar
-                      src={result.avatar}
-                      sx={{
-                        height: 32,
-                        width: 32
+              {results.map((result) => {
+                console.log(result);
+                return (
+                  <ListItem
+                    button
+                    key={result._id}
+                    onClick={() => handleSelect(result)}
+                  >
+                    <ListItemAvatar>
+                      <Avatar
+                        src={result?.avatar}
+                        sx={{
+                          height: 32,
+                          width: 32,
+                        }}
+                      >
+                        {getInitials(result?.name)}
+                      </Avatar>
+                    </ListItemAvatar>
+                    <ListItemText
+                      primary={result?.name}
+                      primaryTypographyProps={{
+                        noWrap: true,
+                        variant: "subtitle2",
                       }}
                     />
-                  </ListItemAvatar>
-                  <ListItemText
-                    primary={result.name}
-                    primaryTypographyProps={{
-                      noWrap: true,
-                      variant: 'subtitle2'
-                    }}
-                  />
-                </ListItem>
-              ))}
+                  </ListItem>
+                );
+              })}
             </List>
           </Box>
         )}
@@ -110,11 +116,11 @@ ChatContactSearch.propTypes = {
   onFocus: PropTypes.func,
   onSelect: PropTypes.func,
   query: PropTypes.string,
-  results: PropTypes.array
+  results: PropTypes.array,
 };
 
 ChatContactSearch.defaultProps = {
   isFocused: false,
-  query: '',
-  results: []
+  query: "",
+  results: [],
 };

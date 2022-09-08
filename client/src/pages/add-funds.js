@@ -13,6 +13,7 @@ import { API_SERVICE } from "../config";
 import CheckoutForm from "../components/funds/checkout-form";
 import { AuthGuard } from "../components/authentication/auth-guard";
 import { useAuth } from "../hooks/use-auth";
+import CustomSnackbar from "../components/custom-snackbar";
 
 console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const stripePromise = loadStripe(
@@ -22,6 +23,8 @@ const stripePromise = loadStripe(
 function AddFunds() {
   const [clientSecret, setClientSecret] = useState(null);
   const { user } = useAuth();
+  const [open, setOpen] = useState(false);
+  const [message, setMessage] = useState("");
   useEffect(() => {}, [user]);
 
   const createPaymentIntent = async ({ type, amount, currency }) => {
@@ -38,7 +41,12 @@ function AddFunds() {
       }),
     });
 
-    const { clientSecret } = await response.json();
+    const { clientSecret, error } = await response.json();
+    if (error) {
+      console.log(error);
+      setMessage(error);
+      setOpen(true);
+    }
     if (clientSecret) {
       setClientSecret(clientSecret);
     }
@@ -56,6 +64,12 @@ function AddFunds() {
           <link href="/static/card-section.css" rel="stylesheet" key="test" />
         </Head>
       </div>
+      <CustomSnackbar
+        open={open}
+        setOpen={setOpen}
+        message={message}
+        severity="error"
+      />
       <label>
         {clientSecret ? (
           <Elements

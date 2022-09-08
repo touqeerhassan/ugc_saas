@@ -45,10 +45,12 @@ import { fileToBase64 } from "../../../utils/file-to-base64";
 import { useSelector, useDispatch } from "react-redux";
 import { useAuth } from "../../../hooks/use-auth";
 import { API_SERVICE } from "../../../config";
+import { useRouter } from "next/router";
 
 export default function Disclaimer({ onClick, onEdit }) {
   const [cover, setCover] = useState("/static/mock-images/covers/cover_4.jpeg");
   const creator = useSelector((state) => state.creator);
+  const router = useRouter();
   const { user } = useAuth();
 
   const addCreator = async () => {

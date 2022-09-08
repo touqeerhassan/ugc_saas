@@ -77,45 +77,82 @@ const brandSections = (t) => [
       },
       {
         path: "/dashboard/chat",
-        icon: <AttachMoney fontSize="small" />,
+        icon: <ChatAlt2Icon fontSize="small" />,
         title: t("Chat"),
       },
     ],
   },
 ];
 
-const creatorSections = (t) => [
-  {
-    title: t("General"),
-    items: [
-      // {
-      //   title: t("Overview"),
-      //   path: "/dashboard",
-      //   icon: <HomeIcon fontSize="small" />,
-      // },
-      // {
-      //   title: t("Creators Onboarding"),
-      //   path: "/dashboard/onboarding",
-      //   icon: <UserCircleIcon fontSize="small" />,
-      // },
+const creatorSections = (t, hasProfile) => {
+  if (hasProfile) {
+    return [
       {
-        title: t("Jobs for Creator"),
-        path: "/dashboard/jobscreator",
-        icon: <ShoppingBagIcon fontSize="small" />,
+        title: t("General"),
+        items: [
+          // {
+          //   title: t("Overview"),
+          //   path: "/dashboard",
+          //   icon: <HomeIcon fontSize="small" />,
+          // },
+          // {
+          //   title: t("Creators Onboarding"),
+          //   path: "/dashboard/onboarding",
+          //   icon: <UserCircleIcon fontSize="small" />,
+          // },
+          {
+            title: t("Jobs for Creator"),
+            path: "/dashboard/jobscreator",
+            icon: <ShoppingBagIcon fontSize="small" />,
+          },
+          {
+            title: t("Orders"),
+            path: "/dashboard/orders",
+            icon: <ChartBarIcon fontSize="small" />,
+          },
+          {
+            path: "/dashboard/chat",
+            icon: <ChatAlt2Icon fontSize="small" />,
+            title: "Chat",
+          },
+        ],
       },
+    ];
+  } else {
+    return [
       {
-        title: t("Orders"),
-        path: "/dashboard/orders",
-        icon: <ChartBarIcon fontSize="small" />,
+        title: t("General"),
+        items: [
+          // {
+          //   title: t("Overview"),
+          //   path: "/dashboard",
+          //   icon: <HomeIcon fontSize="small" />,
+          // },
+          {
+            title: t("Creators Onboarding"),
+            path: "/dashboard/onboarding",
+            icon: <UserCircleIcon fontSize="small" />,
+          },
+          {
+            title: t("Jobs for Creator"),
+            path: "/dashboard/jobscreator",
+            icon: <ShoppingBagIcon fontSize="small" />,
+          },
+          {
+            title: t("Orders"),
+            path: "/dashboard/orders",
+            icon: <ChartBarIcon fontSize="small" />,
+          },
+          {
+            path: "/dashboard/chat",
+            icon: <ChatAlt2Icon fontSize="small" />,
+            title: "Chat",
+          },
+        ],
       },
-      {
-        path: t("Chat"),
-        icon: <AttachMoney fontSize="small" />,
-        title: "Chat",
-      },
-    ],
-  },
-];
+    ];
+  }
+};
 
 export const DashboardSidebar = (props) => {
   const { user } = useAuth();
@@ -130,7 +167,7 @@ export const DashboardSidebar = (props) => {
     () =>
       user?.userData?.userType === "brand"
         ? brandSections(t)
-        : creatorSections(t),
+        : creatorSections(t, user?.creator ? true : false),
     [t]
   );
   const organizationsRef = useRef(null);

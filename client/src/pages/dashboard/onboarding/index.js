@@ -75,11 +75,17 @@ const BlogPostCreate = () => {
   });
 
   const handlePersonalInfoChange = (event) => {
-    console.log(typeof event.target.value);
-    setPersonalInfo({
-      ...personalInfo,
-      [event.target.name]: event.target.value,
-    });
+    if (typeof event === "string") {
+      setPersonalInfo({
+        ...personalInfo,
+        contact: event,
+      });
+    } else {
+      setPersonalInfo({
+        ...personalInfo,
+        [event.target.name]: event.target.value,
+      });
+    }
   };
 
   //Page - 2

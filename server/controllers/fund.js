@@ -5,15 +5,17 @@ const CC = require("currency-converter-lt");
 
 const createPaymentIntent = async (req, res) => {
   const { amount, currency, type } = req.body;
+
+  console.log(req.body);
   try {
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
+      amount: currency === "idr" ? amount * 1000 : amount * 100,
       currency: currency,
       payment_method_types: [type],
       description: "Add Funds",
     });
     console.log(paymentIntent.client_secret);
-    res.send({
+    res.status(200).send({
       clientSecret: paymentIntent.client_secret,
     });
   } catch (err) {
@@ -23,7 +25,9 @@ const createPaymentIntent = async (req, res) => {
 };
 
 const addFunds = async (req, res) => {
-  const { currency, amount, userId } = req.body;
+  let { currency, amount, userId } = req.body;
+  amount = currency === "idr" ? amount / 1000 : amount / 100;
+
   try {
     const customer = await User.findOne({ userId });
     if (customer) {
@@ -31,7 +35,7 @@ const addFunds = async (req, res) => {
       let currencyConverter = new CC({
         from: currency.toUpperCase(),
         to: customer.funds.currency.toUpperCase(),
-        amount: parseInt(amount),
+        amount: parseFloat(amount),
       });
       // console.log(currencyConverter);
       currencyConverter.convert().then(async (response) => {
@@ -40,6 +44,7 @@ const addFunds = async (req, res) => {
         customer.funds.amount += response;
 
         customer.save(function (err) {
+          console.log(err);
           if (!err) {
             console.log(customer);
             res.status(200).send("Funds Updated");

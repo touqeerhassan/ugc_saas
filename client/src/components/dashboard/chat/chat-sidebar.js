@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Scrollbar } from "../../scrollbar";
 import { ChatContactSearch } from "./chat-contact-search";
 import { ChatThreadItem } from "./chat-thread-item";
+import { useAuth } from "../../../hooks/use-auth";
 
 const ChatSidebarDesktop = styled(Drawer)({
   flexShrink: 0,
@@ -42,6 +43,7 @@ const ChatSidebarMobile = styled(Drawer)({
 
 export const ChatSidebar = (props) => {
   const { containerRef, onClose, open, ...other } = props;
+  const { user } = useAuth();
   const router = useRouter();
   const { threads, activeThreadId } = useSelector((state) => state.chat);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
@@ -90,7 +92,7 @@ export const ChatSidebar = (props) => {
       onClose?.();
     }
 
-    router.push(`/dashboard/chat?threadKey=${result.id}`);
+    router.push(`/dashboard/chat?threadKey=${result._id}`);
   };
 
   const handleSelectThread = (threadId) => {
@@ -98,14 +100,14 @@ export const ChatSidebar = (props) => {
     let threadKey;
 
     if (thread.type === "GROUP") {
-      threadKey = thread.id;
+      threadKey = thread._id;
     } else {
       // We hardcode the current user ID because the mocked that is not in sync
       // with the auth provider.
       // When implementing this app with a real database, replace this
       // ID with the ID from Auth Context.
       threadKey = thread.participantIds.find(
-        (participantId) => participantId !== "5e86809283e28b96d2d38537"
+        (participantId) => participantId !== user?.userData?._id
       );
     }
 

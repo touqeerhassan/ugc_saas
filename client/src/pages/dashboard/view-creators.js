@@ -329,7 +329,7 @@ const Creators = () => {
                   )}
                   {isValidUrl(selectedCreator?.social?.youtube) && (
                     <Grid item xs={12} sx={{ display: "flex" }}>
-                      <YoutubeIcon sx={{ mr: 2 }}></YoutubeIcon>
+                      <YouTubeIcon sx={{ mr: 2 }}></YouTubeIcon>
                       <div
                         style={{ color: "gray" }}
                         onClick={() => {

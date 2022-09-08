@@ -21,6 +21,11 @@ import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
 import firebase from "../../lib/firebase";
 
+// import "react-phone-number-input/style.css";
+// import PhoneInput from "react-phone-number-input";
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+
 const reducer = (state, action) => {
   if (action.type === "AUTH_STATE_CHANGED") {
     const { isAuthenticated, user } = action.payload;
@@ -80,6 +85,8 @@ export const FirebaseRegister = (props) => {
   const router = useRouter();
   const { createUserWithEmailAndPassword, signInWithGoogle } = useAuth();
   const [userType, setUserType] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+
   const formik = useFormik({
     initialValues: {
       fName: "",
@@ -108,6 +115,7 @@ export const FirebaseRegister = (props) => {
         sessionStorage.setItem("userType", userType);
         sessionStorage.setItem("name", values.fName + " " + values.lName);
         sessionStorage.setItem("loginType", "register");
+        sessionStorage.setItem("phoneNumber", phoneNumber);
         firebase
           .auth()
           .createUserWithEmailAndPassword(values.email, values.password)
@@ -222,6 +230,23 @@ export const FirebaseRegister = (props) => {
           type="text"
           value={formik.values.lName}
         />
+
+        <Box fullWidth>
+          <PhoneInput
+            style={{ margin: "20px 0" }}
+            country={"us"}
+            value={phoneNumber}
+            onChange={(phone) => setPhoneNumber(phone)}
+          />
+        </Box>
+
+        {/* <PhoneInput
+          style={{ margin: "100px" }}
+          placeholder="Phone Number"
+          value={phoneNumber}
+          onChange={setPhoneNumber}
+        /> */}
+
         <FormControl fullWidth sx={{ margin: "16px 0" }}>
           <InputLabel id="demo-simple-select-label">User Type</InputLabel>
           <Select
@@ -235,7 +260,6 @@ export const FirebaseRegister = (props) => {
             <MenuItem value="creator">Creator</MenuItem>
           </Select>
         </FormControl>
-
         <TextField
           error={Boolean(formik.touched.email && formik.errors.email)}
           fullWidth

@@ -1,21 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { chatApi } from '../__fake-api__/chat-api';
-import { objFromArray } from '../utils/obj-from-array';
+import { createSlice } from "@reduxjs/toolkit";
+import { chatApi } from "../__fake-api__/chat-api";
+import { objFromArray } from "../utils/obj-from-array";
 
 const initialState = {
   activeThreadId: null,
   contacts: {
     byId: {},
-    allIds: []
+    allIds: [],
   },
   threads: {
     byId: {},
-    allIds: []
-  }
+    allIds: [],
+  },
 };
 
 const slice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState,
   reducers: {
     getContacts(state, action) {
@@ -34,10 +34,10 @@ const slice = createSlice({
       const thread = action.payload;
 
       if (thread) {
-        state.threads.byId[thread.id] = thread;
+        state.threads.byId[thread._id] = thread;
 
-        if (!state.threads.allIds.includes(thread.id)) {
-          state.threads.allIds.unshift(thread.id);
+        if (!state.threads.allIds.includes(thread._id)) {
+          state.threads.allIds.unshift(thread._id);
         }
       }
     },
@@ -59,8 +59,8 @@ const slice = createSlice({
       if (thread) {
         thread.messages.push(message);
       }
-    }
-  }
+    },
+  },
 });
 
 export const { reducer } = slice;
@@ -71,18 +71,19 @@ export const getContacts = () => async (dispatch) => {
   dispatch(slice.actions.getContacts(data));
 };
 
-export const getThreads = () => async (dispatch) => {
-  const data = await chatApi.getThreads();
+export const getThreads = (userInfo) => async (dispatch) => {
+  console.log(userInfo);
+  const data = await chatApi.getThreads(userInfo);
 
   dispatch(slice.actions.getThreads(data));
 };
 
-export const getThread = (threadKey) => async (dispatch) => {
-  const data = await chatApi.getThread(threadKey);
+export const getThread = (id, threadKey) => async (dispatch) => {
+  const data = await chatApi.getThread(id, threadKey);
 
   dispatch(slice.actions.getThread(data));
 
-  return data?.id;
+  return data?._id;
 };
 
 export const markThreadAsSeen = (threadId) => async (dispatch) => {
@@ -95,14 +96,17 @@ export const setActiveThread = (threadId) => (dispatch) => {
   dispatch(slice.actions.setActiveThread(threadId));
 };
 
-export const addMessage = ({ threadId, recipientIds, body }) => async (dispatch) => {
-  const data = await chatApi.addMessage({
-    threadId,
-    recipientIds,
-    body
-  });
+export const addMessage =
+  ({ id, threadId, recipientIds, body }) =>
+  async (dispatch) => {
+    const data = await chatApi.addMessage({
+      id,
+      threadId,
+      recipientIds,
+      body,
+    });
 
-  dispatch(slice.actions.addMessage(data));
+    dispatch(slice.actions.addMessage(data));
 
-  return data.threadId;
-};
+    return data.threadId;
+  };

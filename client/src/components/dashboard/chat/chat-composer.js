@@ -5,16 +5,18 @@ import { addMessage } from "../../../slices/chat";
 import { useDispatch, useSelector } from "react-redux";
 import { ChatComposerToolbar } from "./chat-composer-toolbar";
 import { ChatMessageAdd } from "./chat-message-add";
+import { useAuth } from "../../../hooks/use-auth";
 
 export const ChatComposer = (props) => {
   const dispatch = useDispatch();
   const router = useRouter();
+  const { user } = useAuth();
   const [recipients, setRecipients] = useState([]);
 
   const handleAddRecipient = (recipient) => {
     setRecipients((prevState) => {
       const exists = prevState.find(
-        (_recipient) => _recipient.id === recipient.id
+        (_recipient) => _recipient._id === recipient.id
       );
 
       if (!exists) {
@@ -27,7 +29,7 @@ export const ChatComposer = (props) => {
 
   const handleRemoveRecipient = (recipientId) => {
     setRecipients((prevState) =>
-      prevState.filter((recipient) => recipient.id !== recipientId)
+      prevState.filter((recipient) => recipient._id !== recipientId)
     );
   };
 
@@ -36,7 +38,8 @@ export const ChatComposer = (props) => {
       // Handle send message and redirect to the new thread
       const threadId = await dispatch(
         addMessage({
-          recipientIds: recipients.map((recipient) => recipient.id),
+          id: user?.userData?._id,
+          recipientIds: recipients.map((recipient) => recipient._id),
           body,
         })
       );

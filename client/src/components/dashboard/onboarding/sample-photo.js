@@ -40,7 +40,7 @@ export default function SamplePhoto({ brandSelfie, setBrandSelfie }) {
     storage
       .ref(`ugcsass/brand-selfies/${name}`)
       .put(file)
-      .on("state_changed", alert("success"), alert, () => {
+      .on("state_changed", alert("uploading"), alert, () => {
         storage
           .ref("ugcsass")
           .child("brand-selfies")

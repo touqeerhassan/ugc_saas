@@ -87,7 +87,7 @@ const Creators = () => {
       if (response.status === 200) {
         // const data = await response.json();
         // console.log(data);
-        alert("Success");
+        alert("Order Added");
         router.push("/dashboard/orders");
       }
     } catch (err) {

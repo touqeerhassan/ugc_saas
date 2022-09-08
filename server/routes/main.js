@@ -12,6 +12,7 @@ const Bid = require("../models/Bid");
 
 //Controllers
 const fundsController = require("../controllers/fund");
+const chatController = require("../controllers/chat");
 
 // Test route
 router.get("/test", (req, res) => {
@@ -435,11 +436,11 @@ router.patch("/edit_creator/:orderId/:userId", async (req, res) => {
 
 module.exports = router;
 
-// Creators
-// Add a new creator
+// Users
+// Add a new user
 router.post("/add_user", (req, res) => {
   console.log(req.body);
-  const { userId, userType, name, email } = req.body;
+  const { userId, userType, name, email, phoneNumber } = req.body;
 
   res.setHeader("Content-Type", "application/json");
 
@@ -453,6 +454,7 @@ router.post("/add_user", (req, res) => {
         email,
         userId,
         userType,
+        phoneNumber,
         funds: {
           amount: 0,
           currency: "USD",
@@ -475,7 +477,7 @@ router.get("/get_all_users", (req, res) => {
   res.setHeader("Content-Type", "application/json");
   User.find({})
     .then((users) => res.status(200).send(users))
-    .catch((error) => res.status(400).json(`Error: ${err}`));
+    .catch((error) => res.status(400).json(`Error: ${error}`));
 });
 
 // Get a single user
@@ -490,7 +492,7 @@ router.get("/get_user_by_id/:userId", async (req, res) => {
 router.patch("/edit_user/:userId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
 
-  Creator.updateOne(
+  User.updateOne(
     { userId: req.params.userId },
     {
       $set: req.body,
@@ -621,4 +623,13 @@ router.post("/create-payment-intent", fundsController.createPaymentIntent);
 router.post("/addFunds", fundsController.addFunds);
 // router.post("/buyProduct", fundsController.buyProduct);
 // router.get("/fetchCountries", countryController.fetchCountries);
+
+//Chat
+router.post("/addMessage/:id", chatController.addMessage);
+router.get("/getContacts/:query", chatController.getContacts);
+router.get("/getThreads/:id", chatController.getThreads);
+router.get("/getThread/:id/:threadKey", chatController.getThread);
+router.post("/markThreadAsSeen/:threadId", chatController.markThreadAsSeen);
+router.get("/getParticipants/:id/:threadKey", chatController.getParticipants);
+
 module.exports = router;

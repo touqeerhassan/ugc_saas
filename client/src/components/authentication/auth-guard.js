@@ -24,6 +24,10 @@ export const AuthGuard = (props) => {
           pathname: "/authentication/login",
           query: { returnUrl: router.asPath },
         });
+      } else if (user?.userData?.disabled) {
+        router.push({
+          pathname: "/account-disabled",
+        });
       } else {
         setChecked(true);
       }

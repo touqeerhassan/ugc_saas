@@ -19,6 +19,7 @@ import { MenuAlt4 as MenuAlt4Icon } from "../../icons/menu-alt-4";
 import { gtm } from "../../lib/gtm";
 import { getThreads } from "../../slices/chat";
 import { useDispatch } from "react-redux";
+import { useAuth } from "../../hooks/use-auth";
 
 const ChatInner = styled("div", {
   shouldForwardProp: (prop) => prop !== "open",
@@ -51,6 +52,7 @@ const ChatInner = styled("div", {
 
 const Chat = () => {
   const router = useRouter();
+  const { user } = useAuth();
   const dispatch = useDispatch();
   const rootRef = useRef(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
@@ -66,7 +68,7 @@ const Chat = () => {
 
   useEffect(
     () => {
-      dispatch(getThreads());
+      dispatch(getThreads(user?.userData));
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []

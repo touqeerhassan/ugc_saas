@@ -14,6 +14,7 @@ import { ChatMessageAdd } from "./chat-message-add";
 import { ChatMessages } from "./chat-messages";
 import { ChatThreadToolbar } from "./chat-thread-toolbar";
 import { chatApi } from "../../../__fake-api__/chat-api";
+import { useAuth } from "../../../hooks/use-auth";
 
 const threadSelector = (state) => {
   const { threads, activeThreadId } = state.chat;
@@ -28,19 +29,25 @@ export const ChatThread = (props) => {
   const thread = useSelector((state) => threadSelector(state));
   const messagesRef = useRef(null);
   const [participants, setParticipants] = useState([]);
+  const auth = useAuth();
   // To get the user from the authContext, you can use
-  // `const { user } = useAuth();`
-  const user = {
-    id: "5e86809283e28b96d2d38537",
-  };
+  const { user } = useAuth();
+  // const user = {
+  //   id: "5e86809283e28b96d2d38537",
+  // };
 
   const getDetails = async () => {
     try {
-      const _participants = await chatApi.getParticipants(threadKey);
+      const _participants = await chatApi.getParticipants(
+        auth?.user?.userData?._id,
+        threadKey
+      );
 
       setParticipants(_participants);
 
-      const threadId = await dispatch(getThread(threadKey));
+      const threadId = await dispatch(
+        getThread(auth?.user?.userData?._id, threadKey)
+      );
 
       dispatch(setActiveThread(threadId));
       dispatch(markThreadAsSeen(threadId));
@@ -78,23 +85,25 @@ export const ChatThread = (props) => {
       if (thread) {
         await dispatch(
           addMessage({
-            threadId: thread.id,
+            id: user?.userData?._id,
+            threadId: thread._id,
             body,
           })
         );
       } else {
         const recipientIds = participants
-          .filter((participant) => participant.id !== user.id)
-          .map((participant) => participant.id);
+          .filter((participant) => participant._id !== user?.userData?._id)
+          .map((participant) => participant._id);
 
         const threadId = await dispatch(
           addMessage({
+            id: user?.userData?._id,
             recipientIds,
             body,
           })
         );
 
-        await dispatch(getThread(threadId));
+        await dispatch(getThread(user?.userData?._id, threadId));
         dispatch(setActiveThread(threadId));
       }
 

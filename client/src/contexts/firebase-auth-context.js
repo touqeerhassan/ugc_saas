@@ -70,6 +70,7 @@ export const AuthProvider = (props) => {
               },
               body: JSON.stringify({
                 name: firebase.auth().currentUser?.displayName,
+                phoneNumber: sessionStorage.getItem("phoneNumber"),
                 email: user?.email,
                 userId: user?.uid,
                 userType:
@@ -114,6 +115,8 @@ export const AuthProvider = (props) => {
 
               if (sessionStorage.loginType === "register") {
                 router.push("/dashboard/onboarding");
+              } else if (data?.disabled) {
+                router.push("/account-disabled");
               } else {
                 router.push("/dashboard/orders");
               }
@@ -132,7 +135,12 @@ export const AuthProvider = (props) => {
                   },
                 },
               });
-              router.push("/dashboard/orders");
+
+              if (data?.disabled) {
+                router.push("/account-disabled");
+              } else {
+                router.push("/dashboard/orders");
+              }
             }
           } catch (err) {
             console.log(err);

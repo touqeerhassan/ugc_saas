@@ -14,10 +14,13 @@ const campaignSchema = new mongoose.Schema({
   name: {
     type: String,
   },
+  phoneNumber: {
+    type: String,
+  },
   email: {
     type: String,
-    required: true,
-    unique: true,
+    // required: true,
+    // unique: true,
   },
   funds: {
     currency: {
@@ -28,6 +31,10 @@ const campaignSchema = new mongoose.Schema({
       type: Number,
       default: 0,
     },
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
   },
 });
 

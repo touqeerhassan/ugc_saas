@@ -7,6 +7,9 @@ import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
 import NextLink from "next/link";
 
+import PhoneInput from "react-phone-input-2";
+import "react-phone-input-2/lib/style.css";
+
 import {
   Checkbox,
   Container,
@@ -106,7 +109,7 @@ export default function PersonalInformation({ state, handleChange }) {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <TextField
                   fullWidth
                   label="Contact"
@@ -120,7 +123,17 @@ export default function PersonalInformation({ state, handleChange }) {
                     ),
                   }}
                 />
+              </Grid> */}
+
+              <Grid item xs={12}>
+                <PhoneInput
+                  style={{ margin: "20px 0" }}
+                  country={"us"}
+                  value={state.contact}
+                  onChange={handleChange}
+                />
               </Grid>
+
               <Grid item xs={12} sx={{ mt: 2 }}>
                 <Typography variant="h5">What's your home address?</Typography>
               </Grid>
@@ -148,6 +161,8 @@ export default function PersonalInformation({ state, handleChange }) {
                     <MenuItem value="India">India</MenuItem>
                     <MenuItem value="USA">USA</MenuItem>
                     <MenuItem value="Japan">Japan</MenuItem>
+                    <MenuItem value="Malaysia">Malaysia</MenuItem>
+                    <MenuItem value="UK">UK</MenuItem>
                   </Select>
                 </FormControl>
               </Grid>
@@ -179,6 +194,15 @@ export default function PersonalInformation({ state, handleChange }) {
                 />
               </Grid>
               <Grid item xs={12} md={6}>
+                <TextField
+                  fullWidth
+                  label="State/Province"
+                  name="state"
+                  value={state.state}
+                  onChange={handleChange}
+                />
+              </Grid>
+              {/* <Grid item xs={12} md={6}>
                 <FormControl fullWidth>
                   <InputLabel id="demo-simple-select-filled-label">
                     State
@@ -200,7 +224,7 @@ export default function PersonalInformation({ state, handleChange }) {
                     <MenuItem value="Michigan">Michigan</MenuItem>
                   </Select>
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} md={6}>
                 <TextField
                   fullWidth
