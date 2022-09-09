@@ -53,14 +53,16 @@ export const ChatMessageAdd = (props) => {
     >
       <Avatar
         sx={{
-          display: {
-            xs: "none",
-            sm: "inline",
-          },
+          // display: {
+          //   xs: "none",
+          //   sm: "inline",
+          // },
           mr: 2,
         }}
         src={user.avatar}
-      />
+      >
+        {user?.name?.split(" ").map((word) => word[0])}
+      </Avatar>
       <TextField
         disabled={disabled}
         fullWidth

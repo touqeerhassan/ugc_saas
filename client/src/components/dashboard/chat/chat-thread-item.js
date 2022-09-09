@@ -54,9 +54,11 @@ export const ChatThreadItem = (props) => {
   //   id: "5e86809283e28b96d2d38537",
   // };
 
-  const recipients = thread?.participantIds?.filter(
-    (participant) => participant._id !== user._id
+  const recipients = thread?.participants?.filter(
+    (participant) => participant._id != user?.userData?._id
   );
+  // console.log("Recipients");
+  // console.log(recipients);
   const lastMessage =
     thread?.messages && thread?.messages[thread.messages.length - 1];
   const name = recipients?
@@ -65,7 +67,7 @@ export const ChatThreadItem = (props) => {
   let content = "";
 
   if (lastMessage) {
-    const author = lastMessage?.authorId === user?.userData?._id ? "Me: " : "";
+    const author = lastMessage?.authorId == user?.userData?._id ? "Me: " : "";
     const message =
       lastMessage?.contentType === "image" ? "Sent a photo" : lastMessage?.body;
 
@@ -115,7 +117,9 @@ export const ChatThreadItem = (props) => {
           }}
         >
           {recipients?.map((recipient) => (
-            <Avatar key={recipient?._id} src={recipient?.avatar} />
+            <Avatar key={recipient?._id} src={recipient?.avatar}>
+              {recipient?.name?.split(" ").map((n) => n[0])}
+            </Avatar>
           ))}
         </AvatarGroup>
       </ListItemAvatar>
@@ -161,13 +165,13 @@ export const ChatThreadItem = (props) => {
         sx={{ whiteSpace: "nowrap" }}
         variant="caption"
       >
-        {/* {formatDistanceStrict(lastMessage?.createdAt, new Date(), {
+        {formatDistanceStrict(new Date(lastMessage?.createdAt || new Date()), new Date(), {
           addSuffix: false,
           locale: {
             ...locale,
             formatDistance,
           },
-        })} */}
+        })}
       </Typography>
     </ListItem>
   );

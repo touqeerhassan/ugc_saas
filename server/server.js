@@ -5,6 +5,8 @@ const colors = require("colors");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const { origin } = require("./config/client");
+const Thread = require("./models/Thread");
 // const dotenv = require("dotenv");
 
 // Route Files
@@ -87,7 +89,8 @@ const server = app.listen(
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: origin,
+
     // credentials: true,
   },
 });
@@ -95,6 +98,8 @@ const io = require("socket.io")(server, {
 io.on("connection", (socket) => {
   console.log("Connected to socket.io");
   socket.on("setup", (userData) => {
+    console.log("Setting things up...");
+    // console.log(userData);
     socket.join(userData._id);
     socket.emit("connected");
   });
@@ -103,18 +108,22 @@ io.on("connection", (socket) => {
     socket.join(room);
     console.log("User Joined Room: " + room);
   });
+
   socket.on("typing", (room) => socket.in(room).emit("typing"));
   socket.on("stop typing", (room) => socket.in(room).emit("stop typing"));
 
-  socket.on("new message", (newMessageRecieved) => {
-    let chat = newMessageRecieved.chat;
+  socket.on("new message", async ({ threadId, message }) => {
+    let thread = await Thread.findOne({ _id: threadId });
+    console.log(thread);
+    console.log(message);
 
-    if (!chat.users) return console.log("chat.users not defined");
-
-    chat.users.forEach((user) => {
-      if (user._id == newMessageRecieved.sender._id) return;
-
-      socket.in(user._id).emit("message recieved", newMessageRecieved);
+    thread.participantIds.forEach((participantId) => {
+      if (participantId != message.authorId) {
+        console.log(participantId, message.authorId);
+        socket
+          .in(participantId)
+          .emit("message received", { threadId, message });
+      }
     });
   });
 

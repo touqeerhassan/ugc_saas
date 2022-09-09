@@ -84,17 +84,17 @@ export const ChatThreadToolbar = (props) => {
           }}
         >
           {recipients.map((recipient) => (
-            <Avatar key={recipient._id} src={recipient.avatar} />
+            <Avatar key={recipient._id} src={recipient.avatar}>
+              {recipient.name.split(" ").map((n) => n[0])}
+            </Avatar>
           ))}
         </AvatarGroup>
         <Box sx={{ ml: 2 }}>
           <Typography variant="subtitle2">{name}</Typography>
           {recipients.length === 1 && (
             <Typography color="textSecondary" variant="caption">
-              Last active{" "}
-              {formatDistanceToNowStrict(recipients[0].lastActivity, {
-                addSuffix: true,
-              })}
+              {`
+              ${recipients[0].email}`}
             </Typography>
           )}
         </Box>

@@ -16,7 +16,7 @@ export const ChatComposer = (props) => {
   const handleAddRecipient = (recipient) => {
     setRecipients((prevState) => {
       const exists = prevState.find(
-        (_recipient) => _recipient._id === recipient.id
+        (_recipient) => _recipient._id === recipient._id
       );
 
       if (!exists) {
@@ -36,7 +36,7 @@ export const ChatComposer = (props) => {
   const handleSendMessage = async (body) => {
     try {
       // Handle send message and redirect to the new thread
-      const threadId = await dispatch(
+      const { message, threadId } = await dispatch(
         addMessage({
           id: user?.userData?._id,
           recipientIds: recipients.map((recipient) => recipient._id),

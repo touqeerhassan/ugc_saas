@@ -73,7 +73,9 @@ export const ChatContactSearch = forwardRef((props, ref) => {
             </Typography>
             <List>
               {results.map((result) => {
-                console.log(result);
+                {
+                  /* console.log(result); */
+                }
                 return (
                   <ListItem
                     button

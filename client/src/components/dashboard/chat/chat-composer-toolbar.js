@@ -74,6 +74,8 @@ export const ChatComposerToolbar = (props) => {
   };
 
   const handleAddRecipient = (contact) => {
+    // console.log("Add Recipient", contact);
+    return;
     setQuery("");
 
     if (onAddRecipient) {

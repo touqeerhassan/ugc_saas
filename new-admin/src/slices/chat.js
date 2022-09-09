@@ -1,21 +1,21 @@
-import { createSlice } from '@reduxjs/toolkit';
-import { chatApi } from '../__fake-api__/chat-api';
-import { objFromArray } from '../utils/obj-from-array';
+import { createSlice } from "@reduxjs/toolkit";
+import { chatApi } from "../__fake-api__/chat-api";
+import { objFromArray } from "../utils/obj-from-array";
 
 const initialState = {
   activeThreadId: null,
   contacts: {
     byId: {},
-    allIds: []
+    allIds: [],
   },
   threads: {
     byId: {},
-    allIds: []
-  }
+    allIds: [],
+  },
 };
 
 const slice = createSlice({
-  name: 'chat',
+  name: "chat",
   initialState,
   reducers: {
     getContacts(state, action) {
@@ -26,9 +26,11 @@ const slice = createSlice({
     },
     getThreads(state, action) {
       const threads = action.payload;
-
+      console.log(threads);
       state.threads.byId = objFromArray(threads);
+      console.log(state.threads.byId);
       state.threads.allIds = Object.keys(state.threads.byId);
+      console.log(state.threads.allIds);
     },
     getThread(state, action) {
       const thread = action.payload;
@@ -59,8 +61,8 @@ const slice = createSlice({
       if (thread) {
         thread.messages.push(message);
       }
-    }
-  }
+    },
+  },
 });
 
 export const { reducer } = slice;
@@ -95,14 +97,16 @@ export const setActiveThread = (threadId) => (dispatch) => {
   dispatch(slice.actions.setActiveThread(threadId));
 };
 
-export const addMessage = ({ threadId, recipientIds, body }) => async (dispatch) => {
-  const data = await chatApi.addMessage({
-    threadId,
-    recipientIds,
-    body
-  });
+export const addMessage =
+  ({ threadId, recipientIds, body }) =>
+  async (dispatch) => {
+    const data = await chatApi.addMessage({
+      threadId,
+      recipientIds,
+      body,
+    });
 
-  dispatch(slice.actions.addMessage(data));
+    dispatch(slice.actions.addMessage(data));
 
-  return data.threadId;
-};
+    return data.threadId;
+  };

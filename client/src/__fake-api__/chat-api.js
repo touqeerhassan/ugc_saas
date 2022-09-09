@@ -214,7 +214,7 @@ class ChatApi {
         const response = await fetch(`${API_SERVICE}/getContacts/${query}`);
         const foundContacts = await response.json();
 
-        console.log(foundContacts);
+        // console.log(foundContacts);
 
         if (response.status === 200) {
           resolve(deepCopy(foundContacts));
@@ -233,14 +233,14 @@ class ChatApi {
     //   avatar: "/static/mock-images/avatars/avatar-anika_visser.png",
     //   name: "Anika Visser",
     // };
-    console.log(user);
+    // console.log(user);
 
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(`${API_SERVICE}/getThreads/${user?._id}`);
         const foundThreads = await response.json();
 
-        console.log(foundThreads);
+        // console.log(foundThreads);
 
         if (response.status === 200) {
           resolve(deepCopy(foundThreads));
@@ -260,7 +260,7 @@ class ChatApi {
         );
         const foundThread = await response.json();
 
-        console.log(foundThread);
+        // console.log(foundThread);
 
         if (response.status === 200) {
           resolve(deepCopy(foundThread));
@@ -287,7 +287,7 @@ class ChatApi {
         );
         const markedThread = await response.json();
 
-        console.log(markedThread);
+        // console.log(markedThread);
 
         if (response.status === 200) {
           resolve(true);
@@ -306,7 +306,7 @@ class ChatApi {
           `${API_SERVICE}/getParticipants/${id}/${threadKey}`
         );
         const participants = await response.json();
-        console.log(participants);
+        // console.log(participants);
         // console.log(markedThread);
 
         if (response.status === 200) {
@@ -320,7 +320,7 @@ class ChatApi {
   }
 
   addMessage({ id, threadId, recipientIds, body }) {
-    console.log(id, threadId, recipientIds, body);
+    // console.log(id, threadId, recipientIds, body);
     return new Promise(async (resolve, reject) => {
       try {
         const response = await fetch(`${API_SERVICE}/addMessage/${id}`, {
@@ -337,7 +337,7 @@ class ChatApi {
         });
         const addedMessage = await response.json();
 
-        console.log(addedMessage);
+        // console.log(addedMessage);
 
         if (response.status === 200) {
           resolve(addedMessage);

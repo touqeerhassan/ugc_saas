@@ -2,15 +2,7 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import NextLink from "next/link";
 import PropTypes from "prop-types";
-import {
-  Box,
-  Button,
-  Drawer,
-  IconButton,
-  List,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
+import { Box, Button, Drawer, IconButton, List, Typography, useMediaQuery } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { chatApi } from "../../../__fake-api__/chat-api";
 import { Plus as PlusIcon } from "../../../icons/plus";

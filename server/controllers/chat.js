@@ -3,25 +3,27 @@ const { subDays, subHours, subMinutes } = require("date-fns");
 const mongoose = require("mongoose");
 // eslint-disable-next-line consistent-return
 const deepCopy = (obj) => {
-  return obj;
-  //   if (typeof obj !== "object" || obj === null) {
-  //     return obj;
-  //   }
-  //   if (obj instanceof Date) {
-  //     return new Date(obj.getTime());
-  //   }
-  //   if (obj instanceof Array) {
-  //     return obj.reduce((arr, item, i) => {
-  //       arr[i] = deepCopy(item);
-  //       return arr;
-  //     }, []);
-  //   }
-  //   if (obj instanceof Object) {
-  //     return Object.keys(obj).reduce((newObj, key) => {
-  //       newObj[key] = deepCopy(obj[key]);
-  //       return newObj;
-  //     }, {});
-  //   }
+  if (typeof obj !== "object" || obj === null) {
+    return obj;
+  }
+
+  if (obj instanceof Date) {
+    return new Date(obj.getTime());
+  }
+
+  if (obj instanceof Array) {
+    return obj.reduce((arr, item, i) => {
+      arr[i] = deepCopy(item);
+      return arr;
+    }, []);
+  }
+
+  if (obj instanceof Object) {
+    return Object.keys(obj).reduce((newObj, key) => {
+      newObj[key] = deepCopy(obj[key]);
+      return newObj;
+    }, {});
+  }
 };
 
 const User = require("../models/User");
@@ -32,14 +34,16 @@ const now = new Date();
 
 const findThreadById = async (threadId) => {
   const threads = await Thread.find({}).populate("messages");
-  console.log(threads);
-  const thread = threads.find((_threadId) => _threadId._id == threadId);
+  // console.log(threads);
+  const thread = threads.find((_thread) => _thread._id == threadId);
+  // console.log(threadId);
   return thread || null;
 };
 
 const findThreadByParticipantIds = async (participantIds) => {
   const threads = await Thread.find({}).populate("messages");
-  console.log(threads);
+  // console.log(threads);
+  // console.log(participantIds);
   const thread = threads.find((_thread) => {
     if (_thread.participantIds.length !== participantIds.length) {
       return false;
@@ -55,7 +59,7 @@ const findThreadByParticipantIds = async (participantIds) => {
 
     return foundParticipantIds.size === participantIds.length;
   });
-
+  // console.log(thread);
   return thread || null;
 };
 
@@ -63,7 +67,7 @@ const getContacts = async (req, res) => {
   const query = req.params.query;
   try {
     const contacts = await User.find({});
-    console.log(contacts);
+    // console.log(contacts);
     let foundContacts = contacts;
     if (query) {
       const cleanQuery = query.toLowerCase().trim();
@@ -71,7 +75,7 @@ const getContacts = async (req, res) => {
         contact?.name?.toLowerCase().includes(cleanQuery)
       );
     }
-    console.log(foundContacts);
+    // console.log(foundContacts);
     res.status(200).json(foundContacts);
   } catch (err) {
     console.error("[Chat Api]: ", err);
@@ -88,33 +92,33 @@ const getThreads = async (req, res) => {
   // };
 
   const { id } = req.params;
-  console.log(id);
+  // console.log(id);
 
   try {
     const user = await User.findById(id);
-    const threads = await Thread.find({}).populate("messages");
-    const expandedThreads = threads.map(async (thread) => {
-      const participants = [user];
+    const threads = await Thread.find({ participantIds: user._id }).populate(
+      "messages"
+    );
+    const contacts = await User.find({});
 
-      const contacts = await User.find({});
+    const expandedThreads = threads.map((thread) => {
+      const participants = [];
 
       contacts.forEach((contact) => {
         if (thread.participantIds.includes(contact._id)) {
-          participants.push({
-            _id: contact._id,
-            avatar: contact.avatar,
-            lastActivity: contact.lastActivity,
-            name: contact.name,
-          });
+          participants.push(contact);
         }
       });
 
+      // console.log(thread);
+
       return {
-        ...thread,
+        ...thread.toObject(),
         participants,
       };
     });
-    res.status(200).json(deepCopy(expandedThreads));
+    // console.log("ExpandedThreads", expandedThreads);
+    res.status(200).json(expandedThreads);
   } catch (err) {
     console.error("[Chat Api]: ", err);
     res.status(500).json("Server Error");
@@ -124,7 +128,7 @@ const getThreads = async (req, res) => {
 const getThread = async (req, res) => {
   const threadKey = req.params.threadKey;
   const id = req.params.id;
-  console.log(req.params);
+  // console.log(req.params);
   try {
     // On server get current identity (user) from the request
     const user = await User.findById(id);
@@ -138,15 +142,21 @@ const getThread = async (req, res) => {
 
     // Thread key might be a contact ID
     const contacts = await User.find({});
-    const contact = contacts.find((contact) => contact._id === threadKey);
+    const contact = contacts.find((contact) => contact._id == threadKey);
+    // console.log("Contact", contact);
 
     if (contact) {
-      thread = await findThreadByParticipantIds([user._id, contact._id]);
+      thread = await findThreadByParticipantIds([
+        String(user._id),
+        String(contact._id),
+      ]);
+      // console.log("Thread", thread);
     }
 
     // Thread key might be a thread ID
     if (!thread) {
       thread = await findThreadById(threadKey);
+      // console.log("Thread", thread);
     }
 
     // If reached this point and thread does not exist this could mean:
@@ -156,25 +166,27 @@ const getThread = async (req, res) => {
       return res.status(404).json("Thread not found");
     }
 
-    const participants = [user];
+    // console.log("thread Found", thread);
+
+    const participants = [];
 
     contacts.forEach((contact) => {
       if (thread.participantIds.includes(contact._id)) {
-        participants.push({
-          _id: contact._id,
-          avatar: contact.avatar,
-          lastActivity: contact.lastActivity,
-          name: contact.name,
-        });
+        participants.push(contact);
       }
     });
 
+    // console.log(thread, participants);
+
     const expandedThread = {
-      ...thread,
+      ...thread.toObject(),
       participants,
     };
 
-    res.status(200).json(deepCopy(expandedThread));
+    // console.log("ExpandedThread", expandedThread);
+    // console.log(expandedThread);
+
+    res.status(200).json(expandedThread);
   } catch (err) {
     console.error("[Chat Api]: ", err);
     res.status(500).json("Server Error");
@@ -185,7 +197,7 @@ const markThreadAsSeen = async (req, res) => {
   const threadId = req.params.threadId;
   try {
     const threads = await Thread.find({}).populate("messages");
-    const thread = threads.find((_thread) => _thread_.id === threadId);
+    const thread = threads.find((_thread) => _thread._id == threadId);
 
     if (thread) {
       thread.unreadCount = 0;
@@ -202,6 +214,7 @@ const markThreadAsSeen = async (req, res) => {
 const getParticipants = async (req, res) => {
   const threadKey = req.params.threadKey;
   const id = req.params.id;
+  console.log("Here");
   try {
     // On server get current identity (user) from the request
     const user = await User.findById(id);
@@ -213,38 +226,45 @@ const getParticipants = async (req, res) => {
 
     const contacts = await User.find({});
 
-    let participants = [user];
+    let participants = [];
 
     // Thread key might be a thread ID
     let thread = await findThreadById(threadKey);
-    console.log("Thread");
-    console.log(thread);
+    // console.log("Thread Found Yay!");
+    // console.log(thread);
 
     if (thread) {
       contacts.forEach((contact) => {
         if (thread.participantIds.includes(contact._id)) {
-          participants.push({
-            _id: contact._id,
-            avatar: contact.avatar,
-            lastActivity: contact.lastActivity,
-            name: contact.name,
-          });
+          participants.push(contact);
         }
       });
     } else {
-      const contact = contacts.find((contact) => contact._id === threadKey);
+      // console.log(contacts);
+      const contact = contacts.find((contact) => contact._id == threadKey);
+      // console.log(threadKey);
+      // console.log(contact);
 
-      // If no contact found, the user is trying a shady route
       if (!contact) {
-        return res.status(404).json("Thread not found");
+        return res.status(404).json("Contact not found");
       }
 
-      participants.push({
-        _id: contact._id,
-        avatar: contact.avatar,
-        lastActivity: contact.lastActivity,
-        name: contact.name,
-      });
+      thread = await findThreadByParticipantIds([
+        String(user._id),
+        String(contact._id),
+      ]);
+
+      if (!thread) {
+        const newThread = new Thread({
+          messages: [],
+          participantIds: [id, threadKey],
+          type: "ONE_TO_ONE",
+          unreadCount: 0,
+        });
+        await newThread.save();
+      }
+
+      participants.push(contact);
     }
 
     return res.status(200).json(participants);
@@ -257,9 +277,9 @@ const getParticipants = async (req, res) => {
 const addMessage = async (req, res) => {
   const id = mongoose.Types.ObjectId(req.params.id);
 
-  console.log("Id", id);
-  console.log(req.body);
-  const { threadId, recipientIds, body } = req.body;
+  // console.log("Id", id);
+  // console.log(req.body);
+  let { threadId, recipientIds, body } = req.body;
   try {
     if (!(threadId || recipientIds)) {
       return res.status(400).send("Missing threadId or recipientIds");
@@ -269,8 +289,9 @@ const addMessage = async (req, res) => {
     // const user = {
     //   id: "5e86809283e28b96d2d38537",
     // };
+
     const user = await User.findOne({ _id: id });
-    console.log(user);
+    // console.log(user);
 
     let thread;
 
@@ -289,6 +310,8 @@ const addMessage = async (req, res) => {
 
     // If reached this point, thread will exist if thread ID provided
     // For recipient Ids it may or may not exist. If it doesn't, create a new one.
+    // console.log("Thread", thread);
+    // console.log(recipientIds);
 
     if (!thread) {
       const participantIds = [user._id, ...recipientIds];
@@ -300,7 +323,7 @@ const addMessage = async (req, res) => {
       });
 
       thread = await newThread.save();
-      console.log(thread);
+      // console.log("New Thread", thread);
     }
 
     const newMessage = new Message({
@@ -312,11 +335,14 @@ const addMessage = async (req, res) => {
     });
 
     let message = await newMessage.save();
-    console.log("Message", String(message._id));
+    // console.log("Message", String(message._id));
 
     thread.messages.push(message._id);
 
     await thread.save();
+
+    // console.log("Thread to be sent", thread);
+    // console.log(message);
 
     res.status(200).json({
       threadId: thread._id,

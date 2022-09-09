@@ -85,6 +85,8 @@ export const ChatSidebar = (props) => {
   };
 
   const handleSearchSelect = (result) => {
+    // console.log("In Chat Sidebar");
+    // console.log(result);
     setIsSearchFocused(false);
     setSearchQuery("");
 
@@ -107,7 +109,7 @@ export const ChatSidebar = (props) => {
       // When implementing this app with a real database, replace this
       // ID with the ID from Auth Context.
       threadKey = thread.participantIds.find(
-        (participantId) => participantId !== user?.userData?._id
+        (participantId) => participantId != user?.userData?._id
       );
     }
 
@@ -129,7 +131,7 @@ export const ChatSidebar = (props) => {
       >
         <Typography variant="h5">Chats</Typography>
         <Box sx={{ flexGrow: 1 }} />
-        <NextLink href="/dashboard/chat?compose=true" passHref>
+        {/* <NextLink href="/dashboard/chat?compose=true" passHref>
           <Button
             component="a"
             onClick={handleGroupClick}
@@ -138,7 +140,7 @@ export const ChatSidebar = (props) => {
           >
             Group
           </Button>
-        </NextLink>
+        </NextLink> */}
         <IconButton
           onClick={onClose}
           sx={{
@@ -172,7 +174,7 @@ export const ChatSidebar = (props) => {
           <List disablePadding>
             {threads.allIds.map((threadId) => (
               <ChatThreadItem
-                active={activeThreadId === threadId}
+                active={activeThreadId == threadId}
                 key={threadId}
                 onSelect={() => handleSelectThread(threadId)}
                 thread={threads.byId[threadId]}

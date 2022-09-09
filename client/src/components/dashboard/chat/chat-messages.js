@@ -16,7 +16,7 @@ export const ChatMessages = (props) => {
     <Box sx={{ p: 2 }} {...other}>
       {messages.map((message) => {
         const participant = participants.find(
-          (_participant) => _participant.id === message.authorId
+          (_participant) => _participant._id == message.authorId
         );
         let authorAvatar;
         let authorName;
@@ -24,7 +24,7 @@ export const ChatMessages = (props) => {
 
         // Since chat mock db is not synced with external auth providers
         // we set the user details from user auth state instead of thread participants
-        if (message.authorId === user?.userData?._id) {
+        if (message.authorId == user?.userData?._id) {
           authorAvatar = user.avatar;
           authorName = "Me";
           authorType = "user";

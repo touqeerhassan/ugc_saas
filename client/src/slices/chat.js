@@ -26,9 +26,13 @@ const slice = createSlice({
     },
     getThreads(state, action) {
       const threads = action.payload;
-
+      // console.log(threads);
+      // console.log("Getting Threads", objFromArray(threads));
       state.threads.byId = objFromArray(threads);
+      // console.log(state.threads.byId);
+
       state.threads.allIds = Object.keys(state.threads.byId);
+      // console.log(state.threads.allIds);
     },
     getThread(state, action) {
       const thread = action.payload;
@@ -60,6 +64,14 @@ const slice = createSlice({
         thread.messages.push(message);
       }
     },
+    messageReceived(state, action) {
+      const { threadId, message } = action.payload;
+      const thread = state.threads.byId[threadId];
+
+      if (thread) {
+        thread.messages.push(message);
+      }
+    },
   },
 });
 
@@ -72,9 +84,9 @@ export const getContacts = () => async (dispatch) => {
 };
 
 export const getThreads = (userInfo) => async (dispatch) => {
-  console.log(userInfo);
+  // console.log(userInfo);
   const data = await chatApi.getThreads(userInfo);
-
+  // console.log("data", data);
   dispatch(slice.actions.getThreads(data));
 };
 
@@ -108,5 +120,11 @@ export const addMessage =
 
     dispatch(slice.actions.addMessage(data));
 
-    return data.threadId;
+    return { threadId: data.threadId, message: data.message };
+  };
+
+export const messageReceived =
+  ({ threadId, message }) =>
+  (dispatch) => {
+    dispatch(slice.actions.messageReceived({ threadId, message }));
   };
