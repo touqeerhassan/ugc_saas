@@ -131,7 +131,7 @@ const Finance = () => {
     videoDurationPrice +
     creatorPrice;
   let subTotalCost = costPerJob * selectedCampaign?.content?.noOfCreators;
-  let platFormFee = subTotalCost * 0.1;
+  let platFormFee = subTotalCost * 0.04;
   let totalBudget = subTotalCost + platFormFee;
 
   useEffect(() => {

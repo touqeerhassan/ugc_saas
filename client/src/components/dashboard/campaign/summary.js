@@ -101,7 +101,7 @@ export default function Summary({ content, setContent }) {
     videoDurationPrice +
     creatorPrice;
   let subTotalCost = costPerJob * content?.noOfCreators;
-  let platFormFee = subTotalCost * 0.1;
+  let platFormFee = subTotalCost * 0.04;
   let totalBudget = subTotalCost + platFormFee;
 
   return (

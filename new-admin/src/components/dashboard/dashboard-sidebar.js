@@ -32,6 +32,7 @@ import { Scrollbar } from "../scrollbar";
 import { DashboardSidebarSection } from "./dashboard-sidebar-section";
 import { OrganizationPopover } from "./organization-popover";
 import { useAuth } from "../../hooks/use-auth";
+import { Reports } from "src/icons/reports";
 
 const mySections = (t) => [
   {
@@ -46,6 +47,11 @@ const mySections = (t) => [
         title: t("Users"),
         path: "/dashboard/users",
         icon: <UsersIcon fontSize="small" />,
+      },
+      {
+        title: t("Report"),
+        path: "/dashboard/reports",
+        icon: <Reports fontSize="small" />,
       },
       // {
       //   title: t("Orders"),

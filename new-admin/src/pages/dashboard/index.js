@@ -3,442 +3,295 @@ import Head from "next/head";
 import {
   Box,
   Button,
+  Card,
+  CardActions,
+  CardContent,
   Container,
+  Divider,
   Grid,
+  MenuItem,
   TextField,
   Typography,
-  Dialog,
-  DialogContent,
-  Card,
-  CardContent,
-  DialogActions,
-  TableContainer,
-  Paper,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
 } from "@mui/material";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
-
-import DeleteIcon from "@mui/icons-material/Delete";
-import { RemoveRedEye, FactCheck } from "@mui/icons-material";
-
-import { Cog as CogIcon } from "../../icons/cog";
+import { OverviewBanner } from "../../components/dashboard/overview/overview-banner";
+import { OverviewCryptoWallet } from "../../components/dashboard/overview/overview-crypto-wallet";
+import { OverviewInbox } from "../../components/dashboard/overview/overview-inbox";
+import { OverviewLatestTransactions } from "../../components/dashboard/overview/overview-latest-transactions";
+import { OverviewPrivateWallet } from "../../components/dashboard/overview/overview-private-wallet";
+import { OverviewTotalBalance } from "../../components/dashboard/overview/overview-total-balance";
+import { OverviewTotalTransactions } from "../../components/dashboard/overview/overview-total-transactions";
+import { ArrowRight as ArrowRightIcon } from "../../icons/arrow-right";
+import { Briefcase as BriefcaseIcon } from "../../icons/briefcase";
+import { Download as DownloadIcon } from "../../icons/download";
+import { ExternalLink as ExternalLinkIcon } from "../../icons/external-link";
+import { InformationCircleOutlined as InformationCircleOutlinedIcon } from "../../icons/information-circle-outlined";
+import { Reports as ReportsIcon } from "../../icons/reports";
+import { Users as UsersIcon } from "../../icons/users";
 import { gtm } from "../../lib/gtm";
-import { useRouter } from "next/router";
-import { API_SERVICE } from "../../config";
-import { useAuth } from "../../hooks/use-auth";
 
-import {
-  CardMedia,
-  Checkbox,
-  Divider,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
-  Stack,
-} from "@mui/material";
-import { ArrowLeft as ArrowLeftIcon } from "../../icons/arrow-left";
-import PropTypes from "prop-types";
-import Tabs from "@mui/material/Tabs";
-import Tab from "@mui/material/Tab";
-import ImageIcon from "@mui/icons-material/Image";
-import RectangleIcon from "@mui/icons-material/RectangleOutlined";
-import VideocamIcon from "@mui/icons-material/Videocam";
-import AccessTime from "@mui/icons-material/AccessTime";
-import MoreTime from "@mui/icons-material/moreTime";
-import InstagramIcon from "@mui/icons-material/Instagram";
-import YouTubeIcon from "@mui/icons-material/YouTube";
-import TwitterIcon from "@mui/icons-material/Twitter";
-import FilterDramaIcon from "@mui/icons-material/FilterDrama";
-import LanguageIcon from "@mui/icons-material/Language";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import BrandDialog from "src/components/dashboard/users/brand-dialog";
-import CreatorDialog from "src/components/dashboard/users/creator-dialog";
-import OrderList from "src/components/dashboard/order/admin-order";
-
-import * as React from "react";
-import Switch from "@mui/material/Switch";
-
-const CustomBox = ({ value, title }) => (
-  <Grid
-    item
-    md={3}
-    xs={12}
-    sx={{
-      alignItems: "center",
-      borderRight: (theme) => ({
-        md: `1px solid ${theme.palette.divider}`,
-      }),
-      borderBottom: (theme) => ({
-        md: "none",
-        xs: `1px solid ${theme.palette.divider}`,
-      }),
-      display: "flex",
-      justifyContent: "space-between",
-      p: 3,
-    }}
-  >
-    <div>
-      <Typography variant="h5">{value}</Typography>
-      <Typography color="textSecondary" variant="overline">
-        {title}
-      </Typography>
-    </div>
-  </Grid>
-);
-
-const Creators = () => {
-  const router = useRouter();
-  // const { user } = useAuth();
-
-  const [users, setUsers] = useState([]);
-  const [creators, setCreators] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
-  const [orders, setOrders] = useState([]);
-
-  const [creatorOpen, setcreatorOpen] = useState(false);
-  const [selectedCreator, setSelectedCreator] = useState(null);
-
-  const [brandOpen, setbrandOpen] = useState(false);
-  const [selectedCampaigns, setSelectedCampaigns] = useState([]);
-
-  const [orderOpen, setorderOpen] = useState(false);
-  const [selectedOrders, setSelectedOrders] = useState([]);
-
-  const [q, setQ] = useState("");
-  const [searchParam] = useState(["userId", "userType", "name", "email"]);
-
-  const fetchCreators = async () => {
-    try {
-      const response = await fetch(`${API_SERVICE}/get_all_creators`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 200) {
-        const data = await response.json();
-        console.log(data);
-        setCreators(data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetchAllCampaigns = async () => {
-    try {
-      const response = await fetch(`${API_SERVICE}/get_all_campaigns`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 200) {
-        // console.log(response);
-        const data = await response.json();
-        console.log(data);
-        setCampaigns(data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const response = await fetch(`${API_SERVICE}/get_all_users`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 200) {
-        const data = await response.json();
-        console.log(data);
-        setUsers(data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const fetchOrders = async () => {
-    try {
-      const response = await fetch(`${API_SERVICE}/get_orders`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-      });
-      if (response.status === 200) {
-        const data = await response.json();
-        console.log(data);
-        setOrders(data);
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const editUserStatus = async (userId) => {
-    try {
-      const response = await fetch(`${API_SERVICE}/edit_user/${userId}`, {
-        method: "PATCH",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          disabled: !users.find((user) => user.userId === userId).disabled,
-        }),
-      });
-      console.log(response.status);
-      if (response.status === 200) {
-        // const data = await response.json();
-        // console.log(data);
-        // const updatedUser = users.find((user) => user.userId === userId);
-        // updatedUser.disabled = !updatedUser.disabled;
-        // const filteredUsers = users.filter((user) => user.userId !== userId);
-        // setUsers([...filteredUsers, updatedUser]);
-        fetchUsers();
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  const totalTransactions = () => {
-    let sum = 0;
-    users?.forEach((user) => {
-      sum += parseInt(user?.funds?.amount);
-    });
-    console.log("Sum");
-    console.log(sum);
-    return sum;
-  };
+const Overview = () => {
+  const [displayBanner, setDisplayBanner] = useState(true);
 
   useEffect(() => {
     gtm.push({ event: "page_view" });
   }, []);
 
   useEffect(() => {
-    fetchUsers();
-    fetchCreators();
-    fetchAllCampaigns();
-    fetchOrders();
+    // Restore the persistent state from local/session storage
+    const value = globalThis.sessionStorage.getItem("dismiss-banner");
+
+    if (value === "true") {
+      // setDisplayBanner(false);
+    }
   }, []);
 
-  function search(items) {
-    return items?.filter((item) => {
-      return searchParam.some((newItem) => {
-        // console.log(item);
-        // console.log(newItem);
-        return item[newItem]?.toString().toLowerCase().indexOf(q.toLowerCase()) > -1;
-      });
-    });
-  }
-
-  const handleSearch = (e) => {
-    // console.log(e.target.value);
-    setQ(e.target.value);
+  const handleDismissBanner = () => {
+    // Update the persistent state
+    // globalThis.sessionStorage.setItem('dismiss-banner', 'true');
+    setDisplayBanner(false);
   };
 
   return (
     <>
-      <BrandDialog
-        brandOpen={brandOpen}
-        setbrandOpen={setbrandOpen}
-        campaigns={selectedCampaigns}
-      />
-      <CreatorDialog
-        creatorOpen={creatorOpen}
-        setcreatorOpen={setcreatorOpen}
-        selectedCreator={selectedCreator}
-      />
-      <Dialog onClose={() => setorderOpen(false)} open={orderOpen} maxWidth="lg">
-        <DialogContent>
-          <OrderList orders={selectedOrders}></OrderList>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setorderOpen(false)} color="primary">
-            Close
-          </Button>
-        </DialogActions>
-      </Dialog>
       <Head>
-        <title>Dashboard: Finance | Material Kit Pro</title>
+        <title>Dashboard: Overview | Material Kit Pro</title>
       </Head>
-      <Container>
-        <Box sx={{ mt: 4 }}>
-          <Card>
-            <CardContent>
-              <Grid container>
-                <CustomBox
-                  value={`$${totalTransactions().toFixed(2)}`}
-                  title="Total Transactions"
-                ></CustomBox>
-                <CustomBox value={users.length} title="Total Users"></CustomBox>
-                <CustomBox
-                  value={users.filter((user) => user.userType === "brand").length}
-                  title="Total Brands"
-                ></CustomBox>
-                <CustomBox
-                  value={users.filter((user) => user.userType === "creator").length}
-                  title="Total Creators"
-                ></CustomBox>
-              </Grid>
-            </CardContent>
-          </Card>
-        </Box>
-      </Container>
       <Box
         component="main"
         sx={{
           flexGrow: 1,
-          py: 6,
+          py: 8,
         }}
       >
         <Container maxWidth="xl">
           <Box sx={{ mb: 4 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Users</Typography>
+                <Typography variant="h4">Good Morning</Typography>
               </Grid>
               <Grid
                 item
                 sx={{
                   display: "flex",
-                  flexWrap: "wrap",
+                  alignItems: "center",
                   m: -1,
                 }}
               >
-                <TextField
+                <Button
+                  startIcon={<ReportsIcon fontSize="small" />}
                   sx={{ m: 1 }}
                   variant="outlined"
+                >
+                  Reports
+                </Button>
+                <TextField
+                  defaultValue="week"
+                  label="Period"
+                  select
                   size="small"
-                  label="Search"
-                  value={q}
-                  onChange={handleSearch}
-                />
+                  sx={{ m: 1 }}
+                >
+                  <MenuItem value="week">Last week</MenuItem>
+                  <MenuItem value="month">Last month</MenuItem>
+                  <MenuItem value="year">Last year</MenuItem>
+                </TextField>
               </Grid>
             </Grid>
           </Box>
-
-          <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell align="center">Sr No.</TableCell>
-                  <TableCell align="center">Name</TableCell>
-                  <TableCell align="center">Contact</TableCell>
-                  <TableCell align="center">Email</TableCell>
-                  <TableCell align="center">Type</TableCell>
-                  <TableCell align="center">Funds</TableCell>
-                  <TableCell align="center">Active</TableCell>
-                  <TableCell align="center" sx={{ minWidth: 300 }}>
-                    Action
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {search(users)?.map((user, index) => (
-                  <TableRow
-                    key={user._id}
-                    sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+          <Grid container spacing={4}>
+            {/* {displayBanner && (
+              <Grid
+                item
+                xs={12}
+              >
+                <OverviewBanner onDismiss={handleDismissBanner} />
+              </Grid>
+            )} */}
+            <Grid item md={6} xs={12}>
+              <OverviewCryptoWallet />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <OverviewPrivateWallet />
+            </Grid>
+            <Grid item md={8} xs={12}>
+              <OverviewTotalTransactions />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <OverviewTotalBalance />
+            </Grid>
+            <Grid item md={8} xs={12}>
+              <OverviewLatestTransactions />
+            </Grid>
+            <Grid item md={4} xs={12}>
+              <OverviewInbox />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <Card>
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: "center",
+                      display: "flex",
+                    }}
                   >
-                    <TableCell align="center">{index + 1}</TableCell>
-                    <TableCell align="center">{user?.name || "-"}</TableCell>
-                    <TableCell align="center">{user?.phoneNumber || "-"}</TableCell>
-                    <TableCell align="center">{user?.email || "-"}</TableCell>
-                    <TableCell align="center">{user?.userType}</TableCell>
-
-                    <TableCell align="center">{`$${parseInt(user?.funds?.amount).toFixed(
-                      2
-                    )}`}</TableCell>
-                    <TableCell align="center">
-                      <Switch
-                        checked={user?.disabled ? false : true}
-                        onChange={() => {
-                          editUserStatus(user?.userId);
-                        }}
-                        inputProps={{ "aria-label": "controlled" }}
-                      />
-                    </TableCell>
-                    <TableCell align="center">
-                      <Button
-                        endIcon={<RemoveRedEye />}
-                        variant="contained"
-                        size="small"
-                        sx={{ mx: 2 }}
-                        onClick={async () => {
-                          console.log(user);
-                          console.log(campaigns);
-                          if (user?.userType === "brand") {
-                            // console.log(campaigns.filter((c) => c?.userId === user?.userId));
-                            setSelectedCampaigns(
-                              campaigns.filter((c) => c?.userId === user?.userId)
-                            );
-                            setbrandOpen(true);
-                          } else {
-                            setSelectedCreator(
-                              creators.find((creator) => creator?.userId === user?.userId)
-                            );
-                            setcreatorOpen(true);
-                          }
-                        }}
-                      >
-                        More
-                      </Button>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        endIcon={<FactCheck />}
-                        onClick={async () => {
-                          // console.log(user);
-                          // console.log(campaigns);
-                          if (user?.userType === "brand") {
-                            // console.log(campaigns.filter((c) => c?.userId === user?.userId));
-                            setSelectedOrders(orders.filter((o) => o?.branduser === user?.userId));
-                            setorderOpen(true);
-                          } else {
-                            setSelectedOrders(
-                              orders.filter((o) => o?.creatoruser === user?.userId)
-                            );
-                            setorderOpen(true);
-                          }
-                        }}
-                      >
-                        Orders
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
+                    <BriefcaseIcon color="primary" fontSize="small" />
+                    <Typography
+                      color="primary.main"
+                      sx={{ pl: 1 }}
+                      variant="subtitle2"
+                    >
+                      Jobs
+                    </Typography>
+                  </Box>
+                  <Typography variant="h6" sx={{ mt: 2 }}>
+                    Find your dream job
+                  </Typography>
+                  <Typography color="textSecondary" variant="body2">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua.
+                  </Typography>
+                </CardContent>
+                <Divider />
+                <CardActions>
+                  <Button
+                    endIcon={<ArrowRightIcon fontSize="small" />}
+                    size="small"
+                  >
+                    Search Jobs
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <Card>
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: "center",
+                      display: "flex",
+                    }}
+                  >
+                    <InformationCircleOutlinedIcon color="primary" />
+                    <Typography
+                      color="primary.main"
+                      sx={{ pl: 1 }}
+                      variant="subtitle2"
+                    >
+                      Help Center
+                    </Typography>
+                  </Box>
+                  <Typography sx={{ mt: 2 }} variant="h6">
+                    Need help figuring things out?
+                  </Typography>
+                  <Typography color="textSecondary" variant="body2">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua.
+                  </Typography>
+                </CardContent>
+                <Divider />
+                <CardActions>
+                  <Button
+                    endIcon={<ExternalLinkIcon fontSize="small" />}
+                    size="small"
+                  >
+                    Help Center
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <Card>
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: "center",
+                      display: "flex",
+                    }}
+                  >
+                    <DownloadIcon color="primary" />
+                    <Typography
+                      color="primary.main"
+                      sx={{ pl: 1 }}
+                      variant="subtitle2"
+                    >
+                      Download
+                    </Typography>
+                  </Box>
+                  <Typography sx={{ mt: 2 }} variant="h6">
+                    Download our Free PDF and learn how to get more job leads
+                  </Typography>
+                  <Typography color="textSecondary" variant="body2">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua.
+                  </Typography>
+                </CardContent>
+                <Divider />
+                <CardActions>
+                  <Button
+                    endIcon={<DownloadIcon fontSize="small" />}
+                    size="small"
+                    variant="outlined"
+                  >
+                    Download Free PDF
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <Card>
+                <CardContent>
+                  <Box
+                    sx={{
+                      alignItems: "center",
+                      display: "flex",
+                    }}
+                  >
+                    <UsersIcon color="primary" />
+                    <Typography
+                      color="primary.main"
+                      sx={{ pl: 1 }}
+                      variant="subtitle2"
+                    >
+                      Contacts
+                    </Typography>
+                  </Box>
+                  <Typography sx={{ mt: 2 }} variant="h6">
+                    Contacts allow you to manage your company contracts
+                  </Typography>
+                  <Typography color="textSecondary" variant="body2">
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed
+                    do eiusmod tempor incididunt ut labore et dolore magna
+                    aliqua.
+                  </Typography>
+                </CardContent>
+                <Divider />
+                <CardActions>
+                  <Button
+                    endIcon={<ArrowRightIcon fontSize="small" />}
+                    size="small"
+                    variant="outlined"
+                  >
+                    My Contacts
+                  </Button>
+                </CardActions>
+              </Card>
+            </Grid>
+          </Grid>
         </Container>
       </Box>
     </>
   );
 };
 
-Creators.getLayout = (page) => (
+Overview.getLayout = (page) => (
   <AuthGuard>
     <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
-export default Creators;
+export default Overview;

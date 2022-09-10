@@ -207,7 +207,7 @@ const OrderPreview = (props) => {
     videoDurationPrice +
     creatorPrice;
   let subTotalCost = costPerJob * order?.campaign?.content?.noOfCreators;
-  let platFormFee = subTotalCost * 0.1;
+  let platFormFee = subTotalCost * 0.04;
   let totalBudget = subTotalCost + platFormFee;
 
   const align = lgUp ? "horizontal" : "vertical";

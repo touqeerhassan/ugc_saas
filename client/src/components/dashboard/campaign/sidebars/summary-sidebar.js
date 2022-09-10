@@ -69,7 +69,7 @@ function SummarySidebar() {
     videoDurationPrice +
     creatorPrice;
   let subTotalCost = costPerJob * campaign?.content?.noOfCreators;
-  let platFormFee = subTotalCost * 0.1;
+  let platFormFee = subTotalCost * 0.04;
   let totalBudget = subTotalCost + platFormFee;
 
   return (

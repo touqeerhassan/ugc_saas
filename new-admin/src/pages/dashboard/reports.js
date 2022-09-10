@@ -23,9 +23,10 @@ import {
 } from "@mui/material";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
+import ReactHTMLTableToExcel from "react-html-table-to-excel";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import { RemoveRedEye, FactCheck } from "@mui/icons-material";
+import { RemoveRedEye, FactCheck, Download as DownloadIcon } from "@mui/icons-material";
 
 import { Cog as CogIcon } from "../../icons/cog";
 import { gtm } from "../../lib/gtm";
@@ -116,7 +117,6 @@ const Creators = () => {
 
   const [q, setQ] = useState("");
   const [searchParam] = useState(["userId", "userType", "name", "email"]);
-
   const [loading, setLoading] = useState(true);
 
   const fetchCreators = async () => {
@@ -233,6 +233,18 @@ const Creators = () => {
     return sum;
   };
 
+  const findTotalOrders = (user) => {
+    if (user?.userType === "brand") {
+      return orders.filter((order) => order?.branduser === user?.userId).length;
+    }
+    return orders.filter((order) => order?.creatoruser === user?.userId).length;
+  };
+
+  const findTotalCampaigns = (user) => {
+    if (user?.userType === "creator") return 0;
+    return campaigns.filter((campaign) => campaign?.userId === user?.userId).length;
+  };
+
   useEffect(() => {
     gtm.push({ event: "page_view" });
   }, []);
@@ -243,9 +255,6 @@ const Creators = () => {
     fetchCreators();
     fetchAllCampaigns();
     fetchOrders();
-    // setTimeout(() => {
-    //   console.log("Loading");
-    // }, 5000);
     setLoading(false);
   }, []);
 
@@ -287,7 +296,7 @@ const Creators = () => {
         </DialogActions>
       </Dialog>
       {loading ? (
-        <CircularProgress size={20} align="center" />
+        <CircularProgress />
       ) : (
         <>
           <Head>
@@ -324,33 +333,45 @@ const Creators = () => {
             }}
           >
             <Container maxWidth="xl">
-              <Box sx={{ mb: 4 }}>
-                <Grid container justifyContent="space-between" spacing={3}>
-                  <Grid item>
-                    <Typography variant="h4">Users</Typography>
-                  </Grid>
-                  <Grid
-                    item
-                    sx={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      m: -1,
-                    }}
+              <Box
+                sx={{
+                  mb: 4,
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                }}
+              >
+                <Typography variant="h4">Report</Typography>
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                  <TextField
+                    sx={{ mx: 2 }}
+                    variant="outlined"
+                    size="small"
+                    label="Search"
+                    value={q}
+                    onChange={handleSearch}
+                  />
+                  <Button
+                    // style={{ backgroundColor: "#607464" }}
+                    component="a"
+                    startIcon={<DownloadIcon fontSize="small" />}
+                    variant="contained"
                   >
-                    <TextField
-                      sx={{ m: 1 }}
-                      variant="outlined"
-                      size="small"
-                      label="Search"
-                      value={q}
-                      onChange={handleSearch}
-                    />
-                  </Grid>
-                </Grid>
+                    <ReactHTMLTableToExcel
+                      id="test-table-xls-button"
+                      className="download-table-xls-button"
+                      table="table-to-xls-users"
+                      filename="cybrclick-admin-users"
+                      sheet="cybrclick-admin-users"
+                      buttonText="Download as XLS"
+                      // backgroundColor="#5F7464"
+                    ></ReactHTMLTableToExcel>
+                  </Button>
+                </Box>
               </Box>
 
               <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <Table sx={{ minWidth: 650 }} aria-label="simple table" id="table-to-xls-users">
                   <TableHead>
                     <TableRow>
                       <TableCell align="center">Sr No.</TableCell>
@@ -359,10 +380,9 @@ const Creators = () => {
                       <TableCell align="center">Email</TableCell>
                       <TableCell align="center">Type</TableCell>
                       <TableCell align="center">Funds</TableCell>
+                      <TableCell align="center">Total Orders</TableCell>
+                      <TableCell align="center">Total Campaigns</TableCell>
                       <TableCell align="center">Active</TableCell>
-                      <TableCell align="center" sx={{ minWidth: 300 }}>
-                        Action
-                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -380,64 +400,9 @@ const Creators = () => {
                         <TableCell align="center">{`$${parseInt(user?.funds?.amount).toFixed(
                           2
                         )}`}</TableCell>
-                        <TableCell align="center">
-                          <Switch
-                            checked={user?.disabled ? false : true}
-                            onChange={() => {
-                              editUserStatus(user?.userId);
-                            }}
-                            inputProps={{ "aria-label": "controlled" }}
-                          />
-                        </TableCell>
-                        <TableCell align="center">
-                          <Button
-                            endIcon={<RemoveRedEye />}
-                            variant="contained"
-                            size="small"
-                            sx={{ mx: 2 }}
-                            onClick={async () => {
-                              console.log(user);
-                              console.log(campaigns);
-                              if (user?.userType === "brand") {
-                                // console.log(campaigns.filter((c) => c?.userId === user?.userId));
-                                setSelectedCampaigns(
-                                  campaigns.filter((c) => c?.userId === user?.userId)
-                                );
-                                setbrandOpen(true);
-                              } else {
-                                setSelectedCreator(
-                                  creators.find((creator) => creator?.userId === user?.userId)
-                                );
-                                setcreatorOpen(true);
-                              }
-                            }}
-                          >
-                            More
-                          </Button>
-                          <Button
-                            variant="contained"
-                            size="small"
-                            endIcon={<FactCheck />}
-                            onClick={async () => {
-                              // console.log(user);
-                              // console.log(campaigns);
-                              if (user?.userType === "brand") {
-                                // console.log(campaigns.filter((c) => c?.userId === user?.userId));
-                                setSelectedOrders(
-                                  orders.filter((o) => o?.branduser === user?.userId)
-                                );
-                                setorderOpen(true);
-                              } else {
-                                setSelectedOrders(
-                                  orders.filter((o) => o?.creatoruser === user?.userId)
-                                );
-                                setorderOpen(true);
-                              }
-                            }}
-                          >
-                            Orders
-                          </Button>
-                        </TableCell>
+                        <TableCell align="center">{findTotalOrders(user)}</TableCell>
+                        <TableCell align="center">{findTotalCampaigns(user)}</TableCell>
+                        <TableCell align="center">{user.disabled ? "No" : "Yes"}</TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
