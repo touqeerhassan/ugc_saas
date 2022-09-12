@@ -29,10 +29,10 @@ export const gtmConfig = {
   containerId: process.env.NEXT_PUBLIC_GTM_CONTAINER_ID,
 };
 
-export const API_SERVICE = "http://localhost:5000/api/v1/main";
-export const SOCKET_ENDPOINT = "http://localhost:5000";
-export const WEBSITE_URL = "http://localhost:3000";
+// export const API_SERVICE = "http://localhost:5000/api/v1/main";
+// export const SOCKET_ENDPOINT = "http://localhost:5000";
+// export const WEBSITE_URL = "http://localhost:3000";
 
-// export const API_SERVICE = "https://cybrclik.herokuapp.com/api/v1/main";
-// export const SOCKET_ENDPOINT = "https://cybrclik.herokuapp.com";
-// export const WEBSITE_URL = "https://cybrclick.com";
+export const API_SERVICE = "https://cybrclik.herokuapp.com/api/v1/main";
+export const SOCKET_ENDPOINT = "https://cybrclik.herokuapp.com";
+export const WEBSITE_URL = "https://cybrclick.com";
