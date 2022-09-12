@@ -14,6 +14,7 @@ import CheckoutForm from "../components/funds/checkout-form";
 import { AuthGuard } from "../components/authentication/auth-guard";
 import { useAuth } from "../hooks/use-auth";
 import CustomSnackbar from "../components/custom-snackbar";
+import FPXForm from "../components/funds/fpx-form";
 
 console.log(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY);
 const stripePromise = loadStripe(
@@ -21,6 +22,7 @@ const stripePromise = loadStripe(
 );
 
 function AddFunds() {
+  const [paymentType, setPaymentType] = useState("card");
   const [clientSecret, setClientSecret] = useState(null);
   const { user } = useAuth();
   const [open, setOpen] = useState(false);
@@ -47,6 +49,7 @@ function AddFunds() {
       setMessage(error);
       setOpen(true);
     }
+    setPaymentType(type);
     if (clientSecret) {
       setClientSecret(clientSecret);
     }
@@ -76,11 +79,19 @@ function AddFunds() {
             stripe={stripePromise}
             options={{ clientSecret: clientSecret }}
           >
-            <CheckoutForm
-              clientSecret={clientSecret}
-              handleBack={handleBack}
-              //   setClientSecret={() => setClientSecret(null)}
-            />
+            {paymentType === "card" ? (
+              <CheckoutForm
+                clientSecret={clientSecret}
+                handleBack={handleBack}
+                //   setClientSecret={() => setClientSecret(null)}
+              />
+            ) : (
+              <FPXForm
+                clientSecret={clientSecret}
+                handleBack={handleBack}
+                //   setClientSecret={() => setClientSecret(null)}
+              />
+            )}
           </Elements>
         ) : (
           <PaymentIntent createPaymentIntent={createPaymentIntent} />

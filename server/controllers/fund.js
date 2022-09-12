@@ -1,4 +1,5 @@
 const User = require("../models/User");
+const PaymentClientSecret = require("../models/PaymentClientSecret");
 const stripe = require("../config/stripeConfig");
 
 const CC = require("currency-converter-lt");
@@ -63,6 +64,64 @@ const addFunds = async (req, res) => {
   }
 };
 
+const addFundsFPX = async (req, res) => {
+  let { clientSecret, userId } = req.body;
+
+  const isDuplicate = await PaymentClientSecret.find({ clientSecret });
+
+  if (isDuplicate.length > 0) {
+    return res.status(401).json("Duplicate Request");
+  }
+  const paymentIntent = await stripe.paymentIntents.retrieve(clientSecret);
+  let { amount, currency } = paymentIntent;
+  amount = currency === "idr" ? amount / 1000 : amount / 100;
+
+  // console.log(paymentIntent);
+
+  try {
+    const isDuplicate = await PaymentClientSecret.find({ clientSecret });
+    console.log(isDuplicate);
+    if (isDuplicate.length > 0) {
+      return res.status(401).json("Duplicate Request");
+    }
+    const paymentClientSecret = new PaymentClientSecret({
+      clientSecret: clientSecret,
+    });
+    await paymentClientSecret.save();
+    const customer = await User.findOne({ userId });
+    if (customer) {
+      console.log(customer);
+      let currencyConverter = new CC({
+        from: currency.toUpperCase(),
+        to: customer.funds.currency.toUpperCase(),
+        amount: parseFloat(amount),
+      });
+      // console.log(currencyConverter);
+      currencyConverter.convert().then(async (response) => {
+        console.log(response); //or do something else
+        console.log(customer.funds.amount);
+        customer.funds.amount += response;
+
+        customer.save(function (err) {
+          console.log(err);
+          if (!err) {
+            console.log(customer);
+            res.status(200).json("Funds Updated");
+          } else {
+            console.log("Could not save");
+            res.status(500).json("Could not update Funds");
+          }
+        });
+      });
+    } else {
+      res.status(404).json("User not Found");
+    }
+  } catch (err) {
+    console.log(err);
+    res.status(500).json(err.message);
+  }
+};
+
 // const buyProduct = async (req, res) => {
 //   // console.log(req.body);
 //   const { currency, amount, userId } = req.body;
@@ -109,5 +168,6 @@ const addFunds = async (req, res) => {
 module.exports = {
   createPaymentIntent,
   addFunds,
+  addFundsFPX,
   //   buyProduct,
 };

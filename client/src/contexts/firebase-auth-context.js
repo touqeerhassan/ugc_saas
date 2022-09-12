@@ -11,6 +11,12 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
+  // if (action.type === "DATA_FETCHED") {
+  //   return {
+  //     ...state,
+  //     dataFetched: true,
+  //   };
+  // }
   if (action.type === "AUTH_STATE_CHANGED") {
     const { isAuthenticated, user } = action.payload;
 
@@ -112,14 +118,6 @@ export const AuthProvider = (props) => {
                   },
                 },
               });
-
-              if (sessionStorage.loginType === "register") {
-                router.push("/dashboard/onboarding");
-              } else if (data?.disabled) {
-                router.push("/account-disabled");
-              } else {
-                router.push("/dashboard/orders");
-              }
             } else {
               dispatch({
                 type: "AUTH_STATE_CHANGED",
@@ -135,12 +133,6 @@ export const AuthProvider = (props) => {
                   },
                 },
               });
-
-              if (data?.disabled) {
-                router.push("/account-disabled");
-              } else {
-                router.push("/dashboard/orders");
-              }
             }
           } catch (err) {
             console.log(err);

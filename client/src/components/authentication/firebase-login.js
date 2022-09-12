@@ -167,9 +167,23 @@ import {
 import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
 import firebase from "../../lib/firebase";
+import { useEffect } from "react";
 
 export const FirebaseLogin = (props) => {
   const isMounted = useMounted();
+  const auth = useAuth();
+  useEffect(() => {
+    if (!auth.user) return;
+    if (auth?.user?.userData?.disabled) {
+      router.push("/account-disabled");
+    }
+    // else if (user?.userData?.disabled) {
+    //   router.push("/account-disabled");
+    // }
+    else {
+      router.push("/dashboard/orders");
+    }
+  }, [auth?.isAuthenticated]);
   const router = useRouter();
   const { signInWithEmailAndPassword, signInWithGoogle } = useAuth();
   const formik = useFormik({

@@ -49,37 +49,48 @@ const initialState = {
 
 export const FirebaseRegister = (props) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  useEffect(
-    () =>
-      firebase.auth().onAuthStateChanged((user) => {
-        if (user) {
-          // Here you should extract the complete user profile to make it available in your entire app.
-          // The auth state only provides basic information.
-          dispatch({
-            type: "AUTH_STATE_CHANGED",
-            payload: {
-              isAuthenticated: true,
-              user: {
-                id: user.uid,
-                avatar: user.photoURL,
-                email: user.email,
-                name: "Anika Visser",
-                plan: "Premium",
-              },
-            },
-          });
-        } else {
-          dispatch({
-            type: "AUTH_STATE_CHANGED",
-            payload: {
-              isAuthenticated: false,
-              user: null,
-            },
-          });
-        }
-      }),
-    [dispatch]
-  );
+  const auth = useAuth();
+  useEffect(() => {
+    if (!auth.user) return;
+    if (auth.user?.userData?.userType === "creator") {
+      router.push("/dashboard/onboarding");
+    } else if (auth?.user?.userData?.disabled) {
+      router.push("/account-disabled");
+    } else {
+      router.push("/dashboard/orders");
+    }
+  }, [auth?.isAuthenticated]);
+  // useEffect(
+  //   () =>
+  //     firebase.auth().onAuthStateChanged((user) => {
+  //       if (user) {
+  //         // Here you should extract the complete user profile to make it available in your entire app.
+  //         // The auth state only provides basic information.
+  //         dispatch({
+  //           type: "AUTH_STATE_CHANGED",
+  //           payload: {
+  //             isAuthenticated: true,
+  //             user: {
+  //               id: user.uid,
+  //               avatar: user.photoURL,
+  //               email: user.email,
+  //               name: "Anika Visser",
+  //               plan: "Premium",
+  //             },
+  //           },
+  //         });
+  //       } else {
+  //         dispatch({
+  //           type: "AUTH_STATE_CHANGED",
+  //           payload: {
+  //             isAuthenticated: false,
+  //             user: null,
+  //           },
+  //         });
+  //       }
+  //     }),
+  //   [dispatch]
+  // );
 
   const isMounted = useMounted();
   const router = useRouter();

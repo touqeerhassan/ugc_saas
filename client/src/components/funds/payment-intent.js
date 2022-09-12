@@ -30,7 +30,7 @@ function PaymentIntent({ createPaymentIntent }) {
       }}
     >
       <Grid container spacing={4}>
-        {/* <Grid item xs={12}>
+        <Grid item xs={12}>
           <FormControl fullWidth>
             <InputLabel id="demo-simple-select-label">
               Payment Method
@@ -40,22 +40,27 @@ function PaymentIntent({ createPaymentIntent }) {
               id="demo-simple-select"
               value={type}
               label="Payment Method"
-              onChange={(e) => setType(e.target.value)}
+              onChange={(e) => {
+                setType(e.target.value);
+                if (e.target.value === "fpx") {
+                  setCurrency("myr");
+                }
+              }}
             >
               <MenuItem value="card">Card</MenuItem>
-              <MenuItem value="grabpay">Grab Pay</MenuItem>
+              <MenuItem value="fpx">FPX</MenuItem>
             </Select>
           </FormControl>
-        </Grid> */}
+        </Grid>
 
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <TextField
             fullWidth
             disabled
             label="Payment Method"
             defaultValue="Card"
           />
-        </Grid>
+        </Grid> */}
 
         <Grid item xs={12}>
           <TextField
