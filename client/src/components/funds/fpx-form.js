@@ -25,12 +25,14 @@ export default function FPXForm({ handleBack, clientSecret }) {
   const [open, setOpen] = useState(false);
   const [severity, setSeverity] = useState("");
 
+  const [step, setstep] = useState(0);
+
   const [details, setDetails] = useState({
-    name: "Demo User",
-    address: "B 345, sherlock lane",
-    city: "New York",
-    zip: "83888",
-    country: "US",
+    name: "",
+    address: "",
+    city: "",
+    zip: "",
+    country: "",
   });
 
   const handleChange = (e) => {
@@ -163,8 +165,9 @@ export default function FPXForm({ handleBack, clientSecret }) {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
+                autoFocus
                 fullWidth
-                label="Card Holder Name"
+                label="Full Name"
                 name="name"
                 required
                 value={details.name}
@@ -190,6 +193,7 @@ export default function FPXForm({ handleBack, clientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                autoFocus
                 fullWidth
                 label="Country"
                 name="country"
@@ -200,6 +204,7 @@ export default function FPXForm({ handleBack, clientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                autoFocus
                 value={details.zip}
                 fullWidth
                 label="Zip"
@@ -210,6 +215,7 @@ export default function FPXForm({ handleBack, clientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
+                autoFocus
                 value={details.city}
                 fullWidth
                 label="City"
@@ -221,7 +227,16 @@ export default function FPXForm({ handleBack, clientSecret }) {
 
             <Grid item xs={12}>
               <Box sx={{ py: 4 }}>
-                <FpxBankElement options={{ accountHolderType: "individual" }} />
+                {
+                  step === 1 ? (
+                    <>
+                      <h4>
+                        Please select bank
+                      </h4>
+                      <FpxBankElement options={{ accountHolderType: "individual" }} />
+                    </>
+                  ) : null
+                }
               </Box>
             </Grid>
             <Grid item xs={12}>
@@ -232,14 +247,30 @@ export default function FPXForm({ handleBack, clientSecret }) {
                 display="flex"
               >
                 <div onClick={handleBack}>Go Back</div>
-                <Button
-                  type="submit"
-                  variant="contained"
-                  onClick={handleSubmit}
-                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                >
-                  {loading ? "Loading" : "Add Funds"}
-                </Button>
+
+                {
+                  step === 0 ? (
+                    <Button
+                      type="button"
+                      variant="contained"
+                      onClick={() => setstep(1)}
+                      style={{ paddingLeft: "40px", paddingRight: "40px" }}
+                    >
+                      Continue
+                    </Button>
+                  ) : step === 1 ? (
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      onClick={handleSubmit}
+                      style={{ paddingLeft: "40px", paddingRight: "40px" }}
+                    >
+                      {loading ? "Loading" : "Add Funds"}
+                    </Button>
+                  ) : null
+                }
+
+                
               </Box>
             </Grid>
 
