@@ -1,8 +1,15 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Grid, TextField } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+} from "@mui/material";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -15,6 +22,8 @@ import { API_SERVICE, WEBSITE_URL } from "../../config";
 import CustomSnackbar from "../custom-snackbar";
 import { useAuth } from "../../hooks/use-auth";
 
+import countryList from "react-select-country-list";
+
 export default function FPXForm({ handleBack, clientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -26,12 +35,18 @@ export default function FPXForm({ handleBack, clientSecret }) {
   const [severity, setSeverity] = useState("");
 
   const [step, setstep] = useState(0);
+  const countries = useMemo(() => countryList().getData(), []);
 
   const [details, setDetails] = useState({
-    name: "Demo User",
-    address: "B 345, sherlock lane",
-    city: "New York",
-    zip: "83888",
+    // name: "Demo User",
+    // address: "B 345, sherlock lane",
+    // city: "New York",
+    // zip: "83888",
+    // country: "US",
+    name: "",
+    address: "",
+    city: "",
+    zip: "",
     country: "US",
   });
 
@@ -190,14 +205,25 @@ export default function FPXForm({ handleBack, clientSecret }) {
               />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                required
-                value={details.country}
-                onChange={handleChange}
-              />
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Country</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={details.country}
+                  label="Country"
+                  name="country"
+                  onChange={handleChange}
+                >
+                  {countries?.map((country) => {
+                    return (
+                      <MenuItem value={country.value} key={country.value}>
+                        {country.label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
@@ -222,16 +248,14 @@ export default function FPXForm({ handleBack, clientSecret }) {
 
             <Grid item xs={12}>
               <Box sx={{ py: 4 }}>
-                {
-                  step === 1 ? (
-                    <>
-                      <h4>
-                        Please select bank
-                      </h4>
-                      <FpxBankElement options={{ accountHolderType: "individual" }} />
-                    </>
-                  ) : null
-                }
+                {step === 1 ? (
+                  <>
+                    <h4>Please select bank</h4>
+                    <FpxBankElement
+                      options={{ accountHolderType: "individual" }}
+                    />
+                  </>
+                ) : null}
               </Box>
             </Grid>
             <Grid item xs={12}>
@@ -243,28 +267,25 @@ export default function FPXForm({ handleBack, clientSecret }) {
               >
                 <div onClick={handleBack}>Go Back</div>
 
-                {
-                  step === 0 ? (
-                    <Button
-                      type="button"
-                      variant="contained"
-                      onClick={() => setstep(1)}
-                      style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                    >
-                      Continue
-                    </Button>
-                  ) : step === 1 ? (
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      onClick={handleSubmit}
-                      style={{ paddingLeft: "40px", paddingRight: "40px" }}
-                    >
-                      {loading ? "Loading" : "Add Funds"}
-                    </Button>
-                  ) : null
-                }
-                
+                {step === 0 ? (
+                  <Button
+                    type="button"
+                    variant="contained"
+                    onClick={() => setstep(1)}
+                    style={{ paddingLeft: "40px", paddingRight: "40px" }}
+                  >
+                    Continue
+                  </Button>
+                ) : step === 1 ? (
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    onClick={handleSubmit}
+                    style={{ paddingLeft: "40px", paddingRight: "40px" }}
+                  >
+                    {loading ? "Loading" : "Add Funds"}
+                  </Button>
+                ) : null}
               </Box>
             </Grid>
 

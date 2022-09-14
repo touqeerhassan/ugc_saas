@@ -75,6 +75,7 @@
     "react-phone-number-input": "^3.2.11",
     "react-quill": "2.0.0-beta.4",
     "react-redux": "^7.2.4",
+    "react-select-country-list": "^2.2.3",
     "react-syntax-highlighter": "^15.4.3",
     "redux": "^4.1.0",
     "redux-devtools-extension": "^2.13.9",

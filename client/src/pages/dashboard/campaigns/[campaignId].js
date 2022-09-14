@@ -398,7 +398,7 @@ const Creators = () => {
                           <Button
                             fullWidth
                             variant="contained"
-                            onClick={() => {
+                            onClick={async () => {
                               console.log(user);
                               console.log(creator?.price);
                               if (

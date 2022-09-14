@@ -253,14 +253,14 @@ const OrderList = () => {
               <Grid item>
                 <Typography variant="h4">Orders</Typography>
               </Grid>
-              <Grid item>
+              {/* <Grid item>
                 <Button
                   startIcon={<PlusIcon fontSize="small" />}
                   variant="contained"
                 >
                   Add
                 </Button>
-              </Grid>
+              </Grid> */}
             </Grid>
             <Tabs
               indicatorColor="primary"

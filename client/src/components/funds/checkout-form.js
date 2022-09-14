@@ -1,8 +1,15 @@
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import { Grid, TextField } from "@mui/material";
+import {
+  Grid,
+  TextField,
+  Select,
+  FormControl,
+  InputLabel,
+  MenuItem,
+} from "@mui/material";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import {
   PaymentElement,
   useStripe,
@@ -14,6 +21,8 @@ import { API_SERVICE } from "../../config";
 import CustomSnackbar from "../custom-snackbar";
 import { useAuth } from "../../hooks/use-auth";
 
+import countryList from "react-select-country-list";
+
 export default function CheckoutForm({ handleBack, setClientSecret }) {
   const stripe = useStripe();
   const elements = useElements();
@@ -23,6 +32,9 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [severity, setSeverity] = useState("");
+
+  const countries = useMemo(() => countryList().getData(), []);
+  console.log(countries);
   //   const [details, setDetails] = useState({
   //     name: "",
   //     address: "",
@@ -32,10 +44,10 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
   //   });
 
   const [details, setDetails] = useState({
-    name: "Demo User",
-    address: "B 345, sherlock lane",
-    city: "New York",
-    zip: "83888",
+    name: "",
+    address: "",
+    city: "",
+    zip: "",
     country: "US",
   });
 
@@ -189,14 +201,33 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
               />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Country</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={details.country}
+                  label="Country"
+                  name="country"
+                  onChange={handleChange}
+                >
+                  {countries?.map((country) => {
+                    return (
+                      <MenuItem value={country.value} key={country.value}>
+                        {country.label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+              {/* <TextField
                 fullWidth
                 label="Country"
                 name="country"
                 required
                 value={details.country}
                 onChange={handleChange}
-              />
+              /> */}
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
