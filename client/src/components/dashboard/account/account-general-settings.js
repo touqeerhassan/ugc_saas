@@ -9,6 +9,10 @@ import {
   Switch,
   TextField,
   Typography,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 
 import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
@@ -18,7 +22,9 @@ import { updateProfile } from "firebase/auth";
 import { useState } from "react";
 import firebase from "firebase/app";
 import "firebase/auth";
+import { API_SERVICE } from "../../../config";
 
+import { useDispatch, useSelector } from "react-redux";
 import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
@@ -26,10 +32,15 @@ import MuiAlert from "@mui/material/Alert";
 
 export const AccountGeneralSettings = (props) => {
   // To get the user from the authContext, you can use
-  const { user } = useAuth();
+
+  const { user, handleSelectedCurrencyChange } = useAuth();
+  const dispatch = useDispatch();
   console.log(user);
   const [name, setName] = useState(user?.name);
   const [open, setOpen] = useState(false);
+  const [currency, setCurrency] = useState(
+    user?.userData?.funds?.selectedCurrency?.toLowerCase() || "usd"
+  );
 
   const handleClick = () => {
     setOpen(true);
@@ -64,6 +75,28 @@ export const AccountGeneralSettings = (props) => {
         // ...
         console.log(error);
       });
+  };
+
+  const handleCurrencyChange = async () => {
+    try {
+      const response = await fetch(`${API_SERVICE}/change-currency`, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          selectedCurrency: currency,
+        }),
+      });
+      if (response.status === 200) {
+        console.log("Currency Changed");
+        await handleSelectedCurrencyChange(currency);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -101,6 +134,7 @@ export const AccountGeneralSettings = (props) => {
                 )}
                 <Button>Change</Button>
               </Box>
+
               <Box
                 sx={{
                   display: "flex",
@@ -161,11 +195,48 @@ export const AccountGeneralSettings = (props) => {
                 />
                 <Button>Edit</Button>
               </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  mt: 3,
+                  alignItems: "center",
+                }}
+              >
+                <FormControl fullWidth size="small">
+                  <InputLabel id="demo-simple-select-label">
+                    Currency
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={currency}
+                    label="Currency"
+                    onChange={(e) => setCurrency(e.target.value)}
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                    }}
+                  >
+                    <MenuItem value="myr">MYR</MenuItem>
+                    <MenuItem value="idr">IDR</MenuItem>
+                    <MenuItem value="usd">USD</MenuItem>
+                    {/* <MenuItem value="gbp">GBP</MenuItem>
+              <MenuItem value="inr">INR</MenuItem> */}
+                  </Select>
+                </FormControl>
+                <Button
+                  onClick={() => {
+                    handleCurrencyChange();
+                  }}
+                >
+                  Save
+                </Button>
+              </Box>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
-      <Card sx={{ mt: 4 }}>
+      {/* <Card sx={{ mt: 4 }}>
         <CardContent>
           <Grid container spacing={3}>
             <Grid item md={4} xs={12}>
@@ -238,7 +309,7 @@ export const AccountGeneralSettings = (props) => {
             </Grid>
           </Grid>
         </CardContent>
-      </Card>
+      </Card> */}
     </Box>
   );
 };

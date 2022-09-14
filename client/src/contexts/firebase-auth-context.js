@@ -28,6 +28,26 @@ const reducer = (state, action) => {
     };
   }
 
+  if (action.type === "CURRENCY_CHANGED") {
+    const { currency } = action.payload;
+    console.log(currency);
+    console.log("Firebase");
+
+    return {
+      ...state,
+      user: {
+        ...state.user,
+        userData: {
+          ...state.user.userData,
+          funds: {
+            ...state.user.userData.funds,
+            selectedCurrency: currency.toUpperCase(),
+          },
+        },
+      },
+    };
+  }
+
   return state;
 };
 
@@ -38,6 +58,7 @@ export const AuthContext = createContext({
   signInWithEmailAndPassword: () => Promise.resolve(),
   signInWithGoogle: () => Promise.resolve(),
   logout: () => Promise.resolve(),
+  handleSelectedCurrencyChange: () => Promise.resolve(),
 });
 
 export const AuthProvider = (props) => {
@@ -156,9 +177,12 @@ export const AuthProvider = (props) => {
     firebase.auth().signInWithEmailAndPassword(email, password);
   };
 
+  const handleSelectedCurrencyChange = (currency) => {
+    dispatch({ type: "CURRENCY_CHANGED", payload: { currency } });
+  };
+
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
-
     return firebase.auth().signInWithPopup(provider);
   };
 
@@ -178,6 +202,7 @@ export const AuthProvider = (props) => {
         signInWithEmailAndPassword,
         signInWithGoogle,
         logout,
+        handleSelectedCurrencyChange,
       }}
     >
       {children}

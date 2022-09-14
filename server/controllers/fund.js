@@ -122,6 +122,48 @@ const addFundsFPX = async (req, res) => {
   }
 };
 
+const changeCurrency = async (req, res) => {
+  let { selectedCurrency, userId } = req.body;
+  console.log(req.body);
+
+  try {
+    const user = await User.findOne({ userId });
+    if (!user) {
+      return res.status(404).json("User not Found");
+    }
+    user.funds.selectedCurrency = selectedCurrency?.toUpperCase();
+    user.save((err, result) => {
+      console.log(err, result);
+      if (err) {
+        return res.status(500).json("Could not update currency");
+      }
+      return res.status(200).json(result);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: err.message });
+  }
+};
+
+const convertCurrency = async (req, res) => {
+  let { from, amount, to } = req.body;
+
+  try {
+    let currencyConverter = new CC({
+      from: from?.toUpperCase(),
+      to: to?.toUpperCase(),
+      amount: parseFloat(amount),
+    });
+    // console.log(currencyConverter);
+    currencyConverter.convert().then(async (response) => {
+      return res.status(200).json(response);
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: err.message });
+  }
+};
+
 // const buyProduct = async (req, res) => {
 //   // console.log(req.body);
 //   const { currency, amount, userId } = req.body;
@@ -169,5 +211,7 @@ module.exports = {
   createPaymentIntent,
   addFunds,
   addFundsFPX,
+  changeCurrency,
+  convertCurrency,
   //   buyProduct,
 };

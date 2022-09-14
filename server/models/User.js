@@ -31,6 +31,10 @@ const campaignSchema = new mongoose.Schema({
       type: Number,
       default: 0,
     },
+    selectedCurrency: {
+      type: String,
+      default: "USD",
+    },
   },
   disabled: {
     type: Boolean,

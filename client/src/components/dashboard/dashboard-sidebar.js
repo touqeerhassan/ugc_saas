@@ -40,6 +40,7 @@ import { Scrollbar } from "../scrollbar";
 import { DashboardSidebarSection } from "./dashboard-sidebar-section";
 import { OrganizationPopover } from "./organization-popover";
 import { useAuth } from "../../hooks/use-auth";
+import { API_SERVICE } from "../../config";
 
 const brandSections = (t) => [
   {
@@ -157,6 +158,8 @@ const creatorSections = (t, hasProfile) => {
 export const DashboardSidebar = (props) => {
   const { user } = useAuth();
   const { onClose, open } = props;
+  const [amount, setAmount] = useState(user?.userData?.funds?.amount);
+  const [currency, setCurrency] = useState(user?.userData?.funds?.currency);
 
   const router = useRouter();
   const { t } = useTranslation();
@@ -195,12 +198,47 @@ export const DashboardSidebar = (props) => {
   //   user?.userData?.funds?.currency,
   // ]);
 
+  useEffect(() => {
+    console.log("This should print");
+    handleWallet();
+  }, [user?.userData?.funds?.selectedCurrency]);
+
   const handleOpenOrganizationsPopover = () => {
     setOpenOrganizationsPopover(true);
   };
 
   const handleCloseOrganizationsPopover = () => {
     setOpenOrganizationsPopover(false);
+  };
+
+  const handleWallet = async () => {
+    if (user?.userData?.funds?.amount === 0) {
+      setAmount(0);
+      setCurrency(user?.userData?.funds?.selectedCurrency || "USD");
+      return;
+    }
+    try {
+      const response = await fetch(`${API_SERVICE}/convert-currency`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: user?.userData?.funds?.currency,
+          to: user?.userData?.funds?.selectedCurrency,
+          amount: user?.userData?.funds?.amount,
+        }),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
+        setAmount(data);
+        setCurrency(user?.userData?.funds?.selectedCurrency);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const content = (
@@ -234,8 +272,7 @@ export const DashboardSidebar = (props) => {
           <center>
             {user?.userData?.userType === "brand" && (
               <Typography sx={{ mx: 2, mb: 2 }}>
-                {`Wallet ${user?.userData?.funds?.amount}
-              ${user?.userData?.funds?.currency}`}
+                {`Wallet ${amount} ${currency}`}
               </Typography>
             )}
           </center>

@@ -622,6 +622,8 @@ router.delete("/delete_bid/:bidId", async (req, res) => {
 router.post("/create-payment-intent", fundsController.createPaymentIntent);
 router.post("/addFunds", fundsController.addFunds);
 router.post("/addFundsFPX", fundsController.addFundsFPX);
+router.patch("/change-currency", fundsController.changeCurrency);
+router.post("/convert-currency", fundsController.convertCurrency);
 // router.post("/buyProduct", fundsController.buyProduct);
 // router.get("/fetchCountries", countryController.fetchCountries);
 
