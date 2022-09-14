@@ -28,11 +28,11 @@ export default function FPXForm({ handleBack, clientSecret }) {
   const [step, setstep] = useState(0);
 
   const [details, setDetails] = useState({
-    name: "",
-    address: "",
-    city: "",
-    zip: "",
-    country: "",
+    name: "Demo User",
+    address: "B 345, sherlock lane",
+    city: "New York",
+    zip: "83888",
+    country: "US",
   });
 
   const handleChange = (e) => {
@@ -165,7 +165,6 @@ export default function FPXForm({ handleBack, clientSecret }) {
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
-                autoFocus
                 fullWidth
                 label="Full Name"
                 name="name"
@@ -182,7 +181,6 @@ export default function FPXForm({ handleBack, clientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                autoFocus
                 fullWidth
                 label="Street Address"
                 name="address"
@@ -193,7 +191,6 @@ export default function FPXForm({ handleBack, clientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                autoFocus
                 fullWidth
                 label="Country"
                 name="country"
@@ -204,7 +201,6 @@ export default function FPXForm({ handleBack, clientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                autoFocus
                 value={details.zip}
                 fullWidth
                 label="Zip"
@@ -215,7 +211,6 @@ export default function FPXForm({ handleBack, clientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                autoFocus
                 value={details.city}
                 fullWidth
                 label="City"
@@ -269,7 +264,6 @@ export default function FPXForm({ handleBack, clientSecret }) {
                     </Button>
                   ) : null
                 }
-
                 
               </Box>
             </Grid>
