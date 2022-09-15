@@ -201,7 +201,7 @@ export const DashboardSidebar = (props) => {
   useEffect(() => {
     console.log("This should print");
     handleWallet();
-  }, [user?.userData?.funds?.selectedCurrency]);
+  }, [user?.userData?.funds?.selectedCurrency, user?.userData?.funds?.amount]);
 
   const handleOpenOrganizationsPopover = () => {
     setOpenOrganizationsPopover(true);

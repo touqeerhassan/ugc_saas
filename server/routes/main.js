@@ -9,10 +9,12 @@ const Campaign = require("../models/Campaign");
 const Creator = require("../models/Creator");
 const User = require("../models/User");
 const Bid = require("../models/Bid");
+const Withdraw = require("../models/Withdraw");
 
 //Controllers
 const fundsController = require("../controllers/fund");
 const chatController = require("../controllers/chat");
+const withdrawController = require("../controllers/withdraw");
 
 // Test route
 router.get("/test", (req, res) => {
@@ -530,6 +532,20 @@ router.patch("/edit_user/:userId", async (req, res) => {
   );
 });
 
+//Delete User
+router.delete("/delete_user/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  User.deleteOne(
+    { userId: req.params.userId },
+
+    (err) => {
+      if (err) res.status(400).json(`Error: ${err}`);
+      else res.status(200).send("Edited a user");
+    }
+  );
+});
+
 // Add a new bid
 router.post("/add_bid", (req, res) => {
   // console.log(req.body);
@@ -661,5 +677,17 @@ router.get("/getThreads/:id", chatController.getThreads);
 router.get("/getThread/:id/:threadKey", chatController.getThread);
 router.post("/markThreadAsSeen/:threadId", chatController.markThreadAsSeen);
 router.get("/getParticipants/:id/:threadKey", chatController.getParticipants);
+
+//Withdraw Requests
+router.patch("/withdraw-funds/:creatorId", withdrawController.withdrawFunds);
+router.get("/get-all-withdrawals", withdrawController.getAllWithdrawRequests);
+router.get(
+  "/get-withdrawals-by-user/:creatorId",
+  withdrawController.getWithdrawRequestsByUser
+);
+router.get(
+  "/get-withdrawals-by-id/:withdrawalId",
+  withdrawController.getWithdrawRequestById
+);
 
 module.exports = router;

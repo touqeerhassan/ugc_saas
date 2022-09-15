@@ -13,6 +13,7 @@ import {
   InputLabel,
   Select,
   MenuItem,
+  InputAdornment,
 } from "@mui/material";
 
 import { UserCircle as UserCircleIcon } from "../../../icons/user-circle";
@@ -33,7 +34,7 @@ import MuiAlert from "@mui/material/Alert";
 export const AccountGeneralSettings = (props) => {
   // To get the user from the authContext, you can use
 
-  const { user, handleSelectedCurrencyChange } = useAuth();
+  const { user, handleSelectedCurrencyChange, handleAmountMinus } = useAuth();
   const dispatch = useDispatch();
   console.log(user);
   const [name, setName] = useState(user?.name);
@@ -41,6 +42,8 @@ export const AccountGeneralSettings = (props) => {
   const [currency, setCurrency] = useState(
     user?.userData?.funds?.selectedCurrency?.toLowerCase() || "usd"
   );
+
+  const [withdrawAmount, setWithdrawAmount] = useState(0);
 
   const handleClick = () => {
     setOpen(true);
@@ -93,6 +96,32 @@ export const AccountGeneralSettings = (props) => {
       if (response.status === 200) {
         console.log("Currency Changed");
         await handleSelectedCurrencyChange(currency);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleWithdraw = async () => {
+    // await handleAmountMinus(withdrawAmount);
+    try {
+      const response = await fetch(
+        `${API_SERVICE}/withdraw-funds/${user?.id}`,
+        {
+          method: "PATCH",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            amount: withdrawAmount,
+            currency: user?.userData?.funds?.currency,
+          }),
+        }
+      );
+      if (response.status === 200) {
+        console.log("Money Withdrawn");
+        await handleAmountMinus(withdrawAmount);
       }
     } catch (error) {
       console.log(error);
@@ -231,6 +260,47 @@ export const AccountGeneralSettings = (props) => {
                 >
                   Save
                 </Button>
+              </Box>
+              <Box
+                sx={{
+                  display: "flex",
+                  mt: 3,
+                  alignItems: "center",
+                }}
+              >
+                <TextField
+                  // disabled
+                  disabled={user?.userData?.funds?.amount === 0 ? true : false}
+                  type="Number"
+                  inputProps={{
+                    step: 0.01,
+                    min: 0,
+                    max: user?.userData?.funds?.amount,
+                  }}
+                  InputProps={{
+                    startAdornment: (
+                      <InputAdornment position="start">$</InputAdornment>
+                    ),
+                    // endAdornment: (
+                    //   <InputAdornment position="end">per person</InputAdornment>
+                    // ),
+                  }}
+                  value={withdrawAmount}
+                  label="Withdraw Money"
+                  required
+                  size="small"
+                  sx={{
+                    flexGrow: 1,
+                    mr: 3,
+                    // "& .MuiOutlinedInput-notchedOutline": {
+                    //   borderStyle: "dashed",
+                    // },
+                  }}
+                  onChange={(e) => {
+                    setWithdrawAmount(e.target.value);
+                  }}
+                />
+                <Button onClick={handleWithdraw}>Submit</Button>
               </Box>
             </Grid>
           </Grid>

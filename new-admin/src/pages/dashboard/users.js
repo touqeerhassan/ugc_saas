@@ -20,12 +20,13 @@ import {
   TableCell,
   TableBody,
   CircularProgress,
+  IconButton,
 } from "@mui/material";
 import { AuthGuard } from "../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
 
 import DeleteIcon from "@mui/icons-material/Delete";
-import { RemoveRedEye, FactCheck } from "@mui/icons-material";
+import { RemoveRedEye, FactCheck, Delete } from "@mui/icons-material";
 
 import { Cog as CogIcon } from "../../icons/cog";
 import { gtm } from "../../lib/gtm";
@@ -104,6 +105,7 @@ const Creators = () => {
   const [creators, setCreators] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [withdrawalRequests, setWithdrawalRequests] = useState([]);
 
   const [creatorOpen, setcreatorOpen] = useState(false);
   const [selectedCreator, setSelectedCreator] = useState(null);
@@ -130,7 +132,7 @@ const Creators = () => {
       });
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setCreators(data);
       }
     } catch (err) {
@@ -150,7 +152,7 @@ const Creators = () => {
       if (response.status === 200) {
         // console.log(response);
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setCampaigns(data);
       }
     } catch (err) {
@@ -169,7 +171,7 @@ const Creators = () => {
       });
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setUsers(data);
       }
     } catch (err) {
@@ -188,8 +190,27 @@ const Creators = () => {
       });
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data);
+        // console.log(data);
         setOrders(data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const fetchAllWithdrawalRequests = async () => {
+    try {
+      const response = await fetch(`${API_SERVICE}/get-all-withdrawals`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
+        setWithdrawalRequests(data);
       }
     } catch (err) {
       console.log(err);
@@ -223,6 +244,24 @@ const Creators = () => {
     }
   };
 
+  const deleteUser = async (userId) => {
+    try {
+      const response = await fetch(`${API_SERVICE}/delete_user/${userId}`, {
+        method: "DELETE",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      console.log(response.status);
+      if (response.status === 200) {
+        fetchUsers();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const totalTransactions = () => {
     let sum = 0;
     users?.forEach((user) => {
@@ -243,6 +282,7 @@ const Creators = () => {
     fetchCreators();
     fetchAllCampaigns();
     fetchOrders();
+    fetchAllWithdrawalRequests();
     // setTimeout(() => {
     //   console.log("Loading");
     // }, 5000);
@@ -363,6 +403,7 @@ const Creators = () => {
                       <TableCell align="center" sx={{ minWidth: 300 }}>
                         Action
                       </TableCell>
+                      <TableCell align="center">Withdrawal Requests</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -390,53 +431,82 @@ const Creators = () => {
                           />
                         </TableCell>
                         <TableCell align="center">
-                          <Button
-                            endIcon={<RemoveRedEye />}
-                            variant="contained"
-                            size="small"
-                            sx={{ mx: 2 }}
-                            onClick={async () => {
-                              console.log(user);
-                              console.log(campaigns);
-                              if (user?.userType === "brand") {
-                                // console.log(campaigns.filter((c) => c?.userId === user?.userId));
-                                setSelectedCampaigns(
-                                  campaigns.filter((c) => c?.userId === user?.userId)
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            <Button
+                              endIcon={<RemoveRedEye />}
+                              variant="contained"
+                              size="small"
+                              sx={{ mx: 1 }}
+                              onClick={async () => {
+                                console.log(user);
+                                console.log(campaigns);
+                                if (user?.userType === "brand") {
+                                  // console.log(campaigns.filter((c) => c?.userId === user?.userId));
+                                  setSelectedCampaigns(
+                                    campaigns.filter((c) => c?.userId === user?.userId)
+                                  );
+                                  setbrandOpen(true);
+                                } else {
+                                  setSelectedCreator(
+                                    creators.find((creator) => creator?.userId === user?.userId)
+                                  );
+                                  setcreatorOpen(true);
+                                }
+                              }}
+                            >
+                              More
+                            </Button>
+                            <Button
+                              variant="contained"
+                              size="small"
+                              sx={{ mx: 1 }}
+                              endIcon={<FactCheck />}
+                              onClick={async () => {
+                                // console.log(user);
+                                // console.log(campaigns);
+                                if (user?.userType === "brand") {
+                                  // console.log(campaigns.filter((c) => c?.userId === user?.userId));
+                                  setSelectedOrders(
+                                    orders.filter((o) => o?.branduser === user?.userId)
+                                  );
+                                  setorderOpen(true);
+                                } else {
+                                  setSelectedOrders(
+                                    orders.filter((o) => o?.creatoruser === user?.userId)
+                                  );
+                                  setorderOpen(true);
+                                }
+                              }}
+                            >
+                              Orders
+                            </Button>
+                            <IconButton
+                              // sx={{ border: "1px solid #000" }}
+                              onClick={async () => {
+                                console.log(user);
+                                deleteUser(user?.userId);
+                              }}
+                              color="error"
+                              variant="outlined"
+                              size="small"
+                              // sx={{ mx: 2 }}
+                            >
+                              <Delete />
+                            </IconButton>
+                          </Box>
+                        </TableCell>
+                        <TableCell align="center">
+                          <Box sx={{ display: "flex", alignItems: "center" }}>
+                            {withdrawalRequests
+                              .filter((wr) => wr.userId == user.userId)
+                              .map((w) => {
+                                return (
+                                  <Button variant="contained" sx={{ mx: 1 }}>
+                                    Request
+                                  </Button>
                                 );
-                                setbrandOpen(true);
-                              } else {
-                                setSelectedCreator(
-                                  creators.find((creator) => creator?.userId === user?.userId)
-                                );
-                                setcreatorOpen(true);
-                              }
-                            }}
-                          >
-                            More
-                          </Button>
-                          <Button
-                            variant="contained"
-                            size="small"
-                            endIcon={<FactCheck />}
-                            onClick={async () => {
-                              // console.log(user);
-                              // console.log(campaigns);
-                              if (user?.userType === "brand") {
-                                // console.log(campaigns.filter((c) => c?.userId === user?.userId));
-                                setSelectedOrders(
-                                  orders.filter((o) => o?.branduser === user?.userId)
-                                );
-                                setorderOpen(true);
-                              } else {
-                                setSelectedOrders(
-                                  orders.filter((o) => o?.creatoruser === user?.userId)
-                                );
-                                setorderOpen(true);
-                              }
-                            }}
-                          >
-                            Orders
-                          </Button>
+                              })}
+                          </Box>
                         </TableCell>
                       </TableRow>
                     ))}

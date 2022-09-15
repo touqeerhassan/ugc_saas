@@ -48,6 +48,24 @@ const reducer = (state, action) => {
     };
   }
 
+  if (action.type === "ADD_AMOUNT") {
+    const { currency } = action.payload;
+    state?.user?.userData?.funds?.amount += currency;
+
+    return {
+      ...state
+    };
+  }
+
+  if (action.type === "DEDUCT_AMOUNT") {
+    const { currency } = action.payload;
+    state?.user?.userData?.funds?.amount -= currency;
+
+    return {
+      ...state
+    };
+  }
+
   return state;
 };
 
@@ -181,6 +199,14 @@ export const AuthProvider = (props) => {
     dispatch({ type: "CURRENCY_CHANGED", payload: { currency } });
   };
 
+  const handleAmountAdd = (currency) => {
+    dispatch({ type: "ADD_AMOUNT", payload: { currency } });
+  };
+
+  const handleAmountMinus = (currency) => {
+    dispatch({ type: "DEDUCT_AMOUNT", payload: { currency } });
+  };
+
   const signInWithGoogle = () => {
     const provider = new firebase.auth.GoogleAuthProvider();
     return firebase.auth().signInWithPopup(provider);
@@ -203,6 +229,8 @@ export const AuthProvider = (props) => {
         signInWithGoogle,
         logout,
         handleSelectedCurrencyChange,
+        handleAmountAdd,
+        handleAmountMinus,
       }}
     >
       {children}

@@ -95,7 +95,7 @@ export default function Summary() {
 
   useEffect(() => {
     handleWallet();
-  }, [user?.userData?.funds?.selectedCurrency]);
+  }, [user?.userData?.funds?.selectedCurrency, user?.userData?.funds?.amount]);
 
   return (
     <>
