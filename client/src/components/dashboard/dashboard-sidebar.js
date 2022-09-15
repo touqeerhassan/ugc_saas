@@ -270,7 +270,7 @@ export const DashboardSidebar = (props) => {
             </Box>
           </div>
           <center>
-            {user?.userData?.userType === "brand" && (
+            {1 && (
               <Typography sx={{ mx: 2, mb: 2 }}>
                 {`Wallet ${amount} ${currency}`}
               </Typography>

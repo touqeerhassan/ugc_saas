@@ -21,22 +21,34 @@ router.get("/test", (req, res) => {
 
 // Orders
 // Add a new order
-router.post("/add_order", (req, res) => {
+router.post("/add_order", async (req, res) => {
   console.log(req.body);
+  const branduser = req.body.branduser;
 
   res.setHeader("Content-Type", "application/json");
+  try {
+    const user = await User.findOne({ userId: branduser });
+    if (!user) {
+      return res.status(404).json("User not Found");
+    }
+    user.funds.amount -= parseInt(req.body.price * 1.03);
+    await user.save();
 
-  const newOrder = new Order({
-    ...req.body,
-    date: new Date(),
-  });
+    const newOrder = new Order({
+      ...req.body,
+      date: new Date(),
+    });
 
-  newOrder.save((err) => {
-    if (err) {
-      console.log(err);
-      res.status(400).json(`Error: ${err}`);
-    } else res.status(200).send("created a new order");
-  });
+    newOrder.save((err) => {
+      if (err) {
+        console.log(err);
+        res.status(400).json(`Error: ${err}`);
+      } else res.status(200).send("created a new order");
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(`Error: ${err}`);
+  }
 });
 
 // Get all the orders
@@ -187,18 +199,32 @@ router.get("/get_specific_order/:orderId", async (req, res) => {
 // Patch an order
 router.patch("/edit_order/:orderId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  console.log(req.body);
-
-  Order.updateOne(
-    { _id: req.params.orderId },
-    {
-      $set: req.body,
-    },
-    (err) => {
-      if (err) res.status(400).json(`Error: ${err}`);
-      else res.status(200).send("Edited an order");
+  // console.log(req.body);
+  // console.log(req.body);
+  try {
+    const order = await Order.findOne({ _id: req.params.orderId });
+    const creator = await User.findOne({ userId: order.creatoruser });
+    console.log(creator);
+    if (!creator) {
+      return res.status(404).json("User not Found");
     }
-  );
+    creator.funds.amount += parseInt(order.price);
+    console.log(typeof creator.funds.amount);
+    await creator.save();
+    Order.updateOne(
+      { _id: req.params.orderId },
+      {
+        $set: req.body,
+      },
+      (err) => {
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).send("Edited an order");
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(400).json(`Error: ${err}`);
+  }
 });
 
 // Products
@@ -624,6 +650,7 @@ router.post("/addFunds", fundsController.addFunds);
 router.post("/addFundsFPX", fundsController.addFundsFPX);
 router.patch("/change-currency", fundsController.changeCurrency);
 router.post("/convert-currency", fundsController.convertCurrency);
+router.post("/choose-creator", fundsController.chooseCreator);
 // router.post("/buyProduct", fundsController.buyProduct);
 // router.get("/fetchCountries", countryController.fetchCountries);
 

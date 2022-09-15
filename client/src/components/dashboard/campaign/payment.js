@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Card from "@mui/material/Card";
 import CardActions from "@mui/material/CardActions";
@@ -34,6 +34,8 @@ import CreatorLevelCard from "./cards/creator-level-card";
 import InfoIcon from "@mui/icons-material/Info";
 import { useRouter } from "next/router";
 import { useSelector } from "react-redux";
+import { useAuth } from "../../../hooks/use-auth";
+import { API_SERVICE } from "../../../config";
 
 export default function Summary() {
   const [description, setDescription] = useState("");
@@ -42,6 +44,9 @@ export default function Summary() {
   const cover = "/static/mock-images/covers/cover_4.jpeg";
   const router = useRouter();
   const { campaignId } = router.query;
+  const { user } = useAuth();
+  const [amount, setAmount] = useState(user?.userData?.funds?.amount);
+  const [currency, setCurrency] = useState(user?.userData?.funds?.currency);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -57,6 +62,40 @@ export default function Summary() {
     }
     setCreators((prevValue) => prevValue - 1);
   };
+
+  const handleWallet = async () => {
+    if (user?.userData?.funds?.amount === 0) {
+      setAmount(0);
+      setCurrency(user?.userData?.funds?.selectedCurrency || "USD");
+      return;
+    }
+    try {
+      const response = await fetch(`${API_SERVICE}/convert-currency`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: user?.userData?.funds?.currency,
+          to: user?.userData?.funds?.selectedCurrency,
+          amount: user?.userData?.funds?.amount,
+        }),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
+        setAmount(data);
+        setCurrency(user?.userData?.funds?.selectedCurrency);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleWallet();
+  }, [user?.userData?.funds?.selectedCurrency]);
 
   return (
     <>
@@ -87,7 +126,7 @@ export default function Summary() {
             >
               <Typography variant="h6">My Wallet</Typography>
               <Typography align="right" variant="h6">
-                $0.00
+                {`${parseFloat(amount).toFixed(2)} ${currency}`}
               </Typography>
             </Box>
             <Divider sx={{ mt: 3 }} />
@@ -100,17 +139,18 @@ export default function Summary() {
               Pay directly from your credit card
             </div>
             <Button
+              onClick={() => router.push("/dashboard/add-funds")}
               style={{
                 borderRadius: "5px",
                 color: "white",
                 backgroundColor: "black",
-                padding: "5px 10px",
+                padding: "5px 20px",
                 marginTop: "20px",
                 fontSize: "14px",
               }}
               variant="contained"
             >
-              Add new Card
+              Add Funds
             </Button>
           </CardContent>
         </Card>

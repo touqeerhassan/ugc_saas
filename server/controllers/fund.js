@@ -164,6 +164,30 @@ const convertCurrency = async (req, res) => {
   }
 };
 
+const chooseCreator = async (req, res) => {
+  let { brandId, creatorId, amount } = req.body;
+
+  if (!brandId || !creatorId || !amount) {
+    return res.status(400).json("Invalid Request");
+  }
+
+  try {
+    let brand = await User.findOne({ userId: brandId });
+    let creator = await User.findOne({ userId: creatorId });
+    if (!brand || !creator) {
+      return res.status(404).json("User not Found");
+    }
+    brand.funds.amount -= parseFloat(amount);
+    // creator.funds.amount += parseFloat(amount);
+    await brand.save();
+    // await creator.save();
+    return res.status(200).json("Funds Updated");
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 // const buyProduct = async (req, res) => {
 //   // console.log(req.body);
 //   const { currency, amount, userId } = req.body;
@@ -213,5 +237,6 @@ module.exports = {
   addFundsFPX,
   changeCurrency,
   convertCurrency,
+  chooseCreator,
   //   buyProduct,
 };
