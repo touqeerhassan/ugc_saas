@@ -61,7 +61,7 @@ function CreateCampaign({
     cover: "",
     name: "",
     price: 0,
-    categories: ["Sports", "Clothing"],
+    categories: ["Mobile & Accessories", "Watches", "Healt & Beauty", "Baby & Toys", "Fashion", "Books", "Hobbies", "Software", "Sports", "Books", "Clothing", "Others"],
     selectedCategory: "",
     link: "",
     handlingTime: "",

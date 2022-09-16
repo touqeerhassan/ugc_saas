@@ -138,20 +138,21 @@ export default function Summary() {
             <div style={{ fontSize: "14px", color: "gray" }}>
               Pay directly from your credit card
             </div>
-            <Button
-              onClick={() => router.push("/dashboard/add-funds")}
-              style={{
-                borderRadius: "5px",
-                color: "white",
-                backgroundColor: "black",
-                padding: "5px 20px",
-                marginTop: "20px",
-                fontSize: "14px",
-              }}
-              variant="contained"
-            >
-              Add Funds
-            </Button>
+            <NextLink href="/add-funds">
+              <Button
+                style={{
+                  borderRadius: "5px",
+                  color: "white",
+                  backgroundColor: "black",
+                  padding: "5px 20px",
+                  marginTop: "20px",
+                  fontSize: "14px",
+                }}
+                variant="contained"
+              >
+                Add Funds
+              </Button>
+            </NextLink>
           </CardContent>
         </Card>
       </Container>
