@@ -30,6 +30,7 @@ import * as React from "react";
 import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import CustomSnackbar from "../../custom-snackbar";
 
 export const AccountGeneralSettings = (props) => {
   // To get the user from the authContext, you can use
@@ -44,6 +45,10 @@ export const AccountGeneralSettings = (props) => {
   );
 
   const [withdrawAmount, setWithdrawAmount] = useState(0);
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [severity, setSeverity] = useState("");
+  const [message, setMessage] = useState("");
 
   const handleClick = () => {
     setOpen(true);
@@ -104,6 +109,13 @@ export const AccountGeneralSettings = (props) => {
 
   const handleWithdraw = async () => {
     // await handleAmountMinus(withdrawAmount);
+    if (withdrawAmount > user?.userData?.funds?.amount || withdrawAmount <= 0) {
+      setSeverity("error");
+      setMessage("Invalid Amount");
+      setSnackbarOpen(true);
+      return;
+    }
+
     try {
       const response = await fetch(
         `${API_SERVICE}/withdraw-funds/${user?.id}`,
@@ -121,6 +133,9 @@ export const AccountGeneralSettings = (props) => {
       );
       if (response.status === 200) {
         console.log("Money Withdrawn");
+        setSeverity("success");
+        setMessage("Withdrawal Request Sent");
+        setSnackbarOpen(true);
         await handleAmountMinus(withdrawAmount);
       }
     } catch (error) {
@@ -380,6 +395,12 @@ export const AccountGeneralSettings = (props) => {
           </Grid>
         </CardContent>
       </Card> */}
+      <CustomSnackbar
+        open={snackbarOpen}
+        setOpen={setSnackbarOpen}
+        message={message}
+        severity={severity}
+      />
     </Box>
   );
 };

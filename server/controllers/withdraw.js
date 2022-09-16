@@ -16,6 +16,8 @@ const withdrawFunds = async (req, res) => {
     if (creator.funds.amount < amount) {
       return res.status(400).json("Insufficient Funds");
     }
+    creator.funds.amount -= amount;
+    await creator.save();
     const newWithdrawal = new Withdraw({
       userId: req.params.creatorId,
       amount,

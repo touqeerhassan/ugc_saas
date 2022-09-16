@@ -53,6 +53,11 @@ const mySections = (t) => [
         path: "/dashboard/reports",
         icon: <Reports fontSize="small" />,
       },
+      {
+        title: t("Withdrawal Requests"),
+        path: "/dashboard/withdrawal-requests",
+        icon: <Reports fontSize="small" />,
+      },
       // {
       //   title: t("Orders"),
       //   path: "/dashboard/orders",
