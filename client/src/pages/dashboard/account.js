@@ -43,7 +43,7 @@ const Account = () => {
       >
         <Container maxWidth="md">
           <Typography variant="h4">Account</Typography>
-          <Tabs
+          {/* <Tabs
             indicatorColor="primary"
             onChange={handleTabsChange}
             scrollButtons="auto"
@@ -55,13 +55,17 @@ const Account = () => {
             {tabs.map((tab) => (
               <Tab key={tab.value} label={tab.label} value={tab.value} />
             ))}
-          </Tabs>
+          </Tabs> */}
           <Divider sx={{ mb: 3 }} />
-          {currentTab === "general" && <AccountGeneralSettings />}
+          {/* {currentTab === "general" && <AccountGeneralSettings />} */}
           {currentTab === "billing" && <AccountBillingSettings />}
           {currentTab === "team" && <AccountTeamSettings />}
-          {currentTab === "notifications" && <AccountNotificationsSettings />}
-          {currentTab === "security" && <AccountSecuritySettings />}
+          {/* {currentTab === "notifications" && <AccountNotificationsSettings />} */}
+          {/* {currentTab === "security" && <AccountSecuritySettings />} */}
+
+          <AccountGeneralSettings />
+          {/* <AccountNotificationsSettings /> */}
+          <AccountSecuritySettings />
         </Container>
       </Box>
     </>

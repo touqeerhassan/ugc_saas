@@ -31,6 +31,7 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import CustomSnackbar from "../../custom-snackbar";
+import EditIcon from '@mui/icons-material/Edit';
 
 export const AccountGeneralSettings = (props) => {
   // To get the user from the authContext, you can use
@@ -49,6 +50,8 @@ export const AccountGeneralSettings = (props) => {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [severity, setSeverity] = useState("");
   const [message, setMessage] = useState("");
+
+  const [openProfile, setOpenProfile] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -143,183 +146,403 @@ export const AccountGeneralSettings = (props) => {
     }
   };
 
-  return (
-    <Box sx={{ mt: 4 }} {...props}>
-      <Card>
-        <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <Typography variant="h6">Basic details</Typography>
-            </Grid>
-            <Grid item md={8} xs={12}>
-              <Box
-                sx={{
-                  alignItems: "center",
-                  display: "flex",
-                }}
-              >
-                {user?.avatar ? (
-                  <Avatar
-                    src={user?.avatar}
-                    sx={{
-                      height: 40,
-                      width: 40,
-                    }}
-                  >
-                    <UserCircleIcon fontSize="small" />
-                  </Avatar>
-                ) : (
-                  <Avatar sx={{ bgcolor: deepPurple[500] }}>
-                    {user &&
-                      (user.name
-                        ? user.name[0].toUpperCase()
-                        : user.email[0].toUpperCase())}
-                  </Avatar>
-                )}
-                <Button>Change</Button>
-              </Box>
+  const handleOpenProfile = () => {
+    setOpenProfile(true);
+  }
 
-              <Box
-                sx={{
-                  display: "flex",
-                  mt: 3,
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  value={name}
-                  label="Full Name"
-                  size="small"
+  const handleCloseProfile = () => {
+    // handleNameChange();
+    // handleCurrencyChange();
+    // handleWithdraw()
+    setOpenProfile(false);
+  }
+
+  return (
+    <Box sx={{ mt: 4, mb:4 }} {...props}>
+      <Card>
+        {
+          openProfile === false &&
+          <CardContent>
+            <Grid container spacing={3} style={{display:'flex', flexDirection:'column', width:"100%"}}>
+              <Grid item fullWidth>
+                <Box display='flex' style={{ width:'100%', justifyContent:'space-between'}}>
+                  <Typography variant="h6">Profile Information</Typography>
+                  <Button onClick={handleOpenProfile}>
+                    <EditIcon/>
+                  </Button>
+                </Box>
+              </Grid>
+              <Grid item>
+                <Box
                   sx={{
-                    flexGrow: 1,
-                    mr: 3,
-                  }}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
-                <Button
-                  onClick={() => {
-                    handleNameChange();
+                    alignItems: "center",
+                    display: "flex",
                   }}
                 >
-                  Save
-                </Button>
-              </Box>
-              <Snackbar
-                autoHideDuration={2000}
-                anchorOrigin={{ vertical: "center", horizontal: "center" }}
-                open={open}
-                onClose={handleClose}
-              >
-                <Alert onClose={handleClose} severity="success">
-                  "Name Updated Successfully"
-                </Alert>
-              </Snackbar>
-              <Box
-                sx={{
-                  display: "flex",
-                  mt: 3,
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  defaultValue={user?.email}
-                  disabled
-                  label="Email Address"
-                  required
-                  size="small"
+                  {/* {user?.avatar ? (
+                    <Avatar
+                      src={user?.avatar}
+                      sx={{
+                        height: 40,
+                        width: 40,
+                      }}
+                    >
+                      <UserCircleIcon fontSize="small" />
+                    </Avatar>
+                  ) : (
+                    <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                      {user &&
+                        (user.name
+                          ? user.name[0].toUpperCase()
+                          : user.email[0].toUpperCase())}
+                    </Avatar>
+                  )}
+                  <Button>Change</Button> */}
+                </Box>
+
+                <Box
                   sx={{
-                    flexGrow: 1,
-                    mr: 3,
-                    "& .MuiOutlinedInput-notchedOutline": {
-                      borderStyle: "dashed",
-                    },
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
                   }}
-                />
-                <Button>Edit</Button>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  mt: 3,
-                  alignItems: "center",
-                }}
-              >
-                <FormControl fullWidth size="small">
-                  <InputLabel id="demo-simple-select-label">
-                    Currency
-                  </InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={currency}
-                    label="Currency"
-                    onChange={(e) => setCurrency(e.target.value)}
+                >
+                  {/* <TextField
+                    value={name}
+                    label="Full Name"
+                    size="small"
                     sx={{
                       flexGrow: 1,
                       mr: 3,
                     }}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                  <Button
+                    onClick={() => {
+                      handleNameChange();
+                    }}
                   >
-                    <MenuItem value="myr">MYR</MenuItem>
-                    <MenuItem value="idr">IDR</MenuItem>
-                    <MenuItem value="usd">USD</MenuItem>
-                    {/* <MenuItem value="gbp">GBP</MenuItem>
-              <MenuItem value="inr">INR</MenuItem> */}
-                  </Select>
-                </FormControl>
-                <Button
-                  onClick={() => {
-                    handleCurrencyChange();
+                    Save
+                  </Button> */}
+                  <Typography style={{color:'grey'}}>Full name</Typography>
+                </Box>
+                <Box>
+                  <Typography>{name}</Typography>
+                </Box>
+                <Snackbar
+                  autoHideDuration={2000}
+                  anchorOrigin={{ vertical: "center", horizontal: "center" }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <Alert onClose={handleClose} severity="success">
+                    "Name Updated Successfully"
+                  </Alert>
+                </Snackbar>
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
                   }}
                 >
-                  Save
-                </Button>
-              </Box>
-              <Box
-                sx={{
-                  display: "flex",
-                  mt: 3,
-                  alignItems: "center",
-                }}
-              >
-                <TextField
-                  // disabled
-                  disabled={user?.userData?.funds?.amount === 0 ? true : false}
-                  type="Number"
-                  inputProps={{
-                    step: 0.01,
-                    min: 0,
-                    max: user?.userData?.funds?.amount,
-                  }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position="start">$</InputAdornment>
-                    ),
-                    // endAdornment: (
-                    //   <InputAdornment position="end">per person</InputAdornment>
-                    // ),
-                  }}
-                  value={withdrawAmount}
-                  label="Withdraw Money"
-                  required
-                  size="small"
+                  {/* <TextField
+                    defaultValue={user?.email}
+                    disabled
+                    label="Email Address"
+                    required
+                    size="small"
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderStyle: "dashed",
+                      },
+                    }}
+                  />
+                  <Button>Edit</Button> */}
+                  <Typography style={{color:'grey'}}>Email Address</Typography>
+                </Box>
+                <Box>
+                  <Typography>{user?.email}</Typography>
+                </Box>
+
+                <Box
                   sx={{
-                    flexGrow: 1,
-                    mr: 3,
-                    // "& .MuiOutlinedInput-notchedOutline": {
-                    //   borderStyle: "dashed",
-                    // },
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
                   }}
-                  onChange={(e) => {
-                    setWithdrawAmount(e.target.value);
+                >
+                  {/* <FormControl fullWidth size="small">
+                    <InputLabel id="demo-simple-select-label">
+                      Currency
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={currency}
+                      label="Currency"
+                      onChange={(e) => setCurrency(e.target.value)}
+                      sx={{
+                        flexGrow: 1,
+                        mr: 3,
+                      }}
+                    >
+                      <MenuItem value="myr">MYR</MenuItem>
+                      <MenuItem value="idr">IDR</MenuItem>
+                      <MenuItem value="usd">USD</MenuItem>
+                      
+                    </Select>
+                  </FormControl>
+                  <Button
+                    onClick={() => {
+                      handleCurrencyChange();
+                    }}
+                  >
+                    Save
+                  </Button> */}
+                  <Typography style={{color:'grey'}}>Currency</Typography>
+                </Box>
+                <Box>
+                  {currency.toUpperCase()}
+                </Box>
+                
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
                   }}
-                />
-                <Button onClick={handleWithdraw}>Submit</Button>
-              </Box>
+                >
+                  {/* <TextField
+                    // disabled
+                    disabled={user?.userData?.funds?.amount === 0 ? true : false}
+                    type="Number"
+                    inputProps={{
+                      step: 0.01,
+                      min: 0,
+                      max: user?.userData?.funds?.amount,
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">$</InputAdornment>
+                      ),
+                      // endAdornment: (
+                      //   <InputAdornment position="end">per person</InputAdornment>
+                      // ),
+                    }}
+                    value={withdrawAmount}
+                    label="Withdraw Money"
+                    required
+                    size="small"
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                      // "& .MuiOutlinedInput-notchedOutline": {
+                      //   borderStyle: "dashed",
+                      // },
+                    }}
+                    onChange={(e) => {
+                      setWithdrawAmount(e.target.value);
+                    }}
+                  />
+                  <Button onClick={handleWithdraw}>Submit</Button> */}
+                  <Typography style={{color:'grey'}}>Withdraw Money</Typography>
+                </Box>
+                <Box>
+                  ${withdrawAmount}
+                </Box>
+              </Grid>
             </Grid>
-          </Grid>
-        </CardContent>
+          </CardContent>
+        }
+        
+        {
+          openProfile &&
+          <CardContent>
+            <Grid container spacing={3} style={{display:'flex', flexDirection:'column', width:"100%"}}>
+              <Grid item fullWidth>
+                {/* <Typography variant="h6">Profile Information</Typography> */}
+                <Box display='flex' style={{ width:'100%', justifyContent:'space-between'}}>
+                  <Typography variant="h6">Profile Information</Typography>
+                  <Button onClick={handleCloseProfile}>
+                    Save
+                  </Button>
+                </Box>
+              </Grid>
+              <Grid item md={8} xs={12}>
+                <Box
+                  sx={{
+                    alignItems: "center",
+                    display: "flex",
+                  }}
+                >
+                  {user?.avatar ? (
+                    <Avatar
+                      src={user?.avatar}
+                      sx={{
+                        height: 40,
+                        width: 40,
+                      }}
+                    >
+                      <UserCircleIcon fontSize="small" />
+                    </Avatar>
+                  ) : (
+                    <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                      {user &&
+                        (user.name
+                          ? user.name[0].toUpperCase()
+                          : user.email[0].toUpperCase())}
+                    </Avatar>
+                  )}
+                  <Button >Change</Button>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <TextField
+                    value={name}
+                    label="Full Name"
+                    size="small"
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                    }}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                  <Button
+                    onClick={() => {
+                      handleNameChange();
+                    }}
+                  >
+                    Save
+                  </Button>
+                </Box>
+                <Snackbar
+                  autoHideDuration={2000}
+                  anchorOrigin={{ vertical: "center", horizontal: "center" }}
+                  open={open}
+                  onClose={handleClose}
+                >
+                  <Alert onClose={handleClose} severity="success">
+                    "Name Updated Successfully"
+                  </Alert>
+                </Snackbar>
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <TextField
+                    defaultValue={user?.email}
+                    disabled
+                    label="Email Address"
+                    required
+                    size="small"
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderStyle: "dashed",
+                      },
+                    }}
+                  />
+                  <Button>Edit</Button>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <FormControl fullWidth size="small">
+                    <InputLabel id="demo-simple-select-label">
+                      Currency
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={currency}
+                      label="Currency"
+                      onChange={(e) => setCurrency(e.target.value)}
+                      sx={{
+                        flexGrow: 1,
+                        mr: 3,
+                      }}
+                    >
+                      <MenuItem value="myr">MYR</MenuItem>
+                      <MenuItem value="idr">IDR</MenuItem>
+                      <MenuItem value="usd">USD</MenuItem>
+                      {/* <MenuItem value="gbp">GBP</MenuItem>
+                <MenuItem value="inr">INR</MenuItem> */}
+                    </Select>
+                  </FormControl>
+                  <Button
+                    onClick={() => {
+                      handleCurrencyChange();
+                    }}
+                  >
+                    Save
+                  </Button>
+                </Box>
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <TextField
+                    // disabled
+                    disabled={user?.userData?.funds?.amount === 0 ? true : false}
+                    type="Number"
+                    inputProps={{
+                      step: 0.01,
+                      min: 0,
+                      max: user?.userData?.funds?.amount,
+                    }}
+                    InputProps={{
+                      startAdornment: (
+                        <InputAdornment position="start">$</InputAdornment>
+                      ),
+                      // endAdornment: (
+                      //   <InputAdornment position="end">per person</InputAdornment>
+                      // ),
+                    }}
+                    value={withdrawAmount}
+                    label="Withdraw Money"
+                    required
+                    size="small"
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                      // "& .MuiOutlinedInput-notchedOutline": {
+                      //   borderStyle: "dashed",
+                      // },
+                    }}
+                    onChange={(e) => {
+                      setWithdrawAmount(e.target.value);
+                    }}
+                  />
+                  <Button onClick={handleWithdraw}>Submit</Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </CardContent>
+        }
       </Card>
       {/* <Card sx={{ mt: 4 }}>
         <CardContent>

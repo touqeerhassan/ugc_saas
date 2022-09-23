@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 
 export const AccountNotificationsSettings = () => (
-  <Card>
+  <Card sx={{mb:4}}>
     <CardContent>
       <Grid container spacing={3}>
         <Grid item md={4} xs={12}>

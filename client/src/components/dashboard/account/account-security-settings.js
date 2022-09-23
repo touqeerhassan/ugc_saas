@@ -31,6 +31,7 @@ import { useAuth } from "../../../hooks/use-auth";
 import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
+import EditIcon from '@mui/icons-material/Edit';
 
 export const AccountSecuritySettings = () => {
   const [open, setOpen] = React.useState(false);
@@ -71,6 +72,7 @@ export const AccountSecuritySettings = () => {
         // Update successful.
         console.log("Update Successful");
         handleClick();
+        setIsEditing(false);
       })
       .catch((error) => {
         // An error ocurred
@@ -91,9 +93,21 @@ export const AccountSecuritySettings = () => {
     <>
       <Card>
         <CardContent>
-          <Grid container spacing={3}>
-            <Grid item md={4} xs={12}>
-              <Typography variant="h6">Change password</Typography>
+          <Grid container spacing={3} style={{display:'flex', flexDirection:'column', width:"100%"}}>
+            <Grid item >
+              {/* <Typography variant="h6">Change password</Typography> */}
+              <Box display='flex' style={{ width:'100%', justifyContent:'space-between'}}>
+                  <Typography variant="h6">Password</Typography>
+                  <Button 
+                    onClick={isEditing ? handleSave : handleEdit}
+                  // onClick={handleOpenProfile}
+                  >
+                    {
+                      isEditing ? "Save" : <EditIcon/>
+                    }
+                    
+                  </Button>
+                </Box>
             </Grid>
             <Grid item md={8} sm={12} xs={12}>
               <Box
@@ -119,10 +133,15 @@ export const AccountSecuritySettings = () => {
                     }),
                   }}
                 />
-                <Button onClick={isEditing ? handleSave : handleEdit}>
+                {/* <Button onClick={isEditing ? handleSave : handleEdit}>
                   {isEditing ? "Save" : "Edit"}
-                </Button>
+                </Button> */}
+
+                {/* {  <Typography>Password</Typography>} */}
               </Box>
+              {/* <Box>
+                {password}
+              </Box> */}
               <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
                 <DialogTitle>ReLogin</DialogTitle>
                 <DialogContent>
