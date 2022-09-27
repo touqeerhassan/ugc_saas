@@ -276,6 +276,34 @@ export const AccountGeneralSettings = (props) => {
                     alignItems: "center",
                   }}
                 >
+                  {/* <TextField
+                    defaultValue={user?.email}
+                    disabled
+                    label="Email Address"
+                    required
+                    size="small"
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                      "& .MuiOutlinedInput-notchedOutline": {
+                        borderStyle: "dashed",
+                      },
+                    }}
+                  />
+                  <Button>Edit</Button> */}
+                  <Typography style={{color:'grey'}}>Address</Typography>
+                </Box>
+                <Box>
+                  <Typography>A-4 Test Address</Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
                   {/* <FormControl fullWidth size="small">
                     <InputLabel id="demo-simple-select-label">
                       Currency
@@ -353,7 +381,7 @@ export const AccountGeneralSettings = (props) => {
                   <Typography style={{color:'grey'}}>Withdraw Money</Typography>
                 </Box>
                 <Box>
-                  ${withdrawAmount}
+                  {currency.toUpperCase()} {withdrawAmount}
                 </Box>
               </Grid>
             </Grid>
@@ -461,6 +489,30 @@ export const AccountGeneralSettings = (props) => {
                   />
                   <Button>Edit</Button>
                 </Box>
+                
+                <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <TextField
+                    defaultValue="A-4 Test Address"
+                    label="Address"
+                    size="small"
+                    sx={{
+                      flexGrow: 1,
+                      mr: 3,
+                    }}
+                  />
+                  <Button
+                  >
+                    Save
+                  </Button>
+                </Box>
+
+
                 <Box
                   sx={{
                     display: "flex",
@@ -516,7 +568,7 @@ export const AccountGeneralSettings = (props) => {
                     }}
                     InputProps={{
                       startAdornment: (
-                        <InputAdornment position="start">$</InputAdornment>
+                        <InputAdornment position="start">{currency.toUpperCase()}</InputAdornment>
                       ),
                       // endAdornment: (
                       //   <InputAdornment position="end">per person</InputAdornment>
