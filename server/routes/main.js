@@ -8,6 +8,8 @@ const Product = require("../models/Product");
 const Campaign = require("../models/Campaign");
 const Creator = require("../models/Creator");
 const User = require("../models/User");
+const Wallet = require("../models/Wallet");
+
 const Bid = require("../models/Bid");
 const Withdraw = require("../models/Withdraw");
 
@@ -499,6 +501,35 @@ router.post("/add_user", (req, res) => {
     }
   });
 });
+
+
+// Users
+// Add a new user
+router.post("/add_wallet", (req, res) => {
+      const newWallet = new Wallet({
+       email: req.body.email,
+        funds: {
+          amount: req.body.funds.amount,
+          currency: "USD",
+        },
+      });
+      newWallet.save((err, results) => {
+        console.log(results)
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).send(results);
+      });
+});
+
+// Get a single order
+router.get("/get_wallet/:email", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  Wallet.find({ email: req.params.email }, (err, wallet) => {
+    if (err) res.status(400).json(`Error: ${err}`);
+    else res.status(200).send(wallet);
+  });
+});
+
 
 //Get All Users
 router.get("/get_all_users", (req, res) => {

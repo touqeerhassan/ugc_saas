@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {
   Box,
   Button,
@@ -32,8 +32,14 @@ import Stack from "@mui/material/Stack";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import EditIcon from '@mui/icons-material/Edit';
+import { API_SERVICE } from "../../../config";
 
 export const AccountSecuritySettings = () => {
+   const { signInWithEmailAndPassword ,user} = useAuth();
+   console.log(user);
+   const [amount, setAmount] = useState(user?.userData?.funds?.amount);
+  const [currency, setCurrency] = useState(user?.userData?.funds?.currency);
+
   const [open, setOpen] = React.useState(false);
 
   const handleClick = () => {
@@ -55,7 +61,71 @@ export const AccountSecuritySettings = () => {
   const [password, setPassword] = useState("12345678");
   const [oldPassword, setOldPassword] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { signInWithEmailAndPassword } = useAuth();
+    const [transactionDetails, setTransactionDetails] = useState([]);
+
+ 
+
+   useEffect(() => {
+    console.log("This should print");
+    handleWallet();
+    getWallet();
+  }, [user?.userData?.funds?.selectedCurrency, user?.userData?.funds?.amount]);
+
+
+   const getWallet = async () => {
+    try {
+      await fetch(
+`${API_SERVICE}/get_wallet/${user.email}`)
+            .then((res) => res.json())
+            .then((json) => {
+                setTransactionDetails(json)
+                  console.log(res.json())
+            });
+
+      // const response = await fetch(`${API_SERVICE}/get_wallet/${user.email}`, {
+      //   method: "GET",
+      //   headers: {
+      //     Accept: "application/json",
+      //     "Content-Type": "application/json",
+      //   },
+      // });
+      // if (response.status === 200) {
+      //  console.log(response.body)
+      // }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+   const handleWallet = async () => {
+    if (user?.userData?.funds?.amount === 0) {
+      setAmount(0);
+      setCurrency(user?.userData?.funds?.selectedCurrency || "USD");
+      return;
+    }
+    try {
+      const response = await fetch(`${API_SERVICE}/convert-currency`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          from: user?.userData?.funds?.currency,
+          to: user?.userData?.funds?.selectedCurrency,
+          amount: user?.userData?.funds?.amount,
+        }),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log(data);
+        setAmount(data);
+        setCurrency(user?.userData?.funds?.selectedCurrency);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleReLogin = async () => {
     const firebaseUser = firebase.auth().currentUser;
@@ -89,6 +159,10 @@ export const AccountSecuritySettings = () => {
     setDialogOpen(true);
   };
 
+  const getCurrentDate = () =>{
+    debugger;
+    return new Date().toISOString().slice(0, 10)
+  }
   return (
     <>
       <Card>
@@ -177,6 +251,56 @@ export const AccountSecuritySettings = () => {
                 </Alert>
               </Snackbar>
             </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+
+
+<Card  style={{marginTop:'40px'}}>
+        <CardContent>
+          <Grid container spacing={3} style={{ display:'flex', flexDirection:'column', width:"100%"}}>
+            <Grid item >
+              {/* <Typography variant="h6">Change password</Typography> */}
+              <Box display='flex' style={{ width:'100%', justifyContent:'space-between'}}>
+                  <Typography variant="h6">Transaction Details</Typography>
+                </Box>
+            </Grid>
+             {transactionDetails.map((transaction) => (
+            <Grid style={{paddingLeft:'24px'}}>
+            
+               
+            <Grid item md={8} sm={12} xs={12}>
+               <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography style={{color:'grey'}}>Transaction Amount</Typography>
+                </Box>
+                <Box>
+                  <Typography>  {`Wallet ${transaction.funds.amount} ${transaction.funds.currency}`}</Typography>
+                </Box>
+            </Grid>
+             <Grid item md={8} sm={12} xs={12}>
+               <Box
+                  sx={{
+                    display: "flex",
+                    mt: 3,
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography style={{color:'grey'}}>Current date</Typography>
+                </Box>
+                <Box>
+                  <Typography>{transaction.createdDate}</Typography>
+                </Box>
+            </Grid>
+             </Grid>
+                  ))}
+                 
+
           </Grid>
         </CardContent>
       </Card>
