@@ -66,6 +66,7 @@ const brandSections = (t) => [
         path: "/dashboard/view-creators",
         icon: <UsersIcon fontSize="small" />,
       },
+       
       // {
       //   title: t("Brand select Creator"),
       //   path: "/dashboard/creators",
@@ -111,6 +112,11 @@ const creatorSections = (t, hasProfile) => {
             path: "/dashboard/orders",
             icon: <ChartBarIcon fontSize="small" />,
           },
+          {
+        title: t("All Brands"),
+        path: "/dashboard/view-brands",
+        icon: <UsersIcon fontSize="small" />,
+      },
           {
             path: "/dashboard/chat",
             icon: <ChatAlt2Icon fontSize="small" />,
