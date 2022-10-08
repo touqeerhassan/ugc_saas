@@ -62,6 +62,9 @@ const ViewBrands= () => {
   const [brands, setBrands] = useState([]);
 
   const [successOpen, setSuccessOpen] = useState(false);
+
+  const [loading, setloading] = useState(true);
+
   const [selectedCreator, setSelectedCreator] = useState(null);
 
   const [q, setQ] = useState("");
@@ -83,8 +86,8 @@ const ViewBrands= () => {
       });
       if (response.status === 200) {
         const data = await response.json();
-        console.log(data);
         setBrands(data);
+        setloading(false);
       }
     } catch (err) {
       console.log(err);
@@ -529,64 +532,80 @@ const ViewBrands= () => {
             </Grid>
           </Box>
 
-          <Grid container spacing={2}>
-            {brands.map((creator) => {
-              return (
-                <Grid item xs={12} sm={6} md={4} key={creator._id}>
-                  <Card
-                    variant="outlined"
-                    align="center"
-                    // style={{
-                    //   borderColor: selected ? "#5048E5" : "#E6E8F0",
-                    //   backgroundColor: selected ? "#dcdaf9" : "white",
-                    // }}
-                  >
-                    <CardContent>
-                      <Grid container>
-                        <Grid item xs={12}>
-                         {creator.name.slice(0,1)}
-                        </Grid>
-                       <Grid item xs={12}>
-                          <Typography variant="h6">Name:</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="secondary">
-                            {creator?.name}
-                          </Typography>
-                        </Grid>
-                         <Grid item xs={12}>
-                          <Typography variant="h6">Email:</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="secondary">
-                            {creator?.email}
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="h6">PhoneNumber:</Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="secondary">
-                            {creator?.phoneNumber}
-                          </Typography>
-                        </Grid>
-                        {/* <Grid item xs={12}>
-                          <Typography variant="h6" sx={{ mt: 3 }}>
-                            Contact:
-                          </Typography>
-                        </Grid>
-                        <Grid item xs={12}>
-                          <Typography variant="secondary">
-                            {`${parseInt(creator?.contact)}`}
-                          </Typography>
-                        </Grid> */}
-                                              </Grid>
-                    </CardContent>
-                  </Card>
+          {
+            loading ? (
+              <>
+                Loading...
+              </>
+            ) : (
+                <Grid container spacing={2}>
+                  {brands.map((creator) => {
+                    return (
+                      <Grid item xs={12} sm={6} md={4} key={creator._id}>
+                        <Card
+                          variant="outlined"
+                          align="center"
+                          // style={{
+                          //   borderColor: selected ? "#5048E5" : "#E6E8F0",
+                          //   backgroundColor: selected ? "#dcdaf9" : "white",
+                          // }}
+                        >
+                          <CardContent>
+                            <Grid container>
+                              <Grid item xs={12}>
+                              {/* {creator?.name.slice(0,1)} */}
+                                <Avatar sx={{
+                                  height: 50,
+                                  width: 50,
+                                }}>
+                                  {creator?.name?.slice(0,1)}
+                                </Avatar>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography variant="h6">Name:</Typography>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography variant="secondary">
+                                  {creator?.name}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography variant="h6">Email:</Typography>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography variant="secondary">
+                                  {creator?.email}
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography variant="h6">PhoneNumber:</Typography>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography variant="secondary">
+                                  {creator?.phoneNumber}
+                                </Typography>
+                              </Grid>
+                              {/* <Grid item xs={12}>
+                                <Typography variant="h6" sx={{ mt: 3 }}>
+                                  Contact:
+                                </Typography>
+                              </Grid>
+                              <Grid item xs={12}>
+                                <Typography variant="secondary">
+                                  {`${parseInt(creator?.contact)}`}
+                                </Typography>
+                              </Grid> */}
+                                                    </Grid>
+                          </CardContent>
+                        </Card>
+                      </Grid>
+                    );
+                  })}
                 </Grid>
-              );
-            })}
-          </Grid>
+            )
+          }
+
+          
         </Container>
       </Box>
     </>
