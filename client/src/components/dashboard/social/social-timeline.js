@@ -36,19 +36,19 @@ export const SocialTimeline = (props) => {
       >
         <Grid
           item
-          lg={4}
+          lg={12}
           xs={12}
         >
           <SocialAbout
-            currentCity={profile.currentCity}
-            currentJobCompany={profile.currentJobCompany}
-            currentJobTitle={profile.currentJobTitle}
-            email={profile.email}
-            originCity={profile.originCity}
-            previousJobCompany={profile.previousJobCompany}
-            previousJobTitle={profile.previousJobTitle}
-            profileProgress={profile.profileProgress}
-            quote={profile.quote}
+            currentName={profile?.first}
+            currentCity={profile?.address}
+            currentJobTitle={profile?.specialization}
+            DOB={profile?.DOB}
+            gender={profile?.gender}
+            contact={profile?.contact}
+            previousJobTitle={profile?.previousJobTitle}
+            profileProgress={profile?.profileProgress}
+            quote={profile?.quote}
           />
         </Grid>
         <Grid
@@ -56,13 +56,13 @@ export const SocialTimeline = (props) => {
           lg={8}
           xs={12}
         >
-          <SocialPostAdd />
+          {/* <SocialPostAdd /> */}
           {posts.map((post) => (
             <Box
               key={post.id}
               sx={{ mt: 3 }}
             >
-              <SocialPostCard
+              {/* <SocialPostCard
                 authorAvatar={post.author.avatar}
                 authorName={post.author.name}
                 comments={post.comments}
@@ -71,7 +71,7 @@ export const SocialTimeline = (props) => {
                 likes={post.likes}
                 media={post.media}
                 message={post.message}
-              />
+              /> */}
             </Box>
           ))}
         </Grid>

@@ -21,11 +21,11 @@ import { Mail as MailIcon } from '../../../icons/mail';
 export const SocialAbout = (props) => {
   const {
     currentCity,
-    currentJobCompany,
+    currentName,
     currentJobTitle,
-    email,
-    originCity,
-    previousJobCompany,
+    DOB,
+    gender,
+    contact,
     previousJobTitle,
     profileProgress,
     quote,
@@ -57,15 +57,23 @@ export const SocialAbout = (props) => {
           <CardHeader title="About" />
           <Divider />
           <CardContent>
-            <Typography
-              color="textSecondary"
-              variant="subtitle2"
-            >
-              &quot;
-              {quote}
-              &quot;
-            </Typography>
             <List>
+               <ListItem
+                disableGutters
+                divider
+              >
+                <ListItemAvatar sx={{ color: 'action.active' }}>
+                  <BriefcaseIcon fontSize="small" />
+                </ListItemAvatar>
+                <ListItemText
+                  disableTypography
+                  primary={(
+                    <Typography variant="subtitle2">
+                      {currentName}
+                    </Typography>
+                  )}
+                />
+              </ListItem>
               <ListItem
                 disableGutters
                 divider
@@ -78,16 +86,6 @@ export const SocialAbout = (props) => {
                   primary={(
                     <Typography variant="subtitle2">
                       {currentJobTitle}
-                      {' '}
-                      at
-                      {' '}
-                      <Link
-                        color="textPrimary"
-                        href="#"
-                        variant="subtitle2"
-                      >
-                        {currentJobCompany}
-                      </Link>
                     </Typography>
                   )}
                   secondary={(
@@ -97,14 +95,6 @@ export const SocialAbout = (props) => {
                     >
                       Past:
                       {previousJobTitle}
-                      {' '}
-                      <Link
-                        color="textSecondary"
-                        href="#"
-                        variant="body2"
-                      >
-                        {previousJobCompany}
-                      </Link>
                     </Typography>
                   )}
                 />
@@ -116,17 +106,15 @@ export const SocialAbout = (props) => {
                 <ListItemAvatar sx={{ color: 'action.active' }}>
                   <AcademicCapIcon fontSize="small" />
                 </ListItemAvatar>
-                <ListItemText
+                 <ListItemText
                   primary={(
-                    <Link
-                      color="textSecondary"
-                      sx={{ cursor: 'pointer' }}
-                      variant="caption"
-                    >
-                      Add school or collage
-                    </Link>
+                    <Typography variant="subtitle2">
+                                       {gender}
+
+                    </Typography>
                   )}
                 />
+                
               </ListItem>
               <ListItem
                 disableGutters
@@ -136,8 +124,7 @@ export const SocialAbout = (props) => {
                   <HomeIcon fontSize="small" />
                 </ListItemAvatar>
                 <ListItemText
-                  disableTypography
-                  primary={(
+                  disableTypography>
                     <Typography variant="subtitle2">
                       Lives in
                       {' '}
@@ -146,24 +133,25 @@ export const SocialAbout = (props) => {
                         href="#"
                         variant="subtitle2"
                       >
-                        {currentCity}
+                        {currentCity?.city} 
+                         {/* {currentCity?.country}
+                          {currentCity?.line1}
+                           {currentCity?.line2}
+                            {currentCity?.zip}
+                             {currentCity?.state} */}
                       </Link>
                     </Typography>
-                  )}
-                  secondary={(
-                    <Typography
-                      color="textSecondary"
-                      variant="body2"
-                    >
-                      Originally from
-                      {' '}
-                      <Link
-                        color="textSecondary"
-                        href="#"
-                        variant="body2"
-                      >
-                        {originCity}
-                      </Link>
+                  </ListItemText>
+                
+              </ListItem>
+              <ListItem disableGutters>
+                <ListItemAvatar sx={{ color: 'action.active' }}>
+                  <MailIcon fontSize="small" />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={(
+                    <Typography variant="subtitle2">
+                      {DOB}
                     </Typography>
                   )}
                 />
@@ -175,7 +163,7 @@ export const SocialAbout = (props) => {
                 <ListItemText
                   primary={(
                     <Typography variant="subtitle2">
-                      {email}
+                      {contact}
                     </Typography>
                   )}
                 />
@@ -190,11 +178,11 @@ export const SocialAbout = (props) => {
 
 SocialAbout.propTypes = {
   currentCity: PropTypes.string.isRequired,
-  currentJobCompany: PropTypes.string.isRequired,
+  currentName: PropTypes.string.isRequired,
   currentJobTitle: PropTypes.string.isRequired,
-  email: PropTypes.string.isRequired,
-  originCity: PropTypes.string.isRequired,
-  previousJobCompany: PropTypes.string.isRequired,
+  DOB: PropTypes.string.isRequired,
+  gender: PropTypes.string.isRequired,
+  contact: PropTypes.string.isRequired,
   previousJobTitle: PropTypes.string.isRequired,
   profileProgress: PropTypes.number.isRequired,
   quote: PropTypes.string.isRequired

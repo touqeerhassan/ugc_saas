@@ -42,7 +42,22 @@ import { OrganizationPopover } from "./organization-popover";
 import { useAuth } from "../../hooks/use-auth";
 import { API_SERVICE } from "../../config";
 
-const brandSections = (t) => [
+
+
+export const DashboardSidebar = (props) => {
+  const { user } = useAuth();
+  console.log(user)
+  const { onClose, open } = props;
+  const [amount, setAmount] = useState(user?.userData?.funds?.amount);
+  const [currency, setCurrency] = useState(user?.userData?.funds?.currency);
+
+  const router = useRouter();
+  const { t } = useTranslation();
+
+
+
+
+  const brandSections = (t) => [
   {
     title: t("General"),
     items: [
@@ -117,6 +132,11 @@ const creatorSections = (t, hasProfile) => {
         path: "/dashboard/view-brands",
         icon: <UsersIcon fontSize="small" />,
       },
+       {
+        title: t("Portfolio"),
+        path: `/dashboard/portfolio?id=${user.id}`,
+        icon: <UsersIcon fontSize="small" />,
+      },
           {
             path: "/dashboard/chat",
             icon: <ChatAlt2Icon fontSize="small" />,
@@ -161,14 +181,6 @@ const creatorSections = (t, hasProfile) => {
   }
 };
 
-export const DashboardSidebar = (props) => {
-  const { user } = useAuth();
-  const { onClose, open } = props;
-  const [amount, setAmount] = useState(user?.userData?.funds?.amount);
-  const [currency, setCurrency] = useState(user?.userData?.funds?.currency);
-
-  const router = useRouter();
-  const { t } = useTranslation();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
     noSsr: true,
   });

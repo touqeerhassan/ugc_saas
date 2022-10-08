@@ -547,6 +547,15 @@ router.get("/get_user_by_id/:userId", async (req, res) => {
     .catch((error) => res.status(400).json(`Error: ${err}`));
 });
 
+
+// Get a single user
+router.get("/get_protifolio_by_id/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  Creator.findOne({ userId: req.params.userId })
+    .then((user) => res.status(200).send(user))
+    .catch((error) => res.status(400).json(`Error: ${err}`));
+});
+
 //Patch a user
 router.patch("/edit_user/:userId", async (req, res) => {
   res.setHeader("Content-Type", "application/json");

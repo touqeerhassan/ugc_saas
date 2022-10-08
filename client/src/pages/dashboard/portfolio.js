@@ -15,27 +15,37 @@ import {
 } from '@mui/material';
 import { blueGrey } from '@mui/material/colors';
 import AddPhotoIcon from '@mui/icons-material/AddPhotoAlternate';
-import { socialApi } from '../../../__fake-api__/social-api';
-import { AuthGuard } from '../../../components/authentication/auth-guard';
-import { DashboardLayout } from '../../../components/dashboard/dashboard-layout';
-import { SocialConnections } from '../../../components/dashboard/social/social-connections';
-import { SocialTimeline } from '../../../components/dashboard/social/social-timeline';
-import { useMounted } from '../../../hooks/use-mounted';
-import { Chat as ChatIcon } from '../../../icons/chat';
-import { DotsHorizontal as DotsHorizontalIcon } from '../../../icons/dots-horizontal';
-import { UserAdd as UserAddIcon } from '../../../icons/user-add';
-import { gtm } from '../../../lib/gtm';
+import { socialApi } from '../../__fake-api__/social-api';
+import { AuthGuard } from '../../components/authentication/auth-guard';
+import { DashboardLayout } from '../../components/dashboard/dashboard-layout';
+import { SocialConnections } from '../../components/dashboard/social/social-connections';
+import { SocialTimeline } from '../../components/dashboard/social/social-timeline';
+import { useMounted } from '../../hooks/use-mounted';
+import { Chat as ChatIcon } from '../../icons/chat';
+import { DotsHorizontal as DotsHorizontalIcon } from '../../icons/dots-horizontal';
+import { UserAdd as UserAddIcon } from '../../icons/user-add';
+import { gtm } from '../../lib/gtm';
+import { API_SERVICE } from "../../config";
+import { useAuth } from "../../hooks/use-auth";
+
+import { useRouter } from 'next/router'
+
 
 const tabs = [
   { label: 'Timeline', value: 'timeline' },
   { label: 'Connections', value: 'connections' }
 ];
 
-export const SocialProfile = () => {
-  const isMounted = useMounted();
+const ViewBrands= () => {
+    const { user } = useAuth();
+   const router = useRouter()
+
+  console.log(router.query)
+   const isMounted = useMounted();
   const [currentTab, setCurrentTab] = useState('timeline');
   const [profile, setProfile] = useState(null);
   const [connectedStatus, setConnectedStatus] = useState('not_connected');
+    const [protifolio, setProtifolio] = useState();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -54,10 +64,35 @@ export const SocialProfile = () => {
   }, [isMounted]);
 
   useEffect(() => {
+    // console.log(user)
+    // if(user.id==router.query.userid){
+    //    const userEmail=user.email;
+    // }
+  
+     
+   fetch(
+`${API_SERVICE}/get_protifolio_by_id/${router.query.id}`)
+            .then((res) => res.json())
+            .then((json) => {
+
+                setProtifolio(json)
+                  console.log(json)
+                  
+            });
+    
+  
+
       getProfile();
+    
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [getProfile]);
+
+
+    
+
+ 
+
 
   const handleConnectToggle = () => {
     setConnectedStatus((prevConnectedStatus) => (prevConnectedStatus === 'not_connected'
@@ -74,7 +109,7 @@ export const SocialProfile = () => {
   }
 
   return (
-    <>
+    <div>
       <Head>
         <title>
           Dashboard: Social Profile | Material Kit Pro
@@ -148,10 +183,10 @@ export const SocialProfile = () => {
                 color="textSecondary"
                 variant="overline"
               >
-                {profile.bio}
+                 {protifolio?.name} 
               </Typography>
               <Typography variant="h6">
-                {profile.name}
+                 {protifolio?.plan} 
               </Typography>
             </Box>
             <Box sx={{ flexGrow: 1 }} />
@@ -231,22 +266,20 @@ export const SocialProfile = () => {
             </Tabs>
             <Divider />
             <Box sx={{ py: 3 }}>
-              {currentTab === 'timeline' && <SocialTimeline profile={profile} />}
+              {currentTab === 'timeline' && <SocialTimeline profile={protifolio} />}
               {currentTab === 'connections' && <SocialConnections />}
             </Box>
           </Container>
         </Box>
       </Box>
-    </>
+    </div>
   );
 };
 
-SocialProfile.getLayout = (page) => (
+ViewBrands.getLayout = (page) => (
   <AuthGuard>
-    <DashboardLayout>
-      {page}
-    </DashboardLayout>
+    <DashboardLayout>{page}</DashboardLayout>
   </AuthGuard>
 );
 
-export default SocialProfile;
+export default ViewBrands;
