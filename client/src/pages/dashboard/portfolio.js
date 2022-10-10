@@ -183,10 +183,10 @@ const ViewBrands= () => {
                 color="textSecondary"
                 variant="overline"
               >
-                 {protifolio?.name} 
+                 {protifolio?.first} 
               </Typography>
               <Typography variant="h6">
-                 {protifolio?.plan} 
+                 {protifolio?.specialization} 
               </Typography>
             </Box>
             <Box sx={{ flexGrow: 1 }} />

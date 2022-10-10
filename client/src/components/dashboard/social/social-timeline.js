@@ -41,8 +41,11 @@ export const SocialTimeline = (props) => {
         >
           <SocialAbout
             currentName={profile?.first}
+             currentLastName={profile?.last}
             currentCity={profile?.address}
             currentJobTitle={profile?.specialization}
+             currentSocialProfile={profile?.social}
+            
             DOB={profile?.DOB}
             gender={profile?.gender}
             contact={profile?.contact}
