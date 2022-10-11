@@ -79,6 +79,8 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
     }
   };
   const handleSubmit = async (e) => {
+    debugger;
+    console.log(details)
     e.preventDefault();
 
     if (!stripe || !elements) {
@@ -95,7 +97,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
         confirmParams: {
           shipping: {
             name: details.name,
-            street: {
+            address: {
               line1: details.street,
               postal_code: details.zip,
               city: details.city,
@@ -230,7 +232,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
                 >
                   {countries?.map((country) => {
                     return (
-                      <MenuItem value={country.value} key={country.value}>
+                      <MenuItem selected={country.value == details.country} value={country.value} key={country.value}>
                         {country.label}
                       </MenuItem>
                     );
