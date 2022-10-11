@@ -32,12 +32,13 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [severity, setSeverity] = useState("");
-
+   const [paymentsDetails, setPaymentsDetails] = useState();
+  
   const countries = useMemo(() => countryList().getData(), []);
   console.log(countries);
   //   const [details, setDetails] = useState({
   //     name: "",
-  //     address: "",
+  //     street: "",
   //     city: "",
   //     state: "",
   //     country: "",
@@ -45,7 +46,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
 
   const [details, setDetails] = useState({
     name: "",
-    address: "",
+    street: "",
     city: "",
     zip: "",
     country: "US",
@@ -56,11 +57,27 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
   };
 
   useEffect(() => {
+    getPaymentsDetails();
     if (!stripe) {
       return;
     }
   }, [stripe]);
 
+
+    const getPaymentsDetails = async () => {
+    try {
+      await fetch(`${API_SERVICE}/get_payment_details/${user.email}`)
+        .then(res => res.json())
+        .then(json => {
+          setDetails(json[0]);
+        
+          
+        console.log(json)
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -78,8 +95,8 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
         confirmParams: {
           shipping: {
             name: details.name,
-            address: {
-              line1: details.address,
+            street: {
+              line1: details.street,
               postal_code: details.zip,
               city: details.city,
               country: details.country,
@@ -194,9 +211,9 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
                 autoFocus
                 fullWidth
                 label="Street Address"
-                name="address"
+                name="street"
                 required
-                value={details.address}
+                value={details.street}
                 onChange={handleChange}
               />
             </Grid>

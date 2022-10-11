@@ -1,4 +1,4 @@
-import { useState,useEffect } from "react";
+import { useState,useEffect,useMemo } from "react";
 import {
   Box,
   Button,
@@ -12,6 +12,7 @@ import {
   TableRow,
   TextField,
   Typography,
+  
 } from "@mui/material";
 import { ArrowRight as ArrowRightIcon } from "../../../icons/arrow-right";
 import { Scrollbar } from "../../scrollbar";
@@ -23,6 +24,7 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import { FormControl,InputLabel, Select,MenuItem  } from '@mui/material';
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -34,13 +36,42 @@ import MuiAlert from "@mui/material/Alert";
 import EditIcon from '@mui/icons-material/Edit';
 import { API_SERVICE } from "../../../config";
 
+import countryList from "react-select-country-list";
+
+import {
+  PaymentElement,
+  useStripe,
+ 
+} from "@stripe/react-stripe-js";
+
 export const AccountSecuritySettings = () => {
+  
    const { signInWithEmailAndPassword ,user} = useAuth();
-   console.log(user);
    const [amount, setAmount] = useState(user?.userData?.funds?.amount);
   const [currency, setCurrency] = useState(user?.userData?.funds?.currency);
+ const countries = useMemo(() => countryList().getData(), []);
 
-  const [open, setOpen] = React.useState(false);
+ 
+
+  const [message, setMessage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+   const [openPaymentSnack, setOpenPaymentSnack] = useState(false);
+  const [severity, setSeverity] = useState("");
+
+
+   const [details, setDetails] = useState({
+    name: "",
+    street: "",
+    city: "",
+    zip: "",
+    country: "US",
+  });
+
+  const handleChange = (e) => {
+    setDetails({ ...details, [e.target.name]: e.target.value });
+  };
+
 
   const handleClick = () => {
     setOpen(true);
@@ -62,15 +93,33 @@ export const AccountSecuritySettings = () => {
   const [oldPassword, setOldPassword] = useState("");
   const [dialogOpen, setDialogOpen] = useState(false);
     const [transactionDetails, setTransactionDetails] = useState([]);
-
+const [update, setUpdate] = useState(false);
  
 
    useEffect(() => {
     console.log("This should print");
     handleWallet();
+      getPaymentsDetails();
     getWallet();
   }, [user?.userData?.funds?.selectedCurrency, user?.userData?.funds?.amount]);
 
+
+
+  const getPaymentsDetails = async () => {
+    try {
+      await fetch(`${API_SERVICE}/get_payment_details/${user.email}`)
+        .then(res => res.json())
+        .then(json => {
+          setDetails(json[0]);
+            if(json.length>0){
+            setUpdate(true)
+          }
+        console.log(json)
+        });
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
    const getWallet = async () => {
     try {
@@ -163,6 +212,69 @@ export const AccountSecuritySettings = () => {
     debugger;
     return new Date().toISOString().slice(0, 10)
   }
+
+
+    const handleSubmit = async () => {
+      if(update==true){
+ try {
+      const response = await fetch(`${API_SERVICE}/update_payment/${user.email}`, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+           email: user.email,
+          name: details.name,
+          street: details.street,
+          city: details.city,
+          country:details.country,
+          zip:details.zip
+        }),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+       setOpenPaymentSnack(true)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+   
+      }
+      else{
+
+      
+    try {
+      const response = await fetch(`${API_SERVICE}/add_payment`, {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email:user.email,
+          name: details.name,
+          street: details.street,
+          city: details.city,
+          country:details.country,
+          zip:details.zip
+        }),
+      });
+      if (response.status === 200) {
+        const data = await response.json();
+       setOpenPaymentSnack(true)
+      }
+    } catch (error) {
+      console.log(error);
+    }
+      }
+   
+          } 
+       
+     
+  
+
   return (
     <>
       <Card>
@@ -255,6 +367,16 @@ export const AccountSecuritySettings = () => {
         </CardContent>
       </Card>
 
+<Snackbar
+                autoHideDuration={2000}
+                anchorOrigin={{ vertical: "center", horizontal: "center" }}
+                open={openPaymentSnack}
+                onClose={handleClose}
+              >
+                <Alert onClose={handleClose} severity="success">
+                  "Payment details added successfully"
+                </Alert>
+              </Snackbar>
 
 <Card  style={{marginTop:'40px'}}>
         <CardContent>
@@ -304,6 +426,119 @@ export const AccountSecuritySettings = () => {
           </Grid>
         </CardContent>
       </Card>
+
+      <Card  style={{marginTop:'40px'}}>
+        <CardContent>
+          <Grid container spacing={3} style={{ display:'flex', flexDirection:'column', width:"100%"}}>
+            <Grid item >
+             
+              
+                <Grid item md={12} xs={12}>
+              <h4>Payment Details</h4>
+            </Grid>
+        
+          <Box>
+               <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <TextField
+                fullWidth
+                label="Card Holder Name"
+                name="name"
+                required
+                value={details?.name}
+                onChange={handleChange}
+              />
+            </Grid>
+         
+            {/* <Grid item md={12} xs={12}>
+              <h4>Billing Details</h4>
+            </Grid> */}
+            <Grid item md={6} xs={12}>
+              <TextField
+                autoFocus
+                fullWidth
+                label="Street Address"
+                name="street"
+                required
+                value={details?.street}
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <FormControl fullWidth>
+                <InputLabel id="demo-simple-select-label">Country</InputLabel>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={details?.country}
+                  label="Country"
+                  name="country"
+                  onChange={handleChange}
+                >
+                  {countries?.map((country) => {
+                    return (
+                      <MenuItem value={country.value} key={country.value}>
+                        {country.label}
+                      </MenuItem>
+                    );
+                  })}
+                </Select>
+              </FormControl>
+             
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                value={details?.zip}
+                fullWidth
+                label="Zip"
+                name="zip"
+                required
+                onChange={handleChange}
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                value={details?.city}
+                fullWidth
+                label="City"
+                name="city"
+                required
+                onChange={handleChange}
+              />
+            </Grid>
+           
+            <Grid item xs={12}>
+              
+               
+                <Button
+                  type="submit"
+                  variant="contained"
+                  onClick={handleSubmit}
+                  style={{ paddingLeft: "40px", paddingRight: "40px" }}
+                >
+                  {loading ? "Loading" : "Add"}
+                </Button>
+             
+              
+            </Grid>
+             </Grid>
+            
+ </Box>
+  
+            {/* <CustomSnackbar
+              open={open}
+              setOpen={setOpen}
+              message={message}
+              severity={severity}
+            /> */}
+          </Grid>
+
+          </Grid>
+        </CardContent>
+
+          
+      </Card>
+
       {/* <Card sx={{ mt: 4 }}>
         <CardContent>
           <Typography variant="h6">Multi Factor Authentication</Typography>
