@@ -73,13 +73,16 @@ const campaignSchema = new mongoose.Schema({
   },
   productDemo: {
     type: String,
-    required: true,
+    // required: true,
   },
   userId: {
     type: String,
     unique: true,
     required: true,
   },
+  isActive:{
+    type: Boolean
+  }
 });
 
 const campaign = mongoose.model("creator", campaignSchema);

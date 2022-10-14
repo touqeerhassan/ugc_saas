@@ -153,6 +153,9 @@
 // };
 
 import { useRouter } from "next/router";
+import { useState } from "react";
+import InfoIcon from '@mui/icons-material/Info';
+
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import {
@@ -168,10 +171,21 @@ import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
 import firebase from "../../lib/firebase";
 import { useEffect } from "react";
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 
 export const FirebaseLogin = (props) => {
   const isMounted = useMounted();
   const auth = useAuth();
+  const [open, setOpen] = useState(false);
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (!auth.user) return;
     if (auth?.user?.userData?.disabled) {
@@ -181,12 +195,18 @@ export const FirebaseLogin = (props) => {
     //   router.push("/account-disabled");
     // }
     else {
-      router.push("/dashboard/orders");
+      if (auth?.user?.userData?.userType == "creator") {
+        setOpen(true)
+      }
+      else {
+        router.push("/dashboard/orders");
+      }
     }
   }, [auth?.isAuthenticated]);
   const router = useRouter();
   const { signInWithEmailAndPassword, signInWithGoogle } = useAuth();
   const formik = useFormik({
+
     initialValues: {
       email: "",
       password: "",
@@ -209,8 +229,16 @@ export const FirebaseLogin = (props) => {
           .then((userCredential) => {
             // Signed in
             const user = userCredential.user;
-            console.log(user);
-
+            console.log(auth.user);
+            if (auth.user&&auth?.user?.userData?.userType == "creator"&&auth?.user?.userData?.email == user.email) {
+              setOpen(true)
+            }
+            if(auth.user&&auth?.user?.userData?.userType == "brand"&&auth?.user?.userData?.email == user.email){
+              router.push("/dashboard/orders");
+            }
+            // else {
+            //   router.push("/dashboard/orders");
+            // }
             // const returnUrl = router.query.returnUrl || "/dashboard";
             // router.push(returnUrl);
 
@@ -271,6 +299,25 @@ export const FirebaseLogin = (props) => {
         />
         Google
       </Button> */}
+      <Dialog
+        open={open}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">
+        </DialogTitle>
+        <DialogContent>
+        <InfoIcon style={{marginLeft:"98px",fontSize:"50px",color:"#5048E5", fontWeight:600}}></InfoIcon>
+          <DialogContentText id="alert-dialog-description" style={{color:"#5048E5"}}>
+            Account is under review by admin
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose} autoFocus>
+            OK
+          </Button>
+        </DialogActions>
+      </Dialog>
       <Box
         sx={{
           alignItems: "center",

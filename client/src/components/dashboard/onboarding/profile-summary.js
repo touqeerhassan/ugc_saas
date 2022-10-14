@@ -61,7 +61,7 @@ export default function Disclaimer({ onClick, onEdit }) {
           Accept: "application/json",
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ ...creator, userId: user?.id }),
+        body: JSON.stringify({ ...creator, userId: user?.id, isActive: "false" }),
       });
       if (response.status === 200) {
         console.log(response);
