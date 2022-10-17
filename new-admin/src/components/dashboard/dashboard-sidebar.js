@@ -44,6 +44,11 @@ const mySections = (t) => [
       //   icon: <HomeIcon fontSize="small" />,
       // },
       {
+        title: t("Account Review"),
+        path: "/dashboard/account-review",
+        icon: <UsersIcon fontSize="small" />,
+      },
+      {
         title: t("Users"),
         path: "/dashboard/users",
         icon: <UsersIcon fontSize="small" />,
