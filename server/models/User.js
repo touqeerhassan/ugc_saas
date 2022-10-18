@@ -17,6 +17,9 @@ const campaignSchema = new mongoose.Schema({
   phoneNumber: {
     type: String,
   },
+  address: {
+    type: String,
+  },
   email: {
     type: String,
     // required: true,

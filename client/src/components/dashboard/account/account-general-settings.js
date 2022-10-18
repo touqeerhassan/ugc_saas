@@ -36,11 +36,12 @@ import EditIcon from '@mui/icons-material/Edit';
 export const AccountGeneralSettings = (props) => {
   // To get the user from the authContext, you can use
 
-  const { user, handleSelectedCurrencyChange, handleAmountMinus } = useAuth();
+  const { user, handleSelectedCurrencyChange, handleAmountMinus, handleSelectedAddressChange } = useAuth();
   const dispatch = useDispatch();
   console.log(user);
   const [name, setName] = useState(user?.name);
   const [open, setOpen] = useState(false);
+  const [address, setAddress] = useState(user?.userData?.address);
   const [currency, setCurrency] = useState(
     user?.userData?.funds?.selectedCurrency?.toLowerCase() || "usd"
   );
@@ -52,6 +53,8 @@ export const AccountGeneralSettings = (props) => {
   const [message, setMessage] = useState("");
 
   const [openProfile, setOpenProfile] = useState(false);
+
+  const [addressChangeSnackBar, setaddressChangeSnackBar] = useState(false);
 
   const handleClick = () => {
     setOpen(true);
@@ -110,6 +113,28 @@ export const AccountGeneralSettings = (props) => {
     }
   };
 
+  const handleAddressChange = async () => {
+    try {
+      const response = await fetch(`${API_SERVICE}/change-address`, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: user?.id,
+          address: address,
+        }),
+      });
+      if (response.status === 200) {
+        setaddressChangeSnackBar(true)
+        await handleSelectedAddressChange(address);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleWithdraw = async () => {
     // await handleAmountMinus(withdrawAmount);
     if (withdrawAmount > user?.userData?.funds?.amount || withdrawAmount <= 0) {
@@ -157,18 +182,26 @@ export const AccountGeneralSettings = (props) => {
     setOpenProfile(false);
   }
 
+  const handleCloseAddressChangeSnackBar = () =>{
+    setaddressChangeSnackBar(false)
+  }
   return (
-    <Box sx={{ mt: 4, mb:4 }} {...props}>
+    <Box sx={{ mt: 4, mb: 4 }} {...props}>
+       <Snackbar open={addressChangeSnackBar} autoHideDuration={6000} onClose={handleCloseAddressChangeSnackBar}>
+          <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+            Details updated successfully
+          </Alert>
+        </Snackbar>
       <Card>
         {
           openProfile === false &&
           <CardContent>
-            <Grid container spacing={3} style={{display:'flex', flexDirection:'column', width:"100%"}}>
+            <Grid container spacing={3} style={{ display: 'flex', flexDirection: 'column', width: "100%" }}>
               <Grid item fullWidth>
-                <Box display='flex' style={{ width:'100%', justifyContent:'space-between'}}>
+                <Box display='flex' style={{ width: '100%', justifyContent: 'space-between' }}>
                   <Typography variant="h6">Profile Information</Typography>
                   <Button onClick={handleOpenProfile}>
-                    <EditIcon/>
+                    <EditIcon />
                   </Button>
                 </Box>
               </Grid>
@@ -226,7 +259,7 @@ export const AccountGeneralSettings = (props) => {
                   >
                     Save
                   </Button> */}
-                  <Typography style={{color:'grey'}}>Full name</Typography>
+                  <Typography style={{ color: 'grey' }}>Full name</Typography>
                 </Box>
                 <Box>
                   <Typography>{name}</Typography>
@@ -263,7 +296,7 @@ export const AccountGeneralSettings = (props) => {
                     }}
                   />
                   <Button>Edit</Button> */}
-                  <Typography style={{color:'grey'}}>Email Address</Typography>
+                  <Typography style={{ color: 'grey' }}>Email Address</Typography>
                 </Box>
                 <Box>
                   <Typography>{user?.email}</Typography>
@@ -291,10 +324,10 @@ export const AccountGeneralSettings = (props) => {
                     }}
                   />
                   <Button>Edit</Button> */}
-                  <Typography style={{color:'grey'}}>Address</Typography>
+                  <Typography style={{ color: 'grey' }}>Address</Typography>
                 </Box>
                 <Box>
-                  <Typography>A-4 Test Address</Typography>
+                  <Typography>{address}</Typography>
                 </Box>
 
                 <Box
@@ -332,12 +365,12 @@ export const AccountGeneralSettings = (props) => {
                   >
                     Save
                   </Button> */}
-                  <Typography style={{color:'grey'}}>Currency</Typography>
+                  <Typography style={{ color: 'grey' }}>Currency</Typography>
                 </Box>
                 <Box>
                   {currency.toUpperCase()}
                 </Box>
-                
+
                 <Box
                   sx={{
                     display: "flex",
@@ -378,7 +411,7 @@ export const AccountGeneralSettings = (props) => {
                     }}
                   />
                   <Button onClick={handleWithdraw}>Submit</Button> */}
-                  <Typography style={{color:'grey'}}>Withdraw Money</Typography>
+                  <Typography style={{ color: 'grey' }}>Withdraw Money</Typography>
                 </Box>
                 <Box>
                   {currency.toUpperCase()} {withdrawAmount}
@@ -387,14 +420,14 @@ export const AccountGeneralSettings = (props) => {
             </Grid>
           </CardContent>
         }
-        
+
         {
           openProfile &&
           <CardContent>
-            <Grid container spacing={3} style={{display:'flex', flexDirection:'column', width:"100%"}}>
+            <Grid container spacing={3} style={{ display: 'flex', flexDirection: 'column', width: "100%" }}>
               <Grid item fullWidth>
                 {/* <Typography variant="h6">Profile Information</Typography> */}
-                <Box display='flex' style={{ width:'100%', justifyContent:'space-between'}}>
+                <Box display='flex' style={{ width: '100%', justifyContent: 'space-between' }}>
                   <Typography variant="h6">Profile Information</Typography>
                   <Button onClick={handleCloseProfile}>
                     Save
@@ -489,7 +522,7 @@ export const AccountGeneralSettings = (props) => {
                   />
                   <Button>Edit</Button>
                 </Box>
-                
+
                 <Box
                   sx={{
                     display: "flex",
@@ -498,15 +531,21 @@ export const AccountGeneralSettings = (props) => {
                   }}
                 >
                   <TextField
-                    defaultValue="A-4 Test Address"
+                    // defaultValue="A-4 Test Address"
                     label="Address"
+                    value={address}
+                    onChange={(e) => {
+                      setAddress(e.target.value);
+                    }}
                     size="small"
                     sx={{
                       flexGrow: 1,
                       mr: 3,
                     }}
                   />
-                  <Button
+                  <Button onClick={() => {
+                    handleAddressChange();
+                  }}
                   >
                     Save
                   </Button>
@@ -595,6 +634,7 @@ export const AccountGeneralSettings = (props) => {
             </Grid>
           </CardContent>
         }
+       
       </Card>
       {/* <Card sx={{ mt: 4 }}>
         <CardContent>

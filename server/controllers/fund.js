@@ -145,6 +145,32 @@ const changeCurrency = async (req, res) => {
   }
 };
 
+
+const changeAddress = async (req, res) => {
+  let { address, userId } = req.body;
+  console.log(req.body);
+
+  try {
+    var user = await User.findOne({ userId });
+    if (!user) {
+      return res.status(404).json("User not Found");
+    }
+    user.address=address;
+    user.updateOne(
+      {
+        $set: req.body
+      },
+      err => {
+        if (err) res.status(400).json(`Error: ${err}`);
+        else res.status(200).send("Updated User Address");
+      }
+    );
+  } catch (err) {
+    console.log(err);
+    res.status(500).send({ error: err.message });
+  }
+};
+
 const convertCurrency = async (req, res) => {
   let { from, amount, to } = req.body;
 
@@ -238,5 +264,6 @@ module.exports = {
   changeCurrency,
   convertCurrency,
   chooseCreator,
+  changeAddress
   //   buyProduct,
 };

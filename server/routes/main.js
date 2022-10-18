@@ -775,6 +775,7 @@ router.post("/create-payment-intent", fundsController.createPaymentIntent);
 router.post("/addFunds", fundsController.addFunds);
 router.post("/addFundsFPX", fundsController.addFundsFPX);
 router.patch("/change-currency", fundsController.changeCurrency);
+router.patch("/change-address", fundsController.changeAddress);
 router.post("/convert-currency", fundsController.convertCurrency);
 router.post("/choose-creator", fundsController.chooseCreator);
 // router.post("/buyProduct", fundsController.buyProduct);

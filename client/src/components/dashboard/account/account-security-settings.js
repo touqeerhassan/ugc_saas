@@ -25,6 +25,9 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import { FormControl,InputLabel, Select,MenuItem  } from '@mui/material';
+import moment from 'moment';
+
+
 
 import firebase from "firebase/app";
 import "firebase/auth";
@@ -122,6 +125,7 @@ const [update, setUpdate] = useState(false);
   };
 
    const getWallet = async () => {
+    debugger;
     try {
       await fetch(
 `${API_SERVICE}/get_wallet/${user.email}`)
@@ -272,7 +276,10 @@ const [update, setUpdate] = useState(false);
    
           } 
        
-     
+          const getCreatedDate = (createdDate)=>{
+           return moment(createdDate).format('MMMM Do YYYY, h:mm:ss a')
+          }
+         
   
 
   return (
@@ -416,7 +423,7 @@ const [update, setUpdate] = useState(false);
                   <Typography style={{color:'grey'}}>Current date</Typography>
                 </Box>
                 <Box>
-                  <Typography>{transaction.createdDate}</Typography>
+                  <Typography>{getCreatedDate(transaction.createdDate)}</Typography>
                 </Box>
             </Grid>
              </Grid>
