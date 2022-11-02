@@ -312,7 +312,7 @@ const Overview = () => {
                     <TabPanel value="Photo">
                       <Grid
                         container
-                        spacing={{ xs: 3, md: 3 }}
+                        spacing={{ xs: 2, md: 2 }}
                         columns={{ xs: 4, sm: 8, md: 12 }}
                       >
                         {imageLinks &&
@@ -321,8 +321,8 @@ const Overview = () => {
                               <Grid item xs={2} sm={4} md={2}>
                                 <img
                                   style={{ borderRadius: "14px" }}
-                                  width="100%"
-                                  height="100%"
+                                  width="90%"
+                                  height="90%"
                                   src={image.src}
                                 ></img>
                               </Grid>
