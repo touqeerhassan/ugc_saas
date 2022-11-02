@@ -92,6 +92,11 @@ export const DashboardSidebar = (props) => {
           icon: <ClipboardListIcon fontSize="small" />,
           title: t("Products"),
         },
+        {
+          path: "/dashboard/content",
+          icon: <ChartBarIcon fontSize="small" />,
+          title: t("Content"),
+        },
         // {
         //   path: "/dashboard/chat",
         //   icon: <ChatAlt2Icon fontSize="small" />,
