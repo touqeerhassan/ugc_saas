@@ -136,6 +136,8 @@ const CustomerList = () => {
     gtm.push({ event: "page_view" });
   }, []);
 
+  console.log(campaigns);
+
   useEffect(() => {
     fetchCampaigns();
   }, [user?.id, toggler]);
@@ -179,13 +181,44 @@ const CustomerList = () => {
                   </Grid>
                 </Grid>
 
-                <Box
+                {/* <Box
                   sx={{
                     m: -1,
                     mt: 3,
                   }}
                 >
                   <Grid container>
+                    <Grid
+                      item
+                      md={4}
+                      xs={12}
+                      sx={{
+                        alignItems: "center",
+                        borderRight: (theme) => ({
+                          md: `1px solid ${theme.palette.divider}`,
+                        }),
+                        borderBottom: (theme) => ({
+                          md: "none",
+                          xs: `1px solid ${theme.palette.divider}`,
+                        }),
+                        display: "flex",
+                        justifyContent: "space-between",
+                        p: 3,
+                      }}
+                    >
+                      <div>
+                        <Typography variant="h5">
+                          {
+                            campaigns.filter(
+                              (campaign) => campaign.content?.contentType === 1
+                            ).length
+                          }
+                        </Typography>
+                        <Typography color="textSecondary" variant="overline">
+                          My Posts
+                        </Typography>
+                      </div>
+                    </Grid>
                     <Grid
                       item
                       md={4}
@@ -249,7 +282,7 @@ const CustomerList = () => {
                       </div>
                     </Grid>
                   </Grid>
-                </Box>
+                </Box> */}
               </Box>
               <Card>
                 <Tabs

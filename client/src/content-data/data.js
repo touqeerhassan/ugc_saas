@@ -107,10 +107,88 @@ const creatorLevels = [
   { title: "Pro Level", price: 15 },
 ];
 
+const videoLinks = [
+  {
+    url: "/static/videos/Bliese-Men-3.mp4",
+  },
+  {
+    url: "/static/videos/Easy-Muqaddam.mp4",
+  },
+  {
+    url: "/static/videos/Foot-Peel-Mask-Qila.mp4",
+  },
+
+  {
+    url: "/static/videos/MasheFace.mp4",
+  },
+  {
+    url: "/static/videos/Rissa-Skincare.mp4",
+  },
+  {
+    url: "/static/videos/Sacha-Inchi.mp4",
+  },
+  {
+    url: "/static/videos/Sambal-Ghasoo-1-Final.mp4",
+  },
+  {
+    url: "/static/videos/Yen-&-Den-Brownies-2.mp4",
+  },
+  {
+    url: "/static/videos/GebuGlow.mov",
+  },
+  {
+    url: "/static/videos/AdeAzhar.mov",
+  },
+];
+
+const imageLinks = [
+  {
+    src: "/static/dashboard_photos/IMG_5248.png",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5247.png",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5246.png",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5245.png",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5244.png",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5241.jpg",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5237.jpg",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5233.jpg",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_5230.jpg",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_3276.jpg",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_2835.jpg",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_0490.jpg",
+  },
+  {
+    src: "/static/dashboard_photos/IMG_0476.jpg",
+  },
+];
+
 module.exports = {
   imageContents,
   videoContents,
   videoDurationContents,
   contentFormatContents,
   creatorLevels,
+  videoLinks,
+  imageLinks,
 };

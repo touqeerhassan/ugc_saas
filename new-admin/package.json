@@ -67,7 +67,6 @@
     "react-draft-wysiwyg": "^1.14.5",
     "react-dropzone": "^11.2.4",
     "react-hot-toast": "^1.0.2",
-    "react-html-table-to-excel": "^2.0.0",
     "react-i18next": "^11.8.5",
     "react-markdown": "^5.0.3",
     "react-phone-input-2": "^2.15.1",
@@ -89,7 +88,6 @@
   "devDependencies": {
     "@svgr/webpack": "^5.5.0",
     "eslint": "^7.32.0",
-    "eslint-config-next": "12.0.3-canary.7",
     "next-transpile-modules": "^9.0.0"
   }
 }
