@@ -1,11 +1,11 @@
 //React - Stepper
-import * as React from "react";
-import Box from "@mui/material/Box";
-import Stepper from "@mui/material/Stepper";
-import Step from "@mui/material/Step";
-import StepLabel from "@mui/material/StepLabel";
-import Button from "@mui/material/Button";
-import Typography from "@mui/material/Typography";
+import * as React from "react"
+import Box from "@mui/material/Box"
+import Stepper from "@mui/material/Stepper"
+import Step from "@mui/material/Step"
+import StepLabel from "@mui/material/StepLabel"
+import Button from "@mui/material/Button"
+import Typography from "@mui/material/Typography"
 
 import {
   ADD_BASIC_DETAILS,
@@ -14,7 +14,7 @@ import {
   ADD_CATEGORIES,
   ADD_BRAND_SELFIE,
   ADD_PRODUCT_DEMO,
-} from "../../../store/actions";
+} from "../../../store/actions"
 
 const steps = [
   "Personal Information",
@@ -23,41 +23,70 @@ const steps = [
   "Campaigns",
   "Sample Photo",
   "Sample Video",
-];
+]
 
-const nextSteps = ["Disclaimer", "Summary"];
+const nextSteps = ["Disclaimer", "Summary"]
 //Page - 1
-import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import Head from "next/head";
-import NextLink from "next/link";
-import { Card, CardContent, Container, Grid, CardActions } from "@mui/material";
-import { FileDropzone } from "../../../components/file-dropzone";
-import { QuillEditor } from "../../../components/quill-editor";
-import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left";
-import { DotsVertical as DotsHorizontalIcon } from "../../../icons/dots-vertical";
-import { gtm } from "../../../lib/gtm";
-import { fileToBase64 } from "../../../utils/file-to-base64";
+import { useEffect, useState } from "react"
+import { useSelector, useDispatch } from "react-redux"
+import Head from "next/head"
+import NextLink from "next/link"
+import { Card, CardContent, Container, Grid, CardActions } from "@mui/material"
+import { FileDropzone } from "../../../components/file-dropzone"
+import { QuillEditor } from "../../../components/quill-editor"
+import { ArrowLeft as ArrowLeftIcon } from "../../../icons/arrow-left"
+import { DotsVertical as DotsHorizontalIcon } from "../../../icons/dots-vertical"
+import { gtm } from "../../../lib/gtm"
+import { fileToBase64 } from "../../../utils/file-to-base64"
 
 //Page - 2
 
-import PersonalInformation from "../../../components/dashboard/onboarding/personal-information";
-import About from "../../../components/dashboard/onboarding/about";
-import SocialMedia from "../../../components/dashboard/onboarding/social-media";
-import Categories from "../../../components/dashboard/onboarding/categories";
-import SamplePhoto from "../../../components/dashboard/onboarding/sample-photo";
-import SampleVideo from "../../../components/dashboard/onboarding/sample-video";
-import ProfileSummary from "../../../components/dashboard/onboarding/profile-summary";
-import Disclaimer from "../../../components/dashboard/onboarding/disclaimer";
-import ProfilePendingReview from "../../../components/dashboard/onboarding/profile-pending-review";
+import PersonalInformation from "../../../components/dashboard/onboarding/personal-information"
+import About from "../../../components/dashboard/onboarding/about"
+import SocialMedia from "../../../components/dashboard/onboarding/social-media"
+import Categories from "../../../components/dashboard/onboarding/categories"
+import SamplePhoto from "../../../components/dashboard/onboarding/sample-photo"
+import SampleVideo from "../../../components/dashboard/onboarding/sample-video"
+import ProfileSummary from "../../../components/dashboard/onboarding/profile-summary"
+import Disclaimer from "../../../components/dashboard/onboarding/disclaimer"
+import ProfilePendingReview from "../../../components/dashboard/onboarding/profile-pending-review"
 
 const BlogPostCreate = () => {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [nextStep, setNextStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+  const [activeStep, setActiveStep] = React.useState(0)
+  const [nextStep, setNextStep] = React.useState(0)
+  const [skipped, setSkipped] = React.useState(new Set())
+  function isEnabled() {
+    console.log(social)
+    if (activeStep === 0) {
+      return (
+        personalInfo.first != "" &&
+        personalInfo.last != "" &&
+        personalInfo.DOB != "" &&
+        personalInfo.gender != "" &&
+        personalInfo.contact != "" &&
+        personalInfo.country != "" &&
+        personalInfo.address1 != "" &&
+        personalInfo.address2 != "" &&
+        personalInfo.city != "" &&
+        personalInfo.state != "" &&
+        personalInfo.zip != ""
+      )
+    } else if (activeStep === 1) {
+      return profile != "" && specialization != ""
+    } else if (activeStep === 2) {
+      return (social.instagram != "" && social.facebook !="" && social.youtube !="" && social.amazon !="" && social.twitter !="" && social.website !="")
+    } else if(activeStep === 3){
+      return(categories.primary !="" && categories.secondary !="" && categories.tertiary !="")
+    }else if(activeStep === 4){
+      return (brandSelfie!="")
+    }else if(activeStep === 5){
+      return (productDemo!="")
+    }
 
-  const creator = useSelector((state) => state.creator);
-  const dispatch = useDispatch();
+  }
+
+  const creator = useSelector((state) => state.creator)
+  const dispatch = useDispatch()
 
   //Page - 1
   const [personalInfo, setPersonalInfo] = useState({
@@ -72,49 +101,53 @@ const BlogPostCreate = () => {
     city: creator?.address?.city,
     state: creator?.address?.state,
     zip: creator?.address?.zip,
-  });
+  })
 
   const handlePersonalInfoChange = (event) => {
+    console.log(personalInfo)
+    if (personalInfo === "") {
+    }
+
     if (typeof event === "string") {
       setPersonalInfo({
         ...personalInfo,
         contact: event,
-      });
+      })
     } else {
       setPersonalInfo({
         ...personalInfo,
         [event.target.name]: event.target.value,
-      });
+      })
     }
-  };
+  }
 
   //Page - 2
-  const [profile, setProfile] = useState(creator?.profile);
-  const [specialization, setSpecialization] = useState(creator?.specialization);
+  const [profile, setProfile] = useState(creator?.profile)
+  const [specialization, setSpecialization] = useState(creator?.specialization)
 
   //Page - 3
-  const [social, setSocial] = useState(creator?.social);
+  const [social, setSocial] = useState(creator?.social)
 
   const handleSocialChange = (e) => {
-    setSocial({ ...social, [e.target.name]: e.target.value });
-  };
+    setSocial({ ...social, [e.target.name]: e.target.value })
+  }
 
   //Page - 4
   const [categories, setCategories] = useState({
     primary: "",
     secondary: "",
     tertiary: "",
-  });
+  })
 
   const handleCategoryChange = (e) => {
-    setCategories({ ...categories, [e.target.name]: e.target.value });
-  };
+    setCategories({ ...categories, [e.target.name]: e.target.value })
+  }
 
   //Page - 5
-  const [brandSelfie, setBrandSelfie] = useState(creator?.brandSelfie);
+  const [brandSelfie, setBrandSelfie] = useState(creator?.brandSelfie)
 
   //Page - 6
-  const [productDemo, setProductDemo] = useState(creator?.productDemo);
+  const [productDemo, setProductDemo] = useState(creator?.productDemo)
 
   const isStepOptional = (step) => {
     return (
@@ -124,23 +157,26 @@ const BlogPostCreate = () => {
       step === 3 ||
       step === 4 ||
       step === 5
-    );
-  };
+    )
+  }
 
   const isStepSkipped = (step) => {
-    return skipped.has(step);
-  };
+    return skipped.has(step)
+  }
 
   const handleNext = () => {
-    let newSkipped = skipped;
+    let newSkipped = skipped
 
     if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+      newSkipped = new Set(newSkipped.values())
+      newSkipped.delete(activeStep)
     }
 
     if (activeStep === 0) {
-      console.log("Hello");
+      console.log("Hello")
+      if (!personalInfo) {
+        console.log("ABC")
+      }
       dispatch({
         type: ADD_BASIC_DETAILS,
         payload: {
@@ -158,7 +194,7 @@ const BlogPostCreate = () => {
             zip: personalInfo.zip,
           },
         },
-      });
+      })
     } else if (activeStep === 1) {
       dispatch({
         type: ADD_PROFILE_SPECIALIZATION,
@@ -166,67 +202,67 @@ const BlogPostCreate = () => {
           profile: profile,
           specialization: specialization,
         },
-      });
+      })
     } else if (activeStep == 2) {
       dispatch({
         type: ADD_SOCIAL,
         payload: {
           social: social,
         },
-      });
+      })
     } else if (activeStep == 3) {
       dispatch({
         type: ADD_CATEGORIES,
         payload: {
           categories: categories,
         },
-      });
+      })
     } else if (activeStep == 4) {
       dispatch({
         type: ADD_BRAND_SELFIE,
         payload: {
           brandSelfie: brandSelfie,
         },
-      });
+      })
     } else if (activeStep == 5) {
       dispatch({
         type: ADD_PRODUCT_DEMO,
         payload: {
           productDemo: productDemo,
         },
-      });
+      })
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    setSkipped(newSkipped)
+  }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
+      throw new Error("You can't skip a step that isn't optional.")
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
     setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+      const newSkipped = new Set(prevSkipped.values())
+      newSkipped.add(activeStep)
+      return newSkipped
+    })
+  }
 
   const handleReset = () => {
-    setActiveStep(0);
-  };
+    setActiveStep(0)
+  }
 
   useEffect(() => {
-    gtm.push({ event: "page_view" });
-  }, []);
+    gtm.push({ event: "page_view" })
+  }, [])
 
   return (
     <>
@@ -355,17 +391,17 @@ const BlogPostCreate = () => {
               {activeStep < 6 && (
                 <Stepper activeStep={activeStep} orientation="vertical">
                   {steps.map((label, index) => {
-                    const stepProps = {};
+                    const stepProps = {}
                     if (isStepOptional(index)) {
                     }
                     if (isStepSkipped(index)) {
-                      stepProps.completed = false;
+                      stepProps.completed = false
                     }
                     return (
                       <Step key={label} {...stepProps}>
                         <StepLabel>{label}</StepLabel>
                       </Step>
-                    );
+                    )
                   })}
                 </Stepper>
               )}
@@ -395,6 +431,8 @@ const BlogPostCreate = () => {
                     </Grid>
                     <Grid item xs={6}>
                       <Button
+                        disabled={isEnabled() ? false : true}
+                        className="btn"
                         onClick={handleNext}
                         variant="contained"
                         fullWidth
@@ -412,7 +450,7 @@ const BlogPostCreate = () => {
         )}
       </Grid>
     </>
-  );
-};
+  )
+}
 
-export default BlogPostCreate;
+export default BlogPostCreate

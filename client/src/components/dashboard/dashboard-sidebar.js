@@ -82,21 +82,21 @@ export const DashboardSidebar = (props) => {
         icon: <UsersIcon fontSize="small" />,
       },
        
-      // {
-      //   title: t("Brand select Creator"),
-      //   path: "/dashboard/creators",
-      //   icon: <ClipboardListIcon fontSize="small" />,
-      // },
+      {
+        title: t("Brand select Creator"),
+        path: "/dashboard/creators",
+        icon: <ClipboardListIcon fontSize="small" />,
+      },
       {
         path: "/add-funds",
         icon: <AttachMoney fontSize="small" />,
         title: t("Add Funds"),
       },
-      {
-        path: "/dashboard/chat",
-        icon: <ChatAlt2Icon fontSize="small" />,
-        title: t("Chat"),
-      },
+      // {
+      //   path: "/dashboard/chat",
+      //   icon: <ChatAlt2Icon fontSize="small" />,
+      //   title: t("Chat"),
+      // },
     ],
   },
 ];
@@ -123,7 +123,7 @@ const creatorSections = (t, hasProfile) => {
             icon: <ShoppingBagIcon fontSize="small" />,
           },
           {
-            title: t("Orders"),
+            title: t("My Jobs"),
             path: "/dashboard/orders",
             icon: <ChartBarIcon fontSize="small" />,
           },
@@ -137,11 +137,11 @@ const creatorSections = (t, hasProfile) => {
         path: `/dashboard/portfolio?id=${user.id}`,
         icon: <UsersIcon fontSize="small" />,
       },
-          {
-            path: "/dashboard/chat",
-            icon: <ChatAlt2Icon fontSize="small" />,
-            title: "Chat",
-          },
+          // {
+          //   path: "/dashboard/chat",
+          //   icon: <ChatAlt2Icon fontSize="small" />,
+          //   title: "Chat",
+          // },
         ],
       },
     ];
@@ -161,20 +161,20 @@ const creatorSections = (t, hasProfile) => {
             icon: <UserCircleIcon fontSize="small" />,
           },
           {
-            title: t("Jobs for Creator"),
+            title: t("Market Place"),
             path: "/dashboard/jobscreator",
             icon: <ShoppingBagIcon fontSize="small" />,
           },
           {
-            title: t("Orders"),
+            title: t("My Jobs"),
             path: "/dashboard/orders",
             icon: <ChartBarIcon fontSize="small" />,
           },
-          {
-            path: "/dashboard/chat",
-            icon: <ChatAlt2Icon fontSize="small" />,
-            title: "Chat",
-          },
+          // {
+          //   path: "/dashboard/chat",
+          //   icon: <ChatAlt2Icon fontSize="small" />,
+          //   title: "Chat",
+          // },
         ],
       },
     ];
