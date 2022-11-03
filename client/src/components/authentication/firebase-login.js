@@ -154,7 +154,8 @@
 
 import { useRouter } from "next/router";
 import { useState } from "react";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
+import toast from "react-hot-toast";
 
 import * as Yup from "yup";
 import { useFormik } from "formik";
@@ -171,11 +172,11 @@ import { useAuth } from "../../hooks/use-auth";
 import { useMounted } from "../../hooks/use-mounted";
 import firebase from "../../lib/firebase";
 import { useEffect } from "react";
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 export const FirebaseLogin = (props) => {
   const isMounted = useMounted();
@@ -196,17 +197,16 @@ export const FirebaseLogin = (props) => {
     // }
     else {
       if (auth?.user?.userData?.userType == "creator") {
-        setOpen(true)
-      }
-      else {
-        router.push("/dashboard/orders");
+        setOpen(true);
+      } else {
+        // router.push("/dashboard/orders");
+        router.push("/dashboard");
       }
     }
   }, [auth?.isAuthenticated]);
   const router = useRouter();
   const { signInWithEmailAndPassword, signInWithGoogle } = useAuth();
   const formik = useFormik({
-
     initialValues: {
       email: "",
       password: "",
@@ -230,10 +230,18 @@ export const FirebaseLogin = (props) => {
             // Signed in
             const user = userCredential.user;
             console.log(auth.user);
-            if (auth.user&&auth?.user?.userData?.userType == "creator"&&auth?.user?.userData?.email == user.email) {
-              setOpen(true)
+            if (
+              auth.user &&
+              auth?.user?.userData?.userType == "creator" &&
+              auth?.user?.userData?.email == user.email
+            ) {
+              setOpen(true);
             }
-            if(auth.user&&auth?.user?.userData?.userType == "brand"&&auth?.user?.userData?.email == user.email){
+            if (
+              auth.user &&
+              auth?.user?.userData?.userType == "brand" &&
+              auth?.user?.userData?.email == user.email
+            ) {
               router.push("/dashboard/orders");
             }
             // else {
@@ -247,6 +255,15 @@ export const FirebaseLogin = (props) => {
           })
           .catch((err) => {
             console.log(err);
+            if (err?.code === "auth/user-not-found") {
+              toast.error("User not found");
+            }
+            if (err?.code === "auth/wrong-password") {
+              toast.error("Wrong password");
+            }
+            if (err?.code === "auth/too-many-requests") {
+              toast.error(err?.message);
+            }
           });
 
         // if (isMounted()) {
@@ -304,11 +321,20 @@ export const FirebaseLogin = (props) => {
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">
-        </DialogTitle>
+        <DialogTitle id="alert-dialog-title"></DialogTitle>
         <DialogContent>
-        <InfoIcon style={{marginLeft:"98px",fontSize:"50px",color:"#5048E5", fontWeight:600}}></InfoIcon>
-          <DialogContentText id="alert-dialog-description" style={{color:"#5048E5"}}>
+          <InfoIcon
+            style={{
+              marginLeft: "98px",
+              fontSize: "50px",
+              color: "#5048E5",
+              fontWeight: 600,
+            }}
+          ></InfoIcon>
+          <DialogContentText
+            id="alert-dialog-description"
+            style={{ color: "#5048E5" }}
+          >
             Account is under review by admin
           </DialogContentText>
         </DialogContent>

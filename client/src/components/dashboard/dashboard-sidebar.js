@@ -42,20 +42,15 @@ import { OrganizationPopover } from "./organization-popover";
 import { useAuth } from "../../hooks/use-auth";
 import { API_SERVICE } from "../../config";
 
-
-
 export const DashboardSidebar = (props) => {
   const { user } = useAuth();
-  console.log(user)
+  console.log(user);
   const { onClose, open } = props;
   const [amount, setAmount] = useState(user?.userData?.funds?.amount);
   const [currency, setCurrency] = useState(user?.userData?.funds?.currency);
 
   const router = useRouter();
   const { t } = useTranslation();
-
-
-
 
   const brandSections = (t) => [
   {
