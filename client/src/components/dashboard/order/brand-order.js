@@ -251,7 +251,7 @@ const OrderList = () => {
           <Box sx={{ px: 3 }}>
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
-                <Typography variant="h4">Orders</Typography>
+                <Typography variant="h4">Jobs</Typography>
               </Grid>
               {/* <Grid item>
                 <Button
