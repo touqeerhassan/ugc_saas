@@ -4,9 +4,9 @@
   "author": "Devias",
   "private": true,
   "scripts": {
-    "dev": "next",
+    "dev": "next -p 3001",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3001",
     "export": "next export",
     "build-export": "next build && next export",
     "lint": "next lint",
