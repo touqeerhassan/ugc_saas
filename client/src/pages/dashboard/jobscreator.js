@@ -705,7 +705,7 @@ const Finance = () => {
           </Box>
           <Grid container spacing={3}>
             {campaigns.map((campaign) => (
-              <Grid item xs={12} md={6} key={campaign._id}>
+              <Grid item xs={12} md={4} key={campaign._id}>
                 <JobCard
                   campaign={campaign}
                   onClick={() => {

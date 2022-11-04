@@ -22,7 +22,7 @@ import {
   creatorLevels,
   contentFormatContents,
 } from "../../../content-data/data";
-import { Box } from "@mui/system";
+import { border, Box } from "@mui/system";
 import { useAuth } from "../../../hooks/use-auth";
 
 function JobCard({ campaign, onClick }) {
@@ -31,7 +31,7 @@ function JobCard({ campaign, onClick }) {
     <Card variant="outlined">
       <CardContent>
         <Grid container spacing={1}>
-          <Grid
+          {/* <Grid
             item
             xs={6}
             md={4}
@@ -44,9 +44,9 @@ function JobCard({ campaign, onClick }) {
               src={campaign?.product?.cover}
               alt="Image"
             />
-          </Grid>
-          <Grid item xs={6} md={8}>
-            <Box sx={{ p: 2 }}>
+          </Grid> */}
+          <Grid item xs={6} md={14}>
+            <Box sx={{ p: 1 }}>
               {/* <Typography sx={{ float: "right" }}>
                 Earning <br />
                 <span style={{ color: "blue", fontWeight: "bold" }}>
@@ -74,18 +74,37 @@ function JobCard({ campaign, onClick }) {
                 size="small"
                 sx={{ mt: 2 }}
               />
-              <Stack direction="row" sx={{ mt: 3 }} spacing={1}>
+              
+              <Grid
+            item
+            xs={4}
+            md={12}
+            style={{ alignItems: "center", display: "flex" }}
+          >
+            <img
+              style={{
+                width: "100%",
+                margin:"10px 0 0 0 ",
+                borderRadius:"10px"
+
+              }}
+              src={campaign?.product?.cover}
+              alt="Image"
+            />
+          </Grid>
+              <Stack direction="row" sx={{ mt: 6 }} spacing={1}> {/*Free product*/}
                 {campaign?.content?.contentType === 0 ? (
                   <ImageIcon color="primary" />
                 ) : (
                   <VideocamIcon color="primary" />
                 )}
-
+                
                 <Typography variant="subtitle2">
                   Product Demo
                   {campaign?.content?.contentType === 0 ? " Image" : " Video"}
                 </Typography>
               </Stack>
+              
               <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
                 <StayCurrentPortraitIcon color="primary" />
                 <Typography variant="subtitle2">
@@ -106,7 +125,8 @@ function JobCard({ campaign, onClick }) {
               )}
               <Stack direction="row" sx={{ mt: 2 }} spacing={1}>
                 <Button
-                  size="small"
+                  
+                  size="medium"
                   variant="contained"
                   fullWidth
                   onClick={onClick}
