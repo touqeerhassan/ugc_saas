@@ -13,6 +13,8 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import AttachMoney from "@mui/icons-material/AttachMoney";
+import Inventory2Icon from "@mui/icons-material/Inventory2";
+import ContentPasteIcon from "@mui/icons-material/ContentPaste";
 import { Calendar as CalendarIcon } from "../../icons/calendar";
 import { Cash as CashIcon } from "../../icons/cash";
 import { ChartBar as ChartBarIcon } from "../../icons/chart-bar";
@@ -53,128 +55,138 @@ export const DashboardSidebar = (props) => {
   const { t } = useTranslation();
 
   const brandSections = (t) => [
-  {
-    title: t("General"),
-    items: [
-      // {
-      //   title: t("Overview"),
-      //   path: "/dashboard",
-      //   icon: <HomeIcon fontSize="small" />,
-      // },
-      {
-        title: t("Campaigns"),
-        path: "/dashboard/campaigns",
-        icon: <UsersIcon fontSize="small" />,
-      },
-      {
-        title: t("Orders"),
-        path: "/dashboard/orders",
-        icon: <ChartBarIcon fontSize="small" />,
-      },
-      {
-        title: t("All Creators"),
-        path: "/dashboard/view-creators",
-        icon: <UsersIcon fontSize="small" />,
-      },
-       
-      {
-        title: t("Brand select Creator"),
-        path: "/dashboard/creators",
-        icon: <ClipboardListIcon fontSize="small" />,
-      },
-      {
-        path: "/add-funds",
-        icon: <AttachMoney fontSize="small" />,
-        title: t("Add Funds"),
-      },
-      // {
-      //   path: "/dashboard/chat",
-      //   icon: <ChatAlt2Icon fontSize="small" />,
-      //   title: t("Chat"),
-      // },
-    ],
-  },
-];
+    {
+      title: t("General"),
+      items: [
+        {
+          title: t("Dashboard"),
+          path: "/dashboard",
+          icon: <HomeIcon fontSize="small" />,
+        },
+        {
+          title: t("Campaigns"),
+          path: "/dashboard/campaigns",
+          icon: <UsersIcon fontSize="small" />,
+        },
+        {
+          title: t("Orders"),
+          path: "/dashboard/orders",
+          icon: <ChartBarIcon fontSize="small" />,
+        },
+        {
+          title: t("Products"),
+          path: "/dashboard/products",
+          icon: <Inventory2Icon fontSize="small" />,
+        },
+        {
+          title: t("All Creators"),
+          path: "/dashboard/view-creators",
+          icon: <UsersIcon fontSize="small" />,
+        },
 
-const creatorSections = (t, hasProfile) => {
-  if (hasProfile) {
-    return [
-      {
-        title: t("General"),
-        items: [
-          // {
-          //   title: t("Overview"),
-          //   path: "/dashboard",
-          //   icon: <HomeIcon fontSize="small" />,
-          // },
-          // {
-          //   title: t("Creators Onboarding"),
-          //   path: "/dashboard/onboarding",
-          //   icon: <UserCircleIcon fontSize="small" />,
-          // },
-          {
-            title: t("Jobs for Creator"),
-            path: "/dashboard/jobscreator",
-            icon: <ShoppingBagIcon fontSize="small" />,
-          },
-          {
-            title: t("My Jobs"),
-            path: "/dashboard/orders",
-            icon: <ChartBarIcon fontSize="small" />,
-          },
-          {
-        title: t("All Brands"),
-        path: "/dashboard/view-brands",
-        icon: <UsersIcon fontSize="small" />,
-      },
-       {
-        title: t("Portfolio"),
-        path: `/dashboard/portfolio?id=${user.id}`,
-        icon: <UsersIcon fontSize="small" />,
-      },
-          // {
-          //   path: "/dashboard/chat",
-          //   icon: <ChatAlt2Icon fontSize="small" />,
-          //   title: "Chat",
-          // },
-        ],
-      },
-    ];
-  } else {
-    return [
-      {
-        title: t("General"),
-        items: [
-          // {
-          //   title: t("Overview"),
-          //   path: "/dashboard",
-          //   icon: <HomeIcon fontSize="small" />,
-          // },
-          {
-            title: t("Creators Onboarding"),
-            path: "/dashboard/onboarding",
-            icon: <UserCircleIcon fontSize="small" />,
-          },
-          {
-            title: t("Market Place"),
-            path: "/dashboard/jobscreator",
-            icon: <ShoppingBagIcon fontSize="small" />,
-          },
-          {
-            title: t("My Jobs"),
-            path: "/dashboard/orders",
-            icon: <ChartBarIcon fontSize="small" />,
-          },
-          // {
-          //   path: "/dashboard/chat",
-          //   icon: <ChatAlt2Icon fontSize="small" />,
-          //   title: "Chat",
-          // },
-        ],
-      },
-    ];
-  }
-};
+        {
+          title: t("Brand select Creator"),
+          path: "/dashboard/creators",
+          icon: <ClipboardListIcon fontSize="small" />,
+        },
+        {
+          path: "/add-funds",
+          icon: <AttachMoney fontSize="small" />,
+          title: t("Add Funds"),
+        },
+        {
+          title: t("Content"),
+          path: "/dashboard/content",
+          icon: <ContentPasteIcon fontSize="small" />,
+        },
+        // {
+        //   path: "/dashboard/chat",
+        //   icon: <ChatAlt2Icon fontSize="small" />,
+        //   title: t("Chat"),
+        // },
+      ],
+    },
+  ];
+
+  const creatorSections = (t, hasProfile) => {
+    if (hasProfile) {
+      return [
+        {
+          title: t("General"),
+          items: [
+            // {
+            //   title: t("Overview"),
+            //   path: "/dashboard",
+            //   icon: <HomeIcon fontSize="small" />,
+            // },
+            // {
+            //   title: t("Creators Onboarding"),
+            //   path: "/dashboard/onboarding",
+            //   icon: <UserCircleIcon fontSize="small" />,
+            // },
+            {
+              title: t("Jobs for Creator"),
+              path: "/dashboard/jobscreator",
+              icon: <ShoppingBagIcon fontSize="small" />,
+            },
+            {
+              title: t("My Jobs"),
+              path: "/dashboard/orders",
+              icon: <ChartBarIcon fontSize="small" />,
+            },
+            {
+              title: t("All Brands"),
+              path: "/dashboard/view-brands",
+              icon: <UsersIcon fontSize="small" />,
+            },
+            {
+              title: t("Portfolio"),
+              path: `/dashboard/portfolio?id=${user.id}`,
+              icon: <UsersIcon fontSize="small" />,
+            },
+            // {
+            //   path: "/dashboard/chat",
+            //   icon: <ChatAlt2Icon fontSize="small" />,
+            //   title: "Chat",
+            // },
+          ],
+        },
+      ];
+    } else {
+      return [
+        {
+          title: t("General"),
+          items: [
+            // {
+            //   title: t("Overview"),
+            //   path: "/dashboard",
+            //   icon: <HomeIcon fontSize="small" />,
+            // },
+            {
+              title: t("Creators Onboarding"),
+              path: "/dashboard/onboarding",
+              icon: <UserCircleIcon fontSize="small" />,
+            },
+            {
+              title: t("Market Place"),
+              path: "/dashboard/jobscreator",
+              icon: <ShoppingBagIcon fontSize="small" />,
+            },
+            {
+              title: t("My Jobs"),
+              path: "/dashboard/orders",
+              icon: <ChartBarIcon fontSize="small" />,
+            },
+            // {
+            //   path: "/dashboard/chat",
+            //   icon: <ChatAlt2Icon fontSize="small" />,
+            //   title: "Chat",
+            // },
+          ],
+        },
+      ];
+    }
+  };
 
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up("lg"), {
     noSsr: true,
