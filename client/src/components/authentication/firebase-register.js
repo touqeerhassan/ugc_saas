@@ -57,7 +57,8 @@ export const FirebaseRegister = (props) => {
     } else if (auth?.user?.userData?.disabled) {
       router.push("/account-disabled");
     } else {
-      router.push("/dashboard/orders");
+      // router.push("/dashboard/orders");
+      router.push("/dashboard");
     }
   }, [auth?.isAuthenticated]);
   // useEffect(
