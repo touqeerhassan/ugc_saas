@@ -607,7 +607,7 @@ router.get("/get_all_users", (req, res) => {
 //Get All Users
 router.get("/get_all_disbaled_users/:disabled", (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  User.find({disabled: req.params.disabled})
+  User.find({ disabled: req.params.disabled })
     .then(users => res.status(200).send(users))
     .catch(error => res.status(400).json(`Error: ${error}`));
 });

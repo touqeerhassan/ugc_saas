@@ -79,11 +79,12 @@ const OrderPreview = (props) => {
   const [cover, setCover] = useState(
     contentType === 0 ? order?.demoImage : order?.demoVideo
   );
+  const [extraCover, setExtraCover] = useState(
+    contentType === 0 ? order?.demoExtraImage : order?.demoExtraVideo
+  );
 
   const uploadFile = async (file) => {
     try {
-      console.log(file);
-
       let body = {
         status: 2,
       };
@@ -92,6 +93,37 @@ const OrderPreview = (props) => {
       } else {
         body.demoVideo = file;
       }
+      console.log(body)
+      const response = await fetch(`${API_SERVICE}/edit_order/${order?._id}`, {
+        method: "PATCH",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(body),
+      });
+      if (response.status === 200) {
+        // const data = await response.json();
+        // console.log(data);
+        onClose();
+        fetchAgain();
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const uploadExtraFile = async (file) => {
+    try {
+      let body = {
+        status: 2,
+      };
+      if (contentType === 0) {
+        body.demoExtraImage = file;
+      } else {
+        body.demoExtraVideo = file;
+      }
+      console.log(body)
       const response = await fetch(`${API_SERVICE}/edit_order/${order?._id}`, {
         method: "PATCH",
         headers: {
@@ -141,6 +173,11 @@ const OrderPreview = (props) => {
     uploadVideo(file);
   };
 
+  const handleDropExtraCover = async ([file]) => {
+    console.log(file);
+    uploadExtra(file);
+  };
+
   const uploadVideo = (file) => {
     console.log(file);
     if (file === null) return;
@@ -183,6 +220,50 @@ const OrderPreview = (props) => {
       });
     console.log("Here");
   };
+
+  const uploadExtra = (file) => {
+    console.log(file);
+    if (file === null) return;
+    setLoading(true);
+    console.log(extraCover);
+
+    if (extraCover) {
+      const desertRef = storage.refFromURL(extraCover);
+      desertRef
+        .delete()
+        .then(function () {
+          // File deleted successfully
+          console.log("Deleted");
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+          console.log(error);
+        });
+    }
+
+    const name = uuid();
+    storage
+      .ref(`ugcsass/order-files/${name}`)
+      .put(file)
+      .on("state_changed", alert("uploading"), alert, () => {
+        storage
+          .ref("ugcsass")
+          .child("order-files")
+          .child(name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            setExtraCover(url);
+            setLoading(false);
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+          });
+      });
+    console.log("Here");
+  };
+
   console.log(order?.campaign?.product?.price);
   let productPrice = toDoublePrice(order?.campaign?.product?.price);
   let contentPrice = findContentPrice(
@@ -212,7 +293,6 @@ const OrderPreview = (props) => {
 
   const align = lgUp ? "horizontal" : "vertical";
 
-  console.log(order);
 
   return (
     <>
@@ -266,16 +346,70 @@ const OrderPreview = (props) => {
         </Button>
       </Box>
 
+      {loading ? (
+        <>Loading...</>
+      ) : contentType === 0 ? (
+        <center>
+          <img
+            style={{ width: "320px", marginTop: "5px" }}
+            src={extraCover}
+            alt="Image"
+          />
+        </center>
+      ) : (
+        <center>
+          <video
+            width="320"
+            height="180"
+            style={{ marginTop: "5px" }}
+            src={extraCover}
+            alt="Video"
+            controls
+          />
+        </center>
+      )}
+
+
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          my: 2,
+        }}
+      >
+        <Button
+          variant="contained"
+          align="center"
+          onClick={() => uploadExtraFile(extraCover)}
+        >
+          Save Extra
+        </Button>
+      </Box>
+
       <Box sx={{ my: 3 }}>
         <Typography variant="h6" sx={{ my: 2 }}>
-          {`Upload ${
-            order?.campaign?.content?.contentType === 0 ? "Image" : "Video"
-          }`}
+          {`Upload ${order?.campaign?.content?.contentType === 0 ? "Image" : "Video"
+            }`}
         </Typography>
         <FileDropzone
           accept={contentType === 0 ? "image/*" : "video/*"}
           maxFiles={1}
           onDrop={handleDropCover}
+        />
+      </Box>
+
+      <Box sx={{ my: 3 }}>
+        <Typography variant="h6" sx={{ my: 2 }}>
+          {/* {`Upload ${order?.campaign?.content?.contentType === 0 ? "Image" : "Video"
+            }`} */}
+          Upload Extra content
+
+        </Typography>
+        <FileDropzone
+          accept={contentType === 0 ? "image/*" : "video/*"}
+          maxFiles={1}
+          onDrop={handleDropExtraCover}
         />
       </Box>
 

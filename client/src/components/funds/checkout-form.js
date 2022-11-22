@@ -32,8 +32,8 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [severity, setSeverity] = useState("");
-   const [paymentsDetails, setPaymentsDetails] = useState();
-  
+  const [paymentsDetails, setPaymentsDetails] = useState();
+
   const countries = useMemo(() => countryList().getData(), []);
   console.log(countries);
   //   const [details, setDetails] = useState({
@@ -64,22 +64,22 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
   }, [stripe]);
 
 
-    const getPaymentsDetails = async () => {
+  const getPaymentsDetails = async () => {
     try {
       await fetch(`${API_SERVICE}/get_payment_details/${user.email}`)
         .then(res => res.json())
         .then(json => {
           setDetails(json[0]);
-        
-          
-        console.log(json)
+
+
+          console.log(json)
         });
     } catch (err) {
       console.log(err);
     }
   };
   const handleSubmit = async (e) => {
-    debugger;
+    // debugger;
     console.log(details)
     e.preventDefault();
 
@@ -90,6 +90,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
     }
 
     setLoading(true);
+    console.log('here')
 
     await stripe
       .confirmPayment({
@@ -170,6 +171,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
     // redirected to the `return_url`.
 
     // setIsLoading(false);
+    console.log('hdsuih')
   };
 
   return (
@@ -198,7 +200,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
                 label="Card Holder Name"
                 name="name"
                 required
-                value={details.name}
+                value={details?.name}
                 onChange={handleChange}
               />
             </Grid>
@@ -215,7 +217,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
                 label="Street Address"
                 name="street"
                 required
-                value={details.street}
+                value={details?.street}
                 onChange={handleChange}
               />
             </Grid>
@@ -225,14 +227,14 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
                 <Select
                   labelId="demo-simple-select-label"
                   id="demo-simple-select"
-                  value={details.country}
+                  value={details?.country}
                   label="Country"
                   name="country"
                   onChange={handleChange}
                 >
                   {countries?.map((country) => {
                     return (
-                      <MenuItem selected={country.value == details.country} value={country.value} key={country.value}>
+                      <MenuItem selected={country.value == details?.country} value={country.value} key={country.value}>
                         {country.label}
                       </MenuItem>
                     );
@@ -250,7 +252,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                value={details.zip}
+                value={details?.zip}
                 fullWidth
                 label="Zip"
                 name="zip"
@@ -260,7 +262,7 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
-                value={details.city}
+                value={details?.city}
                 fullWidth
                 label="City"
                 name="city"

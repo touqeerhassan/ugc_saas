@@ -46,5 +46,6 @@ export const gtmConfig = {
 
 // Development Server
 export const API_SERVICE = "https://devcybrclik.herokuapp.com/api/v1/main";
+// export const API_SERVICE = "http://localhost:5000/api/v1/main";
 export const SOCKET_ENDPOINT = "https://devcybrclik.herokuapp.com";
 export const WEBSITE_URL = "https://cybrclick.com";

@@ -13,6 +13,8 @@ const orderSchema = new mongoose.Schema({
   date: { type: Date, default: Date.now },
   demoImage: { type: String },
   demoVideo: { type: String },
+  demoExtraImage: { type: String },
+  demoExtraVideo: { type: String },
   branduser: { type: String, required: true },
   creatoruser: { type: String, required: true },
   review: { type: String },
