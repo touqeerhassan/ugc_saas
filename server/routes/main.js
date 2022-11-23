@@ -122,7 +122,7 @@ router.get("/get_orders/creatoruser/:userId", async (req, res) => {
       ]
     })
     .then(p => {
-      console.log(p);
+      console.log('order===', p);
       res.status(200).json(p);
     })
     .catch(error => {

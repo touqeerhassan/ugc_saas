@@ -186,7 +186,7 @@ const Finance = () => {
         handleDialogClose();
         initial.setSnacky({
           color: "success",
-          message: "Biiding Done",
+          message: "Bidding Done",
           open: true,
         });
       }
