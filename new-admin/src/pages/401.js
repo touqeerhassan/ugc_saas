@@ -17,7 +17,7 @@ const AuthorizationRequired = () => {
     <>
       <Head>
         <title>
-          Error: Authorization Required | Material Kit Pro
+          Error: Authorization Required | Cyber Click
         </title>
       </Head>
       <Box

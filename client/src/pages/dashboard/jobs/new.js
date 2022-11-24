@@ -91,7 +91,7 @@ const JobCreate = () => {
     <>
       <Head>
         <title>
-          Dashboard: Job Create | Material Kit Pro
+          Dashboard: Job Create | Cyber Click
         </title>
       </Head>
       <Box

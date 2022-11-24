@@ -103,7 +103,7 @@ const Content = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Overview | Material Kit Pro</title>
+        <title>Dashboard: Overview | Cyber Click</title>
       </Head>
       <Box
         component="main"

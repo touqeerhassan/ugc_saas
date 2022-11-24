@@ -70,31 +70,31 @@ const applyPagination = (invoices, page, rowsPerPage) => invoices.slice(page * r
 
 const InvoiceListInner = styled('div',
   { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ theme, open }) => ({
-    flexGrow: 1,
-    overflow: 'hidden',
-    paddingLeft: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-    zIndex: 1,
-    [theme.breakpoints.up('lg')]: {
-      marginLeft: -380
-    },
-    transition: theme.transitions.create('margin', {
-      easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    }),
-    ...(open && {
+    ({ theme, open }) => ({
+      flexGrow: 1,
+      overflow: 'hidden',
+      paddingLeft: theme.spacing(3),
+      paddingRight: theme.spacing(3),
+      paddingTop: theme.spacing(8),
+      paddingBottom: theme.spacing(8),
+      zIndex: 1,
       [theme.breakpoints.up('lg')]: {
-        marginLeft: 0
+        marginLeft: -380
       },
       transition: theme.transitions.create('margin', {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen
+        easing: theme.transitions.easing.sharp,
+        duration: theme.transitions.duration.leavingScreen
+      }),
+      ...(open && {
+        [theme.breakpoints.up('lg')]: {
+          marginLeft: 0
+        },
+        transition: theme.transitions.create('margin', {
+          easing: theme.transitions.easing.easeOut,
+          duration: theme.transitions.duration.enteringScreen
+        })
       })
-    })
-  }));
+    }));
 
 const InvoiceList = () => {
   const isMounted = useMounted();
@@ -129,8 +129,8 @@ const InvoiceList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getInvoices();
-    },
+    getInvoices();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
@@ -167,7 +167,7 @@ const InvoiceList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Invoice List | Material Kit Pro
+          Dashboard: Invoice List | Cyber Click
         </title>
       </Head>
       <Box

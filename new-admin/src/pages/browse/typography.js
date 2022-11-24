@@ -15,7 +15,7 @@ export const BrowseTypography = () => {
     <>
       <Head>
         <title>
-          Browse: Typography | Material Kit Pro
+          Browse: Typography | Cyber Click
         </title>
       </Head>
       <Box

@@ -20,7 +20,7 @@ const Analytics = () => {
     <>
       <Head>
         <title>
-          Dashboard: Analytics | Material Kit Pro
+          Dashboard: Analytics | Cyber Click
         </title>
       </Head>
       <Box

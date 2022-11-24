@@ -210,7 +210,7 @@ const Creators = () => {
       ) : (
         <>
           <Head>
-            <title>Dashboard: Finance | Material Kit Pro</title>
+            <title>Dashboard: Finance | Cyber Click</title>
           </Head>
 
           <Box
@@ -295,7 +295,7 @@ const Creators = () => {
                                 //   color="error"
                                 variant="outlined"
                                 size="small"
-                                // sx={{ mx: 2 }}
+                              // sx={{ mx: 2 }}
                               >
                                 <RemoveRedEye />
                               </IconButton>

@@ -84,8 +84,8 @@ const ProductList = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProducts();
-    },
+    getProducts();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
@@ -109,7 +109,7 @@ const ProductList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product List | Material Kit Pro
+          Dashboard: Product List | Cyber Click
         </title>
       </Head>
       <Box

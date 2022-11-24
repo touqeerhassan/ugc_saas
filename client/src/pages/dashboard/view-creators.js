@@ -150,7 +150,7 @@ const Creators = () => {
         <DialogContent>
           <Container
             maxWidth="lg"
-            // style={{ margin: "0 20px", padding: "0 50px" }}
+          // style={{ margin: "0 20px", padding: "0 50px" }}
           >
             <Card sx={{ display: "flex" }}>
               {/* <Box>
@@ -494,7 +494,7 @@ const Creators = () => {
       </Dialog>
 
       <Head>
-        <title>Dashboard: Finance | Material Kit Pro</title>
+        <title>Dashboard: Finance | Cyber Click</title>
       </Head>
       <Box
         component="main"
@@ -536,10 +536,10 @@ const Creators = () => {
                   <Card
                     variant="outlined"
                     align="center"
-                    // style={{
-                    //   borderColor: selected ? "#5048E5" : "#E6E8F0",
-                    //   backgroundColor: selected ? "#dcdaf9" : "white",
-                    // }}
+                  // style={{
+                  //   borderColor: selected ? "#5048E5" : "#E6E8F0",
+                  //   backgroundColor: selected ? "#dcdaf9" : "white",
+                  // }}
                   >
                     <CardContent>
                       <Grid container>

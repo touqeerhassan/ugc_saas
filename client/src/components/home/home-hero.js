@@ -34,7 +34,7 @@ export const HomeHero = (props) => {
           align="center"
           variant="h1"
         >
-          Material Kit Pro v5.0
+          Cyber Click v5.0
         </Typography>
         <Typography
           align="center"

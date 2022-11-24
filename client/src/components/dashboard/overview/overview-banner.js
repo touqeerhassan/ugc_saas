@@ -46,7 +46,7 @@ export const OverviewBanner = (props) => {
           sx={{ mt: 2 }}
           variant="h4"
         >
-          Welcome to Material Kit Pro v5!
+          Welcome to Cyber Click v5!
         </Typography>
         <Typography
           color="inherit"

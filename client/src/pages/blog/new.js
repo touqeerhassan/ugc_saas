@@ -39,7 +39,7 @@ const BlogPostCreate = () => {
     <>
       <Head>
         <title>
-          Blog: Post Create | Material Kit Pro
+          Blog: Post Create | Cyber Click
         </title>
       </Head>
       <Box
