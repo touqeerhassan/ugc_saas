@@ -263,9 +263,10 @@ const Creators = () => {
                   <TableBody>
                     {search(withdrawalRequests)?.map((withdrawalRequest, index) => {
                       const user = users.find((user) => user.userId === withdrawalRequest.userId);
+                      console.log('id ====', user?._id)
                       return (
                         <TableRow
-                          key={user._id}
+                          key={user?._id}
                           sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
                         >
                           <TableCell align="center">{index + 1}</TableCell>
