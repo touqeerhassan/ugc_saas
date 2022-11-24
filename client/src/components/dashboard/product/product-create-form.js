@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useRouter } from 'next/router';
 import toast from 'react-hot-toast';
 import * as Yup from 'yup';
+import { v4 as uuid } from "uuid";
 import { useFormik } from 'formik';
 import {
   Box,
@@ -18,6 +19,9 @@ import {
 } from '@mui/material';
 import { FileDropzone } from '../../file-dropzone';
 import { QuillEditor } from '../../quill-editor';
+import { storage } from '../../../lib/firebase';
+import { useAuth } from '../../../hooks/use-auth';
+import { API_SERVICE } from '../../../config';
 
 const categoryOptions = [
   {
@@ -48,34 +52,66 @@ const categoryOptions = [
 
 export const ProductCreateForm = (props) => {
   const router = useRouter();
+  const { user } = useAuth();
   const [files, setFiles] = useState([]);
+  const [firebaseUrl, setFirebaseUrl] = useState('')
   const formik = useFormik({
     initialValues: {
-      barcode: '925487986526',
+      // barcode: '925487986526',
       category: '',
-      description: '',
-      images: [],
+      // description: '',
+      cover: '',
       name: '',
-      newPrice: 0,
-      oldPrice: 0,
-      sku: 'IYV-8745',
+      price: 0,
+      link: "",
+      handlingTime: "",
+      shippingTime: "",
+      // sku: 'IYV-8745',
       submit: null
     },
     validationSchema: Yup.object({
-      barcode: Yup.string().max(255),
+      // barcode: Yup.string().max(255),
       category: Yup.string().max(255),
-      description: Yup.string().max(5000),
-      images: Yup.array(),
+      // description: Yup.string().max(5000),
+      cover: Yup.string().max(555),
       name: Yup.string().max(255).required(),
-      newPrice: Yup.number().min(0).required(),
-      oldPrice: Yup.number().min(0),
-      sku: Yup.string().max(255)
+      link: Yup.string().required(),
+      handlingTime: Yup.string().required(),
+      shippingTime: Yup.string().required(),
+      price: Yup.number().min(0).required(),
+      // sku: Yup.string().max(255)
     }),
     onSubmit: async (values, helpers) => {
       try {
+        values.cover = firebaseUrl
+        console.log(values)
+        console.log(values.cover.length)
         // NOTE: Make API request
-        toast.success('Product created!');
-        router.push('/dashboard/products');
+        try {
+          const response = await fetch(`${API_SERVICE}/add_product`, {
+            method: "POST",
+            headers: {
+              Accept: "application/json",
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              ...values,
+              userId: user?.id,
+            }),
+          });
+          const data = response.json();
+          if (data) {
+            console.log(data)
+            if (values.cover != '') {
+              toast.success('Product created!');
+              router.push('/dashboard/products')
+            } else {
+              toast.error('Please Upload Image');
+            }
+          }
+          // setToggler(!toggler);
+        } finally {
+        }
       } catch (err) {
         console.error(err);
         toast.error('Something went wrong!');
@@ -86,12 +122,72 @@ export const ProductCreateForm = (props) => {
     }
   });
 
+  const uploadImage = () => {
+    if (files[0] === null) return;
+
+    // if (files[0]) {
+    //   const desertRef = storage.refFromURL(files[0]);
+
+    //   desertRef
+    //     .delete()
+    //     .then(function () {
+    //       // File deleted successfully
+    //       console.log("Deleted");
+    //     })
+    //     .catch(function (error) {
+    //       // Uh-oh, an error occurred!
+    //       console.log(error);
+    //     });
+    // }
+
+    const name = uuid();
+    storage
+      .ref(`ugcsass/products/${name}`)
+      .put(files[0])
+      .on("state_changed", alert("uploading"), alert, () => {
+        storage
+          .ref("ugcsass")
+          .child("products")
+          .child(name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url)
+            toast.success('Image Uploaded')
+            setFirebaseUrl(url)
+            // setNewProduct({ ...newProduct, cover: url });
+          });
+      });
+  };
+
+  // const addProduct = async (product) => {
+  //   try {
+  //     const response = await fetch(`${API_SERVICE}/add_product`, {
+  //       method: "POST",
+  //       headers: {
+  //         Accept: "application/json",
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         ...product,
+  //         category: product?.selectedCategory,
+  //         userId: user?.id,
+  //       }),
+  //     });
+  //     const data = response.json();
+  //     setToggler(!toggler);
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
+
   const handleDrop = (newFiles) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+    console.log(newFiles[0])
   };
 
   const handleRemove = (file) => {
     setFiles((prevFiles) => prevFiles.filter((_file) => _file.path !== file.path));
+    setFirebaseUrl('')
   };
 
   const handleRemoveAll = () => {
@@ -123,6 +219,10 @@ export const ProductCreateForm = (props) => {
               xs={12}
             >
               <TextField
+                sx={{
+                  mb: 2,
+                  mt: 3
+                }}
                 error={Boolean(formik.touched.name && formik.errors.name)}
                 fullWidth
                 helperText={formik.touched.name && formik.errors.name}
@@ -132,7 +232,49 @@ export const ProductCreateForm = (props) => {
                 onChange={formik.handleChange}
                 value={formik.values.name}
               />
-              <Typography
+              <TextField
+                sx={{
+                  mb: 2,
+                  mt: 3
+                }}
+                error={Boolean(formik.touched.link && formik.errors.link)}
+                fullWidth
+                helperText={formik.touched.link && formik.errors.link}
+                label="Product link"
+                name="link"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.link}
+              />
+              <TextField
+                sx={{
+                  mb: 2,
+                  mt: 3
+                }}
+                error={Boolean(formik.touched.shippingTime && formik.errors.shippingTime)}
+                fullWidth
+                helperText={formik.touched.shippingTime && formik.errors.shippingTime}
+                label="Shipping Time"
+                name="shippingTime"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.shippingTime}
+              />
+              <TextField
+                sx={{
+                  mb: 2,
+                  mt: 3
+                }}
+                error={Boolean(formik.touched.handlingTime && formik.errors.handlingTime)}
+                fullWidth
+                helperText={formik.touched.handlingTime && formik.errors.handlingTime}
+                label="Handling Time"
+                name="handlingTime"
+                onBlur={formik.handleBlur}
+                onChange={formik.handleChange}
+                value={formik.values.handlingTime}
+              />
+              {/* <Typography
                 color="textSecondary"
                 sx={{
                   mb: 2,
@@ -156,7 +298,7 @@ export const ProductCreateForm = (props) => {
                     {formik.errors.description}
                   </FormHelperText>
                 </Box>
-              )}
+              )} */}
             </Grid>
           </Grid>
         </CardContent>
@@ -191,6 +333,8 @@ export const ProductCreateForm = (props) => {
               <FileDropzone
                 accept="image/*"
                 files={files}
+                disabled={files.length > 0 ? true : false}
+                onUpload={uploadImage}
                 onDrop={handleDrop}
                 onRemove={handleRemove}
                 onRemoveAll={handleRemoveAll}
@@ -220,25 +364,14 @@ export const ProductCreateForm = (props) => {
               xs={12}
             >
               <TextField
-                error={Boolean(formik.touched.oldPrice && formik.errors.oldPrice)}
+                error={Boolean(formik.touched.price && formik.errors.price)}
                 fullWidth
-                label="Old price"
-                name="oldPrice"
+                label="Price"
+                name="price"
                 onBlur={formik.handleBlur}
                 onChange={formik.handleChange}
                 type="number"
-                value={formik.values.oldPrice}
-              />
-              <TextField
-                error={Boolean(formik.touched.newPrice && formik.errors.newPrice)}
-                fullWidth
-                label="New Price"
-                name="newPrice"
-                onBlur={formik.handleBlur}
-                onChange={formik.handleChange}
-                sx={{ mt: 2 }}
-                type="number"
-                value={formik.values.newPrice}
+                value={formik.values.price}
               />
               <Box sx={{ mt: 2 }}>
                 <FormControlLabel
@@ -289,7 +422,7 @@ export const ProductCreateForm = (props) => {
                   </MenuItem>
                 ))}
               </TextField>
-              <TextField
+              {/* <TextField
                 disabled
                 error={Boolean(formik.touched.barcode && formik.errors.barcode)}
                 fullWidth
@@ -310,7 +443,7 @@ export const ProductCreateForm = (props) => {
                 onChange={formik.handleChange}
                 sx={{ mt: 2 }}
                 value={formik.values.sku}
-              />
+              /> */}
             </Grid>
           </Grid>
         </CardContent>
@@ -325,7 +458,7 @@ export const ProductCreateForm = (props) => {
           mt: 3
         }}
       >
-        <Button
+        {/* <Button
           color="error"
           sx={{
             m: 1,
@@ -333,7 +466,7 @@ export const ProductCreateForm = (props) => {
           }}
         >
           Delete
-        </Button>
+        </Button> */}
         <Button
           sx={{ m: 1 }}
           variant="outlined"
