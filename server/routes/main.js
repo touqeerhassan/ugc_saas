@@ -10,6 +10,7 @@ const Creator = require("../models/Creator");
 const User = require("../models/User");
 const Wallet = require("../models/Wallet");
 const Payment = require("../models/Payment");
+const brand = require("../models/Brand");
 
 const Bid = require("../models/Bid");
 const Withdraw = require("../models/Withdraw");
@@ -249,6 +250,36 @@ router.patch("/edit_order/:orderId", async (req, res) => {
     console.log(err);
     res.status(400).json(`Error: ${err}`);
   }
+});
+
+// Brands
+// Add a new brand
+
+router.post("/add_brand", (req, res) => {
+  console.log(req.body);
+
+  res.setHeader("Content-Type", "application/json");
+
+  const newBrand = new brand({
+    ...req.body
+  });
+
+  newBrand.save(err => {
+    console.log(err);
+    if (err) res.status(400).json(`Error: ${err}`);
+    else res.status(200).send("created a new brand");
+  });
+});
+
+// get user  brands
+
+router.get("/get_brands/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  brand.find({ userId: req.params.userId }, (err, brands) => {
+    if (err) res.status(400).json(`Error: ${err}`);
+    else res.status(200).json(brands);
+  });
 });
 
 // Products

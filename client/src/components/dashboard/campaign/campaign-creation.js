@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
+import toast from "react-hot-toast";
 
 import { v4 as uuid } from "uuid";
 
@@ -48,10 +49,13 @@ function CreateCampaign({
   campaignName,
   setCampaignName,
   products,
+  brands,
   setProducts,
   addProduct,
+  addBrand
 }) {
   const [open, setOpen] = useState(false);
+  const [openBrand, setOpenBrand] = useState(false);
   const router = useRouter();
   const { campaignId } = router.query;
 
@@ -66,6 +70,15 @@ function CreateCampaign({
     link: "",
     handlingTime: "",
     shippingTime: "",
+  });
+
+  const [newBrand, setNewBrand] = useState({
+    cover: "",
+    name: "",
+    website: "",
+    categories: ["Mobile & Accessories", "Watches", "Healt & Beauty", "Baby & Toys", "Fashion", "Books", "Hobbies", "Software", "Sports", "Books", "Clothing", "Others"],
+    selectedCategory: "",
+    description: ""
   });
 
   useEffect(() => {
@@ -108,18 +121,69 @@ function CreateCampaign({
       });
   };
 
+  const uploadBrandImage = (file) => {
+    if (file === null) return;
+    console.log(newBrand?.cover);
+
+    if (newBrand?.cover) {
+      const desertRef = storage.refFromURL(newBrand?.cover);
+
+      desertRef
+        .delete()
+        .then(function () {
+          // File deleted successfully
+          console.log("Deleted");
+        })
+        .catch(function (error) {
+          // Uh-oh, an error occurred!
+          console.log(error);
+        });
+    }
+
+    const name = uuid();
+    storage
+      .ref(`ugcsass/products/${name}`)
+      .put(file)
+      .on("state_changed", alert("uploading"), alert, () => {
+        storage
+          .ref("ugcsass")
+          .child("products")
+          .child(name)
+          .getDownloadURL()
+          .then((url) => {
+            console.log(url);
+            toast.success('Image Uploaded')
+            setNewBrand({ ...newBrand, cover: url });
+          });
+      });
+  };
+
   const handleNewProductChange = (event) => {
     setNewProduct({ ...newProduct, [event.target.name]: event.target.value });
+  };
+
+  const handleNewBrandChange = (event) => {
+    setNewBrand({ ...newBrand, [event.target.name]: event.target.value });
   };
 
   const handleProductChange = (event) => {
     setSelectedProduct(event.target.value);
   };
 
+  const handleBrandChange = (event) => {
+    setBrand(event.target.value);
+  };
+
   const handleDropCover = async ([file]) => {
     const data = await fileToBase64(file);
     // setNewProduct({ ...newProduct, cover: data });
     uploadImage(file);
+  };
+
+  const handleDropBrandCover = async ([file]) => {
+    const data = await fileToBase64(file);
+    // setNewProduct({ ...newProduct, cover: data });
+    uploadBrandImage(file);
   };
 
   const handleRemove = () => {
@@ -130,6 +194,13 @@ function CreateCampaign({
     setOpen(true);
   };
 
+  const handleDialogOpenBrand = () => {
+    setOpenBrand(true)
+  };
+
+  const handleDialogCloseBrand = () => {
+    setOpenBrand(false)
+  };
   const handleDialogClose = () => {
     setOpen(false);
   };
@@ -137,7 +208,7 @@ function CreateCampaign({
     <>
       <Container
         maxWidth="md"
-        // style={{ margin: "0 20px", padding: "0 50px" }}
+      // style={{ margin: "0 20px", padding: "0 50px" }}
       >
         <NextLink href="/dashboard" passHref>
           <Button component="a" startIcon={<ArrowLeftIcon fontSize="small" />}>
@@ -150,14 +221,38 @@ function CreateCampaign({
 
         <Card sx={{ mt: 4 }}>
           <CardContent>
-            <Typography variant="h5">Campaign Creation</Typography>
+            <Typography variant="h5">Campaign Creation </Typography>
             <Box sx={{ mt: 3 }}>
-              <TextField
+              <Stack
+                direction="column"
+                justifyContent="center"
+                alignItems="flex-end"
+                sx={{ my: 1 }}
+              >
+                <Button onClick={handleDialogOpenBrand}>Add a new brand</Button>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">Brand</InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={brand}
+                    // label={brand}
+                    onChange={handleBrandChange}
+                  >
+                    {brands.map((brand) => (
+                      <MenuItem key={brand._id} value={brand._id}>
+                        {brand.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Stack>
+              {/* <TextField
                 fullWidth
                 value={brand}
                 onChange={(e) => setBrand(e.target.value)}
                 label="Brand Name"
-              />
+              /> */}
               <Stack
                 direction="column"
                 justifyContent="center"
@@ -195,6 +290,102 @@ function CreateCampaign({
           </CardContent>
         </Card>
       </Container>
+      <Dialog maxWidth={'md'} onClose={handleDialogCloseBrand} open={openBrand}>
+        <DialogTitle>Add a Brand</DialogTitle>
+        <DialogContent>
+          <Box sx={{ m: 2 }}>
+            <Grid container spacing={3}>
+              <Grid item xs={6}>
+                <Box >
+                  <FileDropzone
+                    accept="image/*"
+                    maxFiles={1}
+                    onDrop={handleDropBrandCover}
+                  />
+                </Box>
+              </Grid>
+              <Grid item xs={6}>
+                <Typography sx={{ my: 1 }} variant="h6">Brand name</Typography>
+                <TextField
+                  name="name"
+                  value={newBrand?.name}
+                  onChange={handleNewBrandChange}
+                  fullWidth
+                  placeholder="Brand Name"
+                />
+                <Typography sx={{ my: 1 }} variant="h6">Website</Typography>
+                <TextField
+                  name="website"
+                  value={newBrand?.website}
+                  onChange={handleNewBrandChange}
+                  fullWidth
+                  placeholder="Website"
+                />
+                <Typography sx={{ my: 1 }} variant="h6">Category</Typography>
+                <FormControl fullWidth>
+                  <InputLabel id="demo-simple-select-label">
+                    Category
+                  </InputLabel>
+                  <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    name="selectedCategory"
+                    placeholder="Category"
+                    value={newBrand?.selectedCategory}
+                    onChange={handleNewBrandChange}
+                  >
+                    {newBrand?.categories?.map((category, index) => (
+                      <MenuItem key={index} value={category}>
+                        {category}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+              <Grid item xs={12}>
+                <Typography sx={{ my: 1 }} variant="h6">Description</Typography>
+                <TextField
+                  name="description"
+                  value={newBrand?.description}
+                  onChange={handleNewBrandChange}
+                  multiline
+                  fullWidth
+                  placeholder="Description"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <Box
+                  sx={{
+                    mt: 3,
+                    display: "flex",
+                    justifyContent: "flex-end",
+                  }}
+                >
+                  <Button
+                    variant="contained"
+                    sx={{ mx: 2 }}
+                    onClick={handleDialogCloseBrand}
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    sx={{ mx: 2 }}
+                    disabled={newBrand.name === '' || newBrand.selectedCategory === ''}
+                    onClick={() => {
+                      addBrand(newBrand);
+                      handleDialogCloseBrand();
+                    }}
+                  >
+                    Save Changes
+                  </Button>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+        </DialogContent>
+      </Dialog>
       <Dialog onClose={handleDialogClose} open={open}>
         <DialogTitle>Add a Product</DialogTitle>
         <DialogContent>

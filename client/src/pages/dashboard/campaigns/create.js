@@ -61,6 +61,7 @@ import Summary from "../../../components/dashboard/campaign/summary";
 import Payment from "../../../components/dashboard/campaign/payment";
 import ContentAndCreatorsSidebar from "../../../components/dashboard/campaign/sidebars/content-and-creators-sidebar";
 import SummarySidebar from "../../../components/dashboard/campaign/sidebars/summary-sidebar";
+import toast from "react-hot-toast";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -251,6 +252,7 @@ const BlogPostCreate = () => {
   const [selectedProduct, setSelectedProduct] = useState(campaign?.product);
   const [campaignName, setCampaignName] = useState(campaign?.campaignName);
   const [products, setProducts] = useState([]);
+  const [brands, setBrands] = useState([]);
 
   const fetchSingleProduct = async (productId) => {
     try {
@@ -288,6 +290,23 @@ const BlogPostCreate = () => {
     }
   };
 
+  const fetchBrands = async () => {
+    try {
+      const response = await fetch(`${API_SERVICE}/get_brands/${user?.id}`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log(data);
+      setBrands(data);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
   const addProduct = async (product) => {
     try {
       const response = await fetch(`${API_SERVICE}/add_product`, {
@@ -306,6 +325,33 @@ const BlogPostCreate = () => {
       setToggler(!toggler);
     } catch (err) {
       console.log(err);
+    }
+  };
+
+  const addBrand = async (brand) => {
+    console.log(brand)
+    if (brand.cover !== '') {
+      try {
+        const response = await fetch(`${API_SERVICE}/add_brand`, {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            ...brand,
+            category: brand?.selectedCategory,
+            userId: user?.id,
+          }),
+        });
+        const data = response.json();
+        console.log(data);
+        setToggler(!toggler);
+      } catch (err) {
+        console.log(err);
+      }
+    } else {
+      toast.error('Kindly upload Image')
     }
   };
 
@@ -333,6 +379,7 @@ const BlogPostCreate = () => {
 
   useEffect(() => {
     fetchProducts();
+    fetchBrands()
   }, [user?.id, toggler]);
 
   return (
@@ -386,8 +433,10 @@ const BlogPostCreate = () => {
                   campaignName={campaignName}
                   setCampaignName={setCampaignName}
                   products={products}
+                  brands={brands}
                   setProducts={setProducts}
                   addProduct={addProduct}
+                  addBrand={addBrand}
                 />
               )}
               {activeStep === 1 && (
@@ -416,7 +465,7 @@ const BlogPostCreate = () => {
                 <>
                   <Container
                     maxWidth="md"
-                    // style={{ margin: "0 20px", padding: "0 50px" }}
+                  // style={{ margin: "0 20px", padding: "0 50px" }}
                   >
                     <Typography variant="h5" sx={{ mt: 3 }}>
                       Campaign {campaignId ? "Edited" : "Created"} Successfully
