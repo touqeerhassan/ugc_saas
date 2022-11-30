@@ -32,7 +32,7 @@ const Register = () => {
   return (
     <>
       <Head>
-        <title>Register | Material Kit Pro</title>
+        <title>Register | Cyber Click</title>
       </Head>
       <Box
         component="main"

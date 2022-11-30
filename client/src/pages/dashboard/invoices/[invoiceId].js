@@ -46,8 +46,8 @@ const InvoiceDetails = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getInvoice();
-    },
+    getInvoice();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
@@ -59,7 +59,7 @@ const InvoiceDetails = () => {
     <>
       <Head>
         <title>
-          Dashboard: Invoice Details | Material Kit Pro
+          Dashboard: Invoice Details | Cyber Click
         </title>
       </Head>
       <Box

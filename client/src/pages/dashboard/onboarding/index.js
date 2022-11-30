@@ -74,13 +74,13 @@ const BlogPostCreate = () => {
     } else if (activeStep === 1) {
       return profile != "" && specialization != ""
     } else if (activeStep === 2) {
-      return (social.instagram != "" && social.facebook !="" && social.youtube !="" && social.amazon !="" && social.twitter !="" && social.website !="")
-    } else if(activeStep === 3){
-      return(categories.primary !="" && categories.secondary !="" && categories.tertiary !="")
-    }else if(activeStep === 4){
-      return (brandSelfie!="")
-    }else if(activeStep === 5){
-      return (productDemo!="")
+      return (social.instagram != "" && social.facebook != "" && social.youtube != "" && social.amazon != "" && social.twitter != "" && social.website != "")
+    } else if (activeStep === 3) {
+      return (categories.primary != "" && categories.secondary != "" && categories.tertiary != "")
+    } else if (activeStep === 4) {
+      return (brandSelfie != "")
+    } else if (activeStep === 5) {
+      return (productDemo != "")
     }
 
   }
@@ -267,7 +267,7 @@ const BlogPostCreate = () => {
   return (
     <>
       <Head>
-        <title>Blog: Post Create | Material Kit Pro</title>
+        <title>Blog: Post Create | Cyber Click</title>
       </Head>
       <Grid container justify="center" sx={{ mt: 4 }}>
         <Grid item md={activeStep > 5 ? 2 : 3} align="center">
@@ -284,9 +284,8 @@ const BlogPostCreate = () => {
             style={{ display: nextStep == 2 ? "none" : "block" }}
           >
             {activeStep < 6
-              ? `Step ${activeStep + 1} of ${steps.length}: ${
-                  steps[activeStep]
-                }`
+              ? `Step ${activeStep + 1} of ${steps.length}: ${steps[activeStep]
+              }`
               : nextSteps[nextStep]}
           </Typography>
         </Grid>

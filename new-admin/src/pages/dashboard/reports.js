@@ -300,7 +300,7 @@ const Creators = () => {
       ) : (
         <>
           <Head>
-            <title>Dashboard: Finance | Material Kit Pro</title>
+            <title>Dashboard: Finance | Cyber Click</title>
           </Head>
           <Container>
             <Box sx={{ mt: 4 }}>
@@ -364,7 +364,7 @@ const Creators = () => {
                       filename="cybrclick-admin-users"
                       sheet="cybrclick-admin-users"
                       buttonText="Download as XLS"
-                      // backgroundColor="#5F7464"
+                    // backgroundColor="#5F7464"
                     ></ReactHTMLTableToExcel>
                   </Button>
                 </Box>

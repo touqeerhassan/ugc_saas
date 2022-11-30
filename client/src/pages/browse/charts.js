@@ -27,7 +27,7 @@ const BrowseCharts = () => {
     <>
       <Head>
         <title>
-          Browse: Charts | Material Kit Pro
+          Browse: Charts | Cyber Click
         </title>
       </Head>
       <Box

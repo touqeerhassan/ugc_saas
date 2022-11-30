@@ -32,7 +32,7 @@ const Account = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Account | Material Kit Pro</title>
+        <title>Dashboard: Account | Cyber Click</title>
       </Head>
       <Box
         component="main"

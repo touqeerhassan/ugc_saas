@@ -30,7 +30,7 @@ const VerifyCode = () => {
     <>
       <Head>
         <title>
-          Verify Code | Material Kit Pro
+          Verify Code | Cyber Click
         </title>
       </Head>
       <Box

@@ -1,0 +1,38 @@
+/* .App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.centered {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+} */
+
+.watermarked {
+  position: relative;
+  overflow: hidden;
+}
+
+.watermarked img {
+  width: 100%;
+}
+
+.watermarked::before {
+  position: absolute;
+  top: 79%;
+  left: -4%;
+
+  display: block;
+  width: 150%;
+  height: 150%;
+
+  /* transform: rotate(-50deg); */
+  content: attr(data-watermark);
+
+  opacity: 0.7;
+  line-height: 3em;
+  letter-spacing: 2px;
+  color: #fff;
+}

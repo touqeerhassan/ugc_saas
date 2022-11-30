@@ -338,7 +338,7 @@ const BlogPostCreate = () => {
   return (
     <>
       <Head>
-        <title>Blog: Post Create | Material Kit Pro</title>
+        <title>Blog: Post Create | Cyber Click</title>
       </Head>
       <Grid container justify="center">
         <Grid item md={2} align="center">
@@ -416,7 +416,7 @@ const BlogPostCreate = () => {
                 <>
                   <Container
                     maxWidth="md"
-                    // style={{ margin: "0 20px", padding: "0 50px" }}
+                  // style={{ margin: "0 20px", padding: "0 50px" }}
                   >
                     <Typography variant="h5" sx={{ mt: 3 }}>
                       Campaign {campaignId ? "Edited" : "Created"} Successfully

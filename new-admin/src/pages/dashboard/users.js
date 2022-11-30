@@ -331,7 +331,7 @@ const Creators = () => {
       ) : (
         <>
           <Head>
-            <title>Dashboard: Finance | Material Kit Pro</title>
+            <title>Dashboard: Finance | Cyber Click</title>
           </Head>
           <Container>
             <Box sx={{ mt: 4 }}>
@@ -489,7 +489,7 @@ const Creators = () => {
                               color="error"
                               variant="outlined"
                               size="small"
-                              // sx={{ mx: 2 }}
+                            // sx={{ mx: 2 }}
                             >
                               <Delete />
                             </IconButton>
