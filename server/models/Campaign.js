@@ -3,7 +3,8 @@ const Schema = mongoose.Schema;
 
 const campaignSchema = new mongoose.Schema({
   brand: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "brand",
     required: true,
   },
   product: {
