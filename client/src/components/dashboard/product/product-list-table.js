@@ -56,14 +56,33 @@ const categoryOptions = [
   }
 ];
 
+function formatMonth(month) {
+  var months = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec",
+  ];
+  return months[month];
+}
+
 export const ProductListTable = (props) => {
   const {
     onPageChange,
     onRowsPerPageChange,
     page,
-    products,
+    contents,
     productsCount,
     rowsPerPage,
+    extra,
     ...other
   } = props;
   const [openProduct, setOpenProduct] = useState(null);
@@ -87,7 +106,7 @@ export const ProductListTable = (props) => {
 
   return (
     <div {...other}>
-      <Scrollbar>
+      {/* <Scrollbar>
         <Table sx={{ minWidth: 1200 }}>
           <TableHead>
             <TableRow>
@@ -113,8 +132,8 @@ export const ProductListTable = (props) => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((product) => {
-              const open = product.id === openProduct;
+            {contents.map((content) => {
+              console.log(content)
 
               return (
                 <Fragment key={product.id}>
@@ -461,16 +480,137 @@ export const ProductListTable = (props) => {
         page={page}
         rowsPerPage={rowsPerPage}
         rowsPerPageOptions={[5, 10, 25]}
-      />
-    </div>
+      /> */}
+      <Table>
+        <TableBody>
+          {contents.map((content) => (
+            content.status === 2 &&
+            <TableRow
+              hover
+              key={content._id}
+            // onClick={() => onOpenDrawer?.(content._id)}
+            // sx={{ cursor: "pointer" }}
+            >
+              <TableCell
+                sx={{
+                  alignItems: "center",
+                  display: "flex",
+                }}
+              >
+                <Box
+                  sx={{
+                    backgroundColor: (theme) =>
+                      theme.palette.mode === "dark"
+                        ? "neutral.800"
+                        : "neutral.200",
+                    borderRadius: 2,
+                    maxWidth: "fit-content",
+                    ml: 3,
+                    p: 1,
+                  }}
+                >
+                  <Typography align="center" variant="subtitle2">
+                    {/* {format(order.date, "LLL").toUpperCase()} */}
+                    {formatMonth(
+                      new Date(content?.date).getMonth()
+                    )?.toUpperCase()}
+                  </Typography>
+                  <Typography align="center" variant="h6">
+                    {/* {format(order.date, "LLL").toUpperCase()} */}
+                    {new Date(content?.date).getDate()}
+                  </Typography>
+                </Box>
+                <Box sx={{ ml: 2 }}>
+                  <Typography variant="subtitle2">
+                    {content?.campaign?.campaignName}
+                  </Typography>
+                  {/* <Typography color="textSecondary" variant="body2">
+                    Total of {numeral(order?.price).format(`$0,0.00`)}
+                  </Typography> */}
+                </Box>
+              </TableCell>
+              <TableCell align="right">
+                {extra ? (
+                  content?.campaign?.content?.contentType === 0 ? (
+                    < center >
+                      <img
+                        style={{ width: "100px" }}
+                        src={content?.demoExtraImage}
+                        alt="Image"
+                      />
+                    </center>
+                  ) : (
+                    <center>
+                      <video
+                        style={{ width: "100px", height: "180px", marginTop: "5px" }}
+                        src={content?.demoExtraVideo}
+                        alt="Video"
+                        controls
+                      />
+                    </center>
+                  )
+                ) : (
+                  content?.campaign?.content?.contentType === 0 ? (
+                    < center >
+                      <img
+                        style={{ width: "100px" }}
+                        src={content?.demoImage}
+                        alt="Image"
+                      />
+                    </center>
+                  ) : (
+                    <center>
+                      <video
+                        style={{ width: "100px", height: "180px", marginTop: "5px" }}
+                        src={content?.demoVideo}
+                        alt="Video"
+                        controls
+                      />
+                    </center>
+                  )
+                )}
+                {/* {content?.campaign?.content?.contentType === 0 ? (
+                  < center >
+                    <img
+                      style={{ width: "100px" }}
+                      src={content?.demoImage}
+                      alt="Image"
+                    />
+                  </center>
+                ) : (
+                  <center>
+                    <video
+                      style={{ width: "100px", height: "180px", marginTop: "5px" }}
+                      src={content?.demoVideo}
+                      alt="Video"
+                      controls
+                    />
+                  </center>
+                )} */}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+      {/* <TablePagination
+        component="div"
+        count={ordersCount}
+        onPageChange={onPageChange}
+        onRowsPerPageChange={onRowsPerPageChange}
+        page={page}
+        rowsPerPage={rowsPerPage}
+        rowsPerPageOptions={[5, 10, 25]}
+      /> */}
+    </div >
   );
 };
 
 ProductListTable.propTypes = {
-  products: PropTypes.array.isRequired,
+  contents: PropTypes.array.isRequired,
   productsCount: PropTypes.number.isRequired,
   onPageChange: PropTypes.func,
   onRowsPerPageChange: PropTypes.func,
   page: PropTypes.number.isRequired,
-  rowsPerPage: PropTypes.number.isRequired
+  rowsPerPage: PropTypes.number.isRequired,
+  extra: PropTypes.bool
 };

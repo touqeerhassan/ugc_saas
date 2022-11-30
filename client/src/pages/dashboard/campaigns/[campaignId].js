@@ -82,6 +82,7 @@ const Creators = () => {
           demoVideo: "",
           branduser: user?.id,
           creatoruser: creator?.creator?.userId,
+          confirmed_creator: creator?.creator?._id
         }),
       });
       if (response.status === 200) {
@@ -143,7 +144,7 @@ const Creators = () => {
           <Box sx={{ mt: 2 }}>
             <Container
               maxWidth="md"
-              // style={{ margin: "0 20px", padding: "0 50px" }}
+            // style={{ margin: "0 20px", padding: "0 50px" }}
             >
               <Typography variant="h5" sx={{ mt: 2 }}>
                 Creator Details
@@ -164,11 +165,10 @@ const Creators = () => {
                     <Grid item xs={12}>
                       <Typography variant="h6">
                         {`Name: 
-                                      ${
-                                        selectedCreator?.creator?.first +
-                                        " " +
-                                        selectedCreator?.creator?.last
-                                      }`}
+                                      ${selectedCreator?.creator?.first +
+                          " " +
+                          selectedCreator?.creator?.last
+                          }`}
                       </Typography>
                     </Grid>
                     <Grid item xs={12}>
@@ -252,7 +252,7 @@ const Creators = () => {
           <Box sx={{ mt: 2 }}>
             <Container
               maxWidth="md"
-              // style={{ margin: "0 20px", padding: "0 50px" }}
+            // style={{ margin: "0 20px", padding: "0 50px" }}
             >
               <Typography variant="h5" sx={{ mt: 2 }}>
                 Insufficient Funds
@@ -307,7 +307,7 @@ const Creators = () => {
                       </DialogActions> */}
       </Dialog>
       <Head>
-        <title>Dashboard: Finance | Material Kit Pro</title>
+        <title>Dashboard: Finance | Cyber Click</title>
       </Head>
       <Box
         component="main"
@@ -351,15 +351,16 @@ const Creators = () => {
 
           <Grid container spacing={2}>
             {search(bid?.creators)?.map((creator) => {
+              // console.log(creator?.creator?._id)
               return (
                 <Grid item xs={12} sm={6} md={4} key={creator._id}>
                   <Card
                     variant="outlined"
                     align="center"
-                    // style={{
-                    //   borderColor: selected ? "#5048E5" : "#E6E8F0",
-                    //   backgroundColor: selected ? "#dcdaf9" : "white",
-                    // }}
+                  // style={{
+                  //   borderColor: selected ? "#5048E5" : "#E6E8F0",
+                  //   backgroundColor: selected ? "#dcdaf9" : "white",
+                  // }}
                   >
                     <CardContent>
                       <Grid container>
@@ -401,15 +402,20 @@ const Creators = () => {
                             onClick={async () => {
                               console.log(user);
                               console.log(creator?.price);
-                              if (
-                                user?.userData?.funds?.amount <
-                                creator?.price * 1.03
-                              ) {
-                                setErrorOpen(true);
-                              } else {
-                                setSelectedCreator(creator);
-                                setSuccessOpen(true);
-                              }
+                              // revert this code ..
+                              setSelectedCreator(creator);
+                              setSuccessOpen(true);
+
+                              /// add fund issue not resolved so this code is commented out.
+                              // if (
+                              //   user?.userData?.funds?.amount <
+                              //   creator?.price * 1.03
+                              // ) {
+                              //   setErrorOpen(true);
+                              // } else {
+                              //   setSelectedCreator(creator);
+                              //   setSuccessOpen(true);
+                              // }
                             }}
                           >
                             Choose Creator

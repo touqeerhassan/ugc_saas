@@ -54,8 +54,8 @@ export const SocialProfile = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getProfile();
-    },
+    getProfile();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [getProfile]);
 
@@ -77,7 +77,7 @@ export const SocialProfile = () => {
     <>
       <Head>
         <title>
-          Dashboard: Social Profile | Material Kit Pro
+          Dashboard: Social Profile | Cyber Click
         </title>
       </Head>
       <Box
@@ -89,13 +89,13 @@ export const SocialProfile = () => {
       >
         <Container maxWidth="lg">
           <Box
-         
+
             sx={{
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               borderRadius: 1,
-              
+
               position: 'relative',
               '&:hover': {
                 '& button': {

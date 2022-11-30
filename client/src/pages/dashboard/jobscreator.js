@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import Head from "next/head";
 import {
   Box,
@@ -68,6 +68,7 @@ function findTotalBudget(contentPrice, reimbursementPrice) {
 }
 
 import { useRouter } from "next/router";
+import AlertContext from "../../contexts/alert-context";
 
 function toDoublePrice(price) {
   if (price) {
@@ -107,6 +108,7 @@ const Finance = () => {
     status: undefined,
   });
   const queryRef = useRef(null);
+  const initial = useContext(AlertContext);
 
   let productPrice = toDoublePrice(selectedCampaign?.product?.price);
   let contentPrice = findContentPrice(
@@ -182,7 +184,11 @@ const Finance = () => {
       });
       if (response.status === 200) {
         handleDialogClose();
-        alert("Bidding done");
+        initial.setSnacky({
+          color: "success",
+          message: "Bidding Done",
+          open: true,
+        });
       }
     } catch (err) {
       console.log(err);
@@ -221,7 +227,7 @@ const Finance = () => {
           <Box sx={{ mt: 2 }}>
             <Container
               maxWidth="md"
-              // style={{ margin: "0 20px", padding: "0 50px" }}
+            // style={{ margin: "0 20px", padding: "0 50px" }}
             >
               <Typography variant="h5" sx={{ mt: 2 }}>
                 Campaign Name: {selectedCampaign?.campaignName}
@@ -295,7 +301,7 @@ const Finance = () => {
             </Container>
             <Container
               maxWidth="md"
-              // style={{ margin: "0 20px", padding: "0 50px" }}
+            // style={{ margin: "0 20px", padding: "0 50px" }}
             >
               <Card sx={{ mt: 4 }}>
                 <CardContent>
@@ -405,11 +411,10 @@ const Finance = () => {
                       >
                         <div style={{ fontSize: "14px" }}>
                           {`Price per
-                    ${
-                      selectedCampaign?.content?.contentType === 0
-                        ? "Image"
-                        : "Video"
-                    }`}
+                    ${selectedCampaign?.content?.contentType === 0
+                              ? "Image"
+                              : "Video"
+                            }`}
                         </div>
                         <div style={{ fontSize: "14px" }}>
                           ${contentPrice.toFixed(2)}
@@ -571,7 +576,7 @@ const Finance = () => {
 
             <Container
               maxWidth="md"
-              // style={{ margin: "0 20px", padding: "0 50px" }}
+            // style={{ margin: "0 20px", padding: "0 50px" }}
             >
               <Card sx={{ mt: 2 }}>
                 <CardContent>
@@ -705,7 +710,9 @@ const Finance = () => {
           </Box>
           <Grid container spacing={3}>
             {campaigns.map((campaign) => (
-              <Grid item xs={12} md={4} key={campaign._id}>
+              // We have to remove undefined check as we have added because we have added a new field in DB and it is giving undefined where this field isn't added yet.
+              campaign?.takenBy === null || campaign?.takenBy === undefined &&
+              < Grid item xs={12} md={4} key={campaign._id} >
                 <JobCard
                   campaign={campaign}
                   onClick={() => {

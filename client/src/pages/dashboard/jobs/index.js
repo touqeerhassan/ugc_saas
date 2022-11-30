@@ -48,8 +48,8 @@ const JobBrowse = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getCompanies();
-    },
+    getCompanies();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
@@ -57,7 +57,7 @@ const JobBrowse = () => {
     <>
       <Head>
         <title>
-          Dashboard: Job Browse | Material Kit Pro
+          Dashboard: Job Browse | Cyber Click
         </title>
       </Head>
       <Box

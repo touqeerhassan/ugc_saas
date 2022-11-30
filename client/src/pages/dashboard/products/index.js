@@ -12,6 +12,8 @@ import { Download as DownloadIcon } from '../../../icons/download';
 import { Upload as UploadIcon } from '../../../icons/upload';
 import { Plus as PlusIcon } from '../../../icons/plus';
 import { gtm } from '../../../lib/gtm';
+import { useAuth } from '../../../hooks/use-auth';
+import { API_SERVICE } from '../../../config';
 
 const applyFilters = (products, filters) => products.filter((product) => {
   if (filters.name) {
@@ -66,26 +68,32 @@ const ProductList = () => {
     status: [],
     inStock: undefined
   });
+  const { user } = useAuth();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getProducts = useCallback(async () => {
+  const fetchProducts = async () => {
     try {
-      const data = await productApi.getProducts();
-
-      if (isMounted()) {
-        setProducts(data);
-      }
+      const response = await fetch(`${API_SERVICE}/get_products/${user?.id}`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      console.log("products====", data);
+      setProducts(data);
     } catch (err) {
-      console.error(err);
+      console.log(err);
     }
-  }, [isMounted]);
+  };
 
   useEffect(() => {
-      getProducts();
-    },
+    fetchProducts();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
@@ -109,7 +117,7 @@ const ProductList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product List | Material Kit Pro
+          Dashboard: Product List | Cyber Click
         </title>
       </Head>
       <Box

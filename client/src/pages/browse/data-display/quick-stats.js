@@ -23,7 +23,7 @@ const BrowseQuickStats = () => {
     <>
       <Head>
         <title>
-          Browse: Quick Stats | Material Kit Pro
+          Browse: Quick Stats | Cyber Click
         </title>
       </Head>
       <Box

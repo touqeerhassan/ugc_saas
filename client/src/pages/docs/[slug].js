@@ -49,7 +49,7 @@ const Article = (props) => {
     <>
       <Head>
         <title>
-          {`Docs: ${article.title} | Material Kit Pro`}
+          {`Docs: ${article.title} | Cyber Click`}
         </title>
       </Head>
       <Container

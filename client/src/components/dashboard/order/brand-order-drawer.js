@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import { format } from "date-fns";
 import numeral from "numeral";
@@ -78,6 +78,8 @@ const OrderPreview = (props) => {
   const { lgUp, order, fetchAgain, onClose } = props;
   const [reviewOpen, setReviewOpen] = useState(false);
   const [review, setReview] = useState("");
+  const imgContainerRef = useRef(null);
+  const [watermark, setWatermark] = useState(true);
   const handleReviewOpen = () => {
     setReviewOpen(true);
   };
@@ -108,6 +110,25 @@ const OrderPreview = (props) => {
       console.log(err);
     }
   }, [isMounted]);
+
+  useEffect(() => {
+    const imgContainerSelector = imgContainerRef.current.querySelector(
+      ".watermarked"
+    );
+    console.log('con', imgContainerSelector)
+    console.log("watermark ", watermark);
+
+    if (watermark) {
+      console.log('hii', watermark)
+      imgContainerSelector.dataset.watermark = (
+        imgContainerSelector.dataset.watermark + "   "
+      ).repeat(1);
+      console.log('imgContainerSelector.dataset.watermark===', imgContainerSelector.dataset.watermark)
+    } else {
+      console.log('hiiii====')
+      imgContainerSelector.dataset.watermark = "";
+    }
+  }, [watermark]);
 
   const handleReview = async () => {
     console.log(review);
@@ -230,9 +251,8 @@ const OrderPreview = (props) => {
         }}
       >
         <Typography color="textSecondary" sx={{ mr: 2 }} variant="overline">
-          {`Download ${
-            order?.campaign?.content?.contentType === 0 ? "Image" : "Video"
-          }`}
+          {`Download ${order?.campaign?.content?.contentType === 0 ? "Image" : "Video"
+            }`}
         </Typography>
         <Box
           sx={{
@@ -245,7 +265,7 @@ const OrderPreview = (props) => {
             },
           }}
         >
-          <Link href={order?.demoVideo} passHref>
+          <Link href={order?.campaign?.content?.contentType === 0 ? order?.demoImage : order?.demoVideo} passHref>
             <a target="_blank" download>
               <Button size="small" variant="contained">
                 Download
@@ -277,6 +297,74 @@ const OrderPreview = (props) => {
           </Button>
         </Box>
       )}
+
+      <Typography variant="h5" sx={{ mb: 4 }}>
+        Extra Content
+      </Typography>
+
+
+      {order?.campaign?.content?.contentType === 0 ? (
+        <center>
+          <div className="App" ref={imgContainerRef}>
+            <div className="watermarked" data-watermark="Cyber Click">
+              <img
+                style={{ width: "320px", marginTop: "5px" }}
+                src={order?.demoExtraImage}
+                alt="Image"
+              />
+            </div>
+          </div>
+        </center>
+      ) : (
+        <center>
+          <video
+            style={{ width: "320px", height: "180px", marginTop: "5px" }}
+            src={order?.demoExtraVideo}
+            alt="Video"
+            controls
+          />
+        </center>
+      )}
+
+      {/* download button for extra content upload by creator */}
+      {/* <Box 
+        sx={{
+          alignItems: "center",
+          backgroundColor: (theme) =>
+            theme.palette.mode === "dark" ? "neutral.800" : "neutral.100",
+          borderRadius: 1,
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+          px: 3,
+          py: 2.5,
+          my: 3,
+        }}
+      >
+        <Typography color="textSecondary" sx={{ mr: 2 }} variant="overline">
+          {`Download ${order?.campaign?.content?.contentType === 0 ? "Image" : "Video"
+            }`}
+        </Typography>
+        <Box
+          sx={{
+            alignItems: "center",
+            display: "flex",
+            flexWrap: "wrap",
+            m: -1,
+            "& > button": {
+              m: 1,
+            },
+          }}
+        >
+          <Link href={order?.campaign?.content?.contentType === 0 ? order?.demoExtraImage : order?.demoExtraVideo} passHref>
+            <a target="_blank" download>
+              <Button size="small" variant="contained">
+                Download
+              </Button>
+            </a>
+          </Link>
+        </Box>
+      </Box> */}
 
       {/* <Typography sx={{ my: 3 }} variant="h6">
         Details

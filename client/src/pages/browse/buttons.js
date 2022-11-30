@@ -18,7 +18,7 @@ const BrowseButtons = () => {
     <>
       <Head>
         <title>
-          Browse: Buttons | Material Kit Pro
+          Browse: Buttons | Cyber Click
         </title>
       </Head>
       <Box

@@ -17,7 +17,7 @@ const NotFound = () => {
     <>
       <Head>
         <title>
-          Error: Not Found | Material Kit Pro
+          Error: Not Found | Cyber Click
         </title>
       </Head>
       <Box

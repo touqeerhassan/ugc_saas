@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Head from "next/head";
 import {
   Box,
@@ -22,6 +22,9 @@ import { AuthGuard } from "../../components/authentication/auth-guard";
 import { DashboardLayout } from "../../components/dashboard/dashboard-layout";
 import { ProjectListFilters } from "../../components/dashboard/product/product-list-filters";
 import { ProductListTable } from "../../components/dashboard/product/product-list-table";
+import { useMounted } from "../../hooks/use-mounted";
+import { API_SERVICE } from "../../config";
+import { useAuth } from "../../hooks/use-auth";
 
 const applyFilters = (products, filters) =>
   products.filter((product) => {
@@ -70,7 +73,9 @@ const applyPagination = (products, page, rowsPerPage) =>
 
 const Content = () => {
   const [value, setValue] = useState("my-content");
-  const [products, setProducts] = useState([]);
+  const [contents, setContents] = useState([]);
+  const [contentCount, setContentCount] = useState(0)
+  const [contentExtraCount, setContentExtraCount] = useState(0)
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [filters, setFilters] = useState({
@@ -79,13 +84,15 @@ const Content = () => {
     status: [],
     inStock: undefined,
   });
+  const isMounted = useMounted();
+  const { user } = useAuth();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-  const handleFiltersChange = (filters) => {
-    setFilters(filters);
-  };
+  // const handleFiltersChange = (filters) => {
+  //   setFilters(filters);
+  // };
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
@@ -93,8 +100,42 @@ const Content = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-  const filteredProducts = applyFilters(products, filters);
-  const paginatedProducts = applyPagination(
+  const getOrderContent = useCallback(async () => {
+    try {
+      const response = await fetch(
+        `${API_SERVICE}/get_orders/branduser/${user?.id}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log("brand orders====", data);
+        const content_count = data.filter((content) => content.status === 2 && content.demoImage !== " ").length
+        const content_extra_count = data.filter((content) => content.status === 2 && content.demoExtraImage !== " ").length
+        setContentExtraCount(content_extra_count)
+        setContentCount(content_count)
+        setContents(data);
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }, [isMounted]);
+
+  useEffect(
+    () => {
+      getOrderContent();
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
+
+  const filteredProducts = applyFilters(contents, filters);
+  const paginatedContents = applyPagination(
     filteredProducts,
     page,
     rowsPerPage
@@ -103,7 +144,7 @@ const Content = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Overview | Material Kit Pro</title>
+        <title>Dashboard: Overview | Cyber Click</title>
       </Head>
       <Box
         component="main"
@@ -138,39 +179,41 @@ const Content = () => {
                   >
                     <Tab
                       sx={{ fontSize: "18px", padding: "10px" }}
-                      label="My content (0)"
+                      label={`My content (${contentCount})`}
                       value="my-content"
                     />
                     <Tab
                       sx={{ fontSize: "18px", padding: "10px" }}
-                      label="Extra content (0)"
+                      label={`Extra content (${contentExtraCount})`}
                       value="extra-content"
                     />
                   </TabList>
                 </Box>
                 <TabPanel value="my-content">
                   <Card>
-                    <ProjectListFilters onChange={handleFiltersChange} />
+                    {/* <ProjectListFilters onChange={handleFiltersChange} /> */}
                     <ProductListTable
                       onPageChange={handlePageChange}
                       onRowsPerPageChange={handleRowsPerPageChange}
                       page={page}
-                      products={paginatedProducts}
+                      contents={paginatedContents}
                       productsCount={filteredProducts.length}
                       rowsPerPage={rowsPerPage}
+                      extra={false}
                     />
                   </Card>
                 </TabPanel>
                 <TabPanel value="extra-content">
                   <Card>
-                    <ProjectListFilters onChange={handleFiltersChange} />
+                    {/* <ProjectListFilters onChange={handleFiltersChange} /> */}
                     <ProductListTable
                       onPageChange={handlePageChange}
                       onRowsPerPageChange={handleRowsPerPageChange}
                       page={page}
-                      products={paginatedProducts}
+                      contents={paginatedContents}
                       productsCount={filteredProducts.length}
                       rowsPerPage={rowsPerPage}
+                      extra={true}
                     />
                   </Card>
                 </TabPanel>

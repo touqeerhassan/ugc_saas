@@ -10,6 +10,7 @@ const Creator = require("../models/Creator");
 const User = require("../models/User");
 const Wallet = require("../models/Wallet");
 const Payment = require("../models/Payment");
+const brand = require("../models/Brand");
 
 const Bid = require("../models/Bid");
 const Withdraw = require("../models/Withdraw");
@@ -27,8 +28,9 @@ router.get("/test", (req, res) => {
 // Orders
 // Add a new order
 router.post("/add_order", async (req, res) => {
-  console.log(req.body);
   const branduser = req.body.branduser;
+  const confirmed_creator = req.body.confirmed_creator
+  const campaignId = req.body.campaign
 
   res.setHeader("Content-Type", "application/json");
   try {
@@ -39,10 +41,28 @@ router.post("/add_order", async (req, res) => {
     user.funds.amount -= parseInt(req.body.price * 1.03);
     await user.save();
 
+    // const newOrder = new Order({
+    //   ...req.body,
+    //   date: new Date()
+    // });
+
     const newOrder = new Order({
-      ...req.body,
+      campaign: req.body.campaign,
+      price: req.body.price,
+      status: req.body.status,
+      demoImage: req.body.demoImage,
+      demoVideo: req.body.demoVideo,
+      branduser: req.body.branduser,
+      creatoruser: req.body.creatoruser,
       date: new Date()
     });
+
+    const campaign = await Campaign.findOne({ _id: campaignId });
+    if (!campaign) {
+      return res.status(404).json("campaign not Found");
+    }
+    campaign.takenBy = confirmed_creator
+    await campaign.save();
 
     newOrder.save(err => {
       if (err) {
@@ -122,7 +142,7 @@ router.get("/get_orders/creatoruser/:userId", async (req, res) => {
       ]
     })
     .then(p => {
-      console.log(p);
+      console.log('order===', p);
       res.status(200).json(p);
     })
     .catch(error => {
@@ -230,6 +250,36 @@ router.patch("/edit_order/:orderId", async (req, res) => {
     console.log(err);
     res.status(400).json(`Error: ${err}`);
   }
+});
+
+// Brands
+// Add a new brand
+
+router.post("/add_brand", (req, res) => {
+  console.log(req.body);
+
+  res.setHeader("Content-Type", "application/json");
+
+  const newBrand = new brand({
+    ...req.body
+  });
+
+  newBrand.save(err => {
+    console.log(err);
+    if (err) res.status(400).json(`Error: ${err}`);
+    else res.status(200).send("created a new brand");
+  });
+});
+
+// get user  brands
+
+router.get("/get_brands/:userId", async (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+
+  brand.find({ userId: req.params.userId }, (err, brands) => {
+    if (err) res.status(400).json(`Error: ${err}`);
+    else res.status(200).json(brands);
+  });
 });
 
 // Products
@@ -607,7 +657,7 @@ router.get("/get_all_users", (req, res) => {
 //Get All Users
 router.get("/get_all_disbaled_users/:disabled", (req, res) => {
   res.setHeader("Content-Type", "application/json");
-  User.find({disabled: req.params.disabled})
+  User.find({ disabled: req.params.disabled })
     .then(users => res.status(200).send(users))
     .catch(error => res.status(400).json(`Error: ${error}`));
 });

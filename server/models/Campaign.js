@@ -3,13 +3,19 @@ const Schema = mongoose.Schema;
 
 const campaignSchema = new mongoose.Schema({
   brand: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "brand",
     required: true,
   },
   product: {
     type: Schema.Types.ObjectId,
     ref: "product",
     required: true,
+  },
+  takenBy: {
+    type: Schema.Types.ObjectId,
+    ref: "creator",
+    default: null
   },
   campaignName: {
     type: String,

@@ -20,7 +20,7 @@ const BrowseInputs = () => {
     <>
       <Head>
         <title>
-          Browse: Inputs | Material Kit Pro
+          Browse: Inputs | Cyber Click
         </title>
       </Head>
       <Box
