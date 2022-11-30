@@ -307,7 +307,7 @@ const Creators = () => {
                       </DialogActions> */}
       </Dialog>
       <Head>
-        <title>Dashboard: Finance | Material Kit Pro</title>
+        <title>Dashboard: Finance | Cyber Click</title>
       </Head>
       <Box
         component="main"

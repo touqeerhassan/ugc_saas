@@ -125,7 +125,7 @@ const Browse = () => {
     <>
       <Head>
         <title>
-          Browse | Material Kit Pro
+          Browse | Cyber Click
         </title>
       </Head>
       <Box
@@ -185,7 +185,7 @@ const Browse = () => {
                     >
                       <Card
                         component="a"
-                                                target={item.newTab
+                        target={item.newTab
                           ? '_blank'
                           : '_self'}
                         sx={{

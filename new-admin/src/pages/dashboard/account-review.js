@@ -332,7 +332,7 @@ const AccountReview = () => {
       ) : (
         <>
           <Head>
-            <title>Dashboard: Finance | Material Kit Pro</title>
+            <title>Dashboard: Finance | Cyber Click</title>
           </Head>
           <Box
             component="main"
@@ -377,7 +377,7 @@ const AccountReview = () => {
                               variant="contained"
                               size="small"
                               sx={{ mx: 1 }}
-                              onClick={ () => {
+                              onClick={() => {
                                 editUserStatus(user)
                               }}
                             >

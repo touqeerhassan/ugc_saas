@@ -227,7 +227,7 @@ const Calendar = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Calendar | Material Kit Pro</title>
+        <title>Dashboard: Calendar | Cyber Click</title>
       </Head>
       <Box
         component="main"

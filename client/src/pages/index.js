@@ -26,7 +26,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>Material Kit Pro</title>
+        <title>Cyber Click</title>
       </Head>
       {/* <main>
         <HomeHero />

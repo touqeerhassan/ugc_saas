@@ -56,7 +56,7 @@ import FilterDramaIcon from "@mui/icons-material/FilterDrama";
 import LanguageIcon from "@mui/icons-material/Language";
 import FacebookIcon from "@mui/icons-material/Facebook";
 
-const ViewBrands= () => {
+const ViewBrands = () => {
   const router = useRouter();
   const { user } = useAuth();
   const [brands, setBrands] = useState([]);
@@ -153,7 +153,7 @@ const ViewBrands= () => {
         <DialogContent>
           <Container
             maxWidth="lg"
-            // style={{ margin: "0 20px", padding: "0 50px" }}
+          // style={{ margin: "0 20px", padding: "0 50px" }}
           >
             <Card sx={{ display: "flex" }}>
               {/* <Box>
@@ -497,7 +497,7 @@ const ViewBrands= () => {
       </Dialog>
 
       <Head>
-        <title>Dashboard: Finance | Material Kit Pro</title>
+        <title>Dashboard: Finance | Cyber Click</title>
       </Head>
       <Box
         component="main"
@@ -538,54 +538,54 @@ const ViewBrands= () => {
                 Loading...
               </>
             ) : (
-                <Grid container spacing={2}>
-                  {brands.map((creator) => {
-                    return (
-                      <Grid item xs={12} sm={6} md={4} key={creator._id}>
-                        <Card
-                          variant="outlined"
-                          align="center"
-                          // style={{
-                          //   borderColor: selected ? "#5048E5" : "#E6E8F0",
-                          //   backgroundColor: selected ? "#dcdaf9" : "white",
-                          // }}
-                        >
-                          <CardContent>
-                            <Grid container>
-                              <Grid item xs={12}>
+              <Grid container spacing={2}>
+                {brands.map((creator) => {
+                  return (
+                    <Grid item xs={12} sm={6} md={4} key={creator._id}>
+                      <Card
+                        variant="outlined"
+                        align="center"
+                      // style={{
+                      //   borderColor: selected ? "#5048E5" : "#E6E8F0",
+                      //   backgroundColor: selected ? "#dcdaf9" : "white",
+                      // }}
+                      >
+                        <CardContent>
+                          <Grid container>
+                            <Grid item xs={12}>
                               {/* {creator?.name.slice(0,1)} */}
-                                <Avatar sx={{
-                                  height: 50,
-                                  width: 50,
-                                }}>
-                                  {creator?.name?.slice(0,1)}
-                                </Avatar>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography variant="h6">Name:</Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography variant="secondary">
-                                  {creator?.name}
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography variant="h6">Email:</Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography variant="secondary">
-                                  {creator?.email}
-                                </Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography variant="h6">PhoneNumber:</Typography>
-                              </Grid>
-                              <Grid item xs={12}>
-                                <Typography variant="secondary">
-                                  {creator?.phoneNumber}
-                                </Typography>
-                              </Grid>
-                              {/* <Grid item xs={12}>
+                              <Avatar sx={{
+                                height: 50,
+                                width: 50,
+                              }}>
+                                {creator?.name?.slice(0, 1)}
+                              </Avatar>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="h6">Name:</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="secondary">
+                                {creator?.name}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="h6">Email:</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="secondary">
+                                {creator?.email}
+                              </Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="h6">PhoneNumber:</Typography>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <Typography variant="secondary">
+                                {creator?.phoneNumber}
+                              </Typography>
+                            </Grid>
+                            {/* <Grid item xs={12}>
                                 <Typography variant="h6" sx={{ mt: 3 }}>
                                   Contact:
                                 </Typography>
@@ -595,17 +595,17 @@ const ViewBrands= () => {
                                   {`${parseInt(creator?.contact)}`}
                                 </Typography>
                               </Grid> */}
-                                                    </Grid>
-                          </CardContent>
-                        </Card>
-                      </Grid>
-                    );
-                  })}
-                </Grid>
+                          </Grid>
+                        </CardContent>
+                      </Card>
+                    </Grid>
+                  );
+                })}
+              </Grid>
             )
           }
 
-          
+
         </Container>
       </Box>
     </>

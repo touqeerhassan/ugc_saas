@@ -17,7 +17,7 @@ const ServerError = () => {
     <>
       <Head>
         <title>
-          Error: Server Error | Material Kit Pro
+          Error: Server Error | Cyber Click
         </title>
       </Head>
       <Box

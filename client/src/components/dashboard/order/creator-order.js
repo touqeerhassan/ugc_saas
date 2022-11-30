@@ -234,7 +234,7 @@ const OrderList = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Order List | Material Kit Pro</title>
+        <title>Dashboard: Order List | Cyber Click</title>
       </Head>
       <Box
         component="main"

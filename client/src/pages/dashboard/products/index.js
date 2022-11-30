@@ -117,7 +117,7 @@ const ProductList = () => {
     <>
       <Head>
         <title>
-          Dashboard: Product List | Material Kit Pro
+          Dashboard: Product List | Cyber Click
         </title>
       </Head>
       <Box

@@ -95,7 +95,7 @@ const BlogPostDetails = () => {
     <>
       <Head>
         <title>
-          Blog: Post Details | Material Kit Pro
+          Blog: Post Details | Cyber Click
         </title>
       </Head>
       <Box

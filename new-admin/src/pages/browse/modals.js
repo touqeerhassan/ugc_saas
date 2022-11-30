@@ -27,7 +27,7 @@ export const BrowseModals = () => {
     <>
       <Head>
         <title>
-          Browse: Modals | Material Kit Pro
+          Browse: Modals | Cyber Click
         </title>
       </Head>
       <Box

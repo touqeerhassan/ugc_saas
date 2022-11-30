@@ -30,8 +30,8 @@ const SocialFeed = () => {
   }, [isMounted]);
 
   useEffect(() => {
-      getPosts();
-    },
+    getPosts();
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []);
 
@@ -39,7 +39,7 @@ const SocialFeed = () => {
     <>
       <Head>
         <title>
-          Dashboard: Social Feed | Material Kit Pro
+          Dashboard: Social Feed | Cyber Click
         </title>
       </Head>
       <Box

@@ -33,7 +33,7 @@ const Login = () => {
   return (
     <>
       <Head>
-        <title>Login | Material Kit Pro</title>
+        <title>Login | Cyber Click</title>
       </Head>
       <Box
         component="main"

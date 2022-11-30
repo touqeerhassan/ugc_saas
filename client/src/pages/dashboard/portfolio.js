@@ -36,16 +36,16 @@ const tabs = [
   { label: 'Connections', value: 'connections' }
 ];
 
-const ViewBrands= () => {
-    const { user } = useAuth();
-   const router = useRouter()
+const ViewBrands = () => {
+  const { user } = useAuth();
+  const router = useRouter()
 
   console.log(router.query)
-   const isMounted = useMounted();
+  const isMounted = useMounted();
   const [currentTab, setCurrentTab] = useState('timeline');
   const [profile, setProfile] = useState(null);
   const [connectedStatus, setConnectedStatus] = useState('not_connected');
-    const [protifolio, setProtifolio] = useState();
+  const [protifolio, setProtifolio] = useState();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -68,30 +68,30 @@ const ViewBrands= () => {
     // if(user.id==router.query.userid){
     //    const userEmail=user.email;
     // }
-  
-     
-   fetch(
-`${API_SERVICE}/get_protifolio_by_id/${router.query.id}`)
-            .then((res) => res.json())
-            .then((json) => {
 
-                setProtifolio(json)
-                  console.log(json)
-                  
-            });
-    
-  
 
-      getProfile();
-    
-    },
+    fetch(
+      `${API_SERVICE}/get_protifolio_by_id/${router.query.id}`)
+      .then((res) => res.json())
+      .then((json) => {
+
+        setProtifolio(json)
+        console.log(json)
+
+      });
+
+
+
+    getProfile();
+
+  },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [getProfile]);
 
 
-    
 
- 
+
+
 
 
   const handleConnectToggle = () => {
@@ -112,7 +112,7 @@ const ViewBrands= () => {
     <div>
       <Head>
         <title>
-          Dashboard: Social Profile | Material Kit Pro
+          Dashboard: Social Profile | Cyber Click
         </title>
       </Head>
       <Box
@@ -124,13 +124,13 @@ const ViewBrands= () => {
       >
         <Container maxWidth="lg">
           <Box
-         
+
             sx={{
               backgroundPosition: 'center',
               backgroundRepeat: 'no-repeat',
               backgroundSize: 'cover',
               borderRadius: 1,
-              
+
               position: 'relative',
               '&:hover': {
                 '& button': {
@@ -183,10 +183,10 @@ const ViewBrands= () => {
                 color="textSecondary"
                 variant="overline"
               >
-                 {protifolio?.first} 
+                {protifolio?.first}
               </Typography>
               <Typography variant="h6">
-                 {protifolio?.specialization} 
+                {protifolio?.specialization}
               </Typography>
             </Box>
             <Box sx={{ flexGrow: 1 }} />

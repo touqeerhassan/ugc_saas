@@ -149,7 +149,7 @@ const CustomerList = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Customer List | Material Kit Pro</title>
+        <title>Dashboard: Customer List | Cyber Click</title>
       </Head>
       <Box
         component="main"

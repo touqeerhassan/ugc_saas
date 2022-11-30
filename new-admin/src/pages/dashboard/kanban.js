@@ -62,7 +62,7 @@ const Kanban = () => {
   return (
     <>
       <Head>
-        <title>Dashboard: Kanban | Material Kit Pro</title>
+        <title>Dashboard: Kanban | Cyber Click</title>
       </Head>
       <Box
         component="main"
