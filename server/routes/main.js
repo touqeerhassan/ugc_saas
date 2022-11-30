@@ -27,8 +27,9 @@ router.get("/test", (req, res) => {
 // Orders
 // Add a new order
 router.post("/add_order", async (req, res) => {
-  console.log(req.body);
   const branduser = req.body.branduser;
+  const confirmed_creator = req.body.confirmed_creator
+  const campaignId = req.body.campaign
 
   res.setHeader("Content-Type", "application/json");
   try {
@@ -39,10 +40,28 @@ router.post("/add_order", async (req, res) => {
     user.funds.amount -= parseInt(req.body.price * 1.03);
     await user.save();
 
+    // const newOrder = new Order({
+    //   ...req.body,
+    //   date: new Date()
+    // });
+
     const newOrder = new Order({
-      ...req.body,
+      campaign: req.body.campaign,
+      price: req.body.price,
+      status: req.body.status,
+      demoImage: req.body.demoImage,
+      demoVideo: req.body.demoVideo,
+      branduser: req.body.branduser,
+      creatoruser: req.body.creatoruser,
       date: new Date()
     });
+
+    const campaign = await Campaign.findOne({ _id: campaignId });
+    if (!campaign) {
+      return res.status(404).json("campaign not Found");
+    }
+    campaign.takenBy = confirmed_creator
+    await campaign.save();
 
     newOrder.save(err => {
       if (err) {

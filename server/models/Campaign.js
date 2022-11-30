@@ -11,6 +11,11 @@ const campaignSchema = new mongoose.Schema({
     ref: "product",
     required: true,
   },
+  takenBy: {
+    type: Schema.Types.ObjectId,
+    ref: "creator",
+    default: null
+  },
   campaignName: {
     type: String,
     required: true,

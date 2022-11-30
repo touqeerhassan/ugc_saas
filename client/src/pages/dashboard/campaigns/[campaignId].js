@@ -82,6 +82,7 @@ const Creators = () => {
           demoVideo: "",
           branduser: user?.id,
           creatoruser: creator?.creator?.userId,
+          confirmed_creator: creator?.creator?._id
         }),
       });
       if (response.status === 200) {
@@ -350,6 +351,7 @@ const Creators = () => {
 
           <Grid container spacing={2}>
             {search(bid?.creators)?.map((creator) => {
+              // console.log(creator?.creator?._id)
               return (
                 <Grid item xs={12} sm={6} md={4} key={creator._id}>
                   <Card
