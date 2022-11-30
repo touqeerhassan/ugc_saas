@@ -25,6 +25,7 @@ import { ProductListTable } from "../../components/dashboard/product/product-lis
 import { useMounted } from "../../hooks/use-mounted";
 import { API_SERVICE } from "../../config";
 import { useAuth } from "../../hooks/use-auth";
+import { ContentListTable } from "../../components/dashboard/content/ContentListTable";
 
 const applyFilters = (products, filters) =>
   products.filter((product) => {
@@ -192,7 +193,7 @@ const Content = () => {
                 <TabPanel value="my-content">
                   <Card>
                     {/* <ProjectListFilters onChange={handleFiltersChange} /> */}
-                    <ProductListTable
+                    <ContentListTable
                       onPageChange={handlePageChange}
                       onRowsPerPageChange={handleRowsPerPageChange}
                       page={page}
@@ -206,7 +207,7 @@ const Content = () => {
                 <TabPanel value="extra-content">
                   <Card>
                     {/* <ProjectListFilters onChange={handleFiltersChange} /> */}
-                    <ProductListTable
+                    <ContentListTable
                       onPageChange={handlePageChange}
                       onRowsPerPageChange={handleRowsPerPageChange}
                       page={page}
