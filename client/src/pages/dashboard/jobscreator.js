@@ -709,19 +709,20 @@ const Finance = () => {
             </Grid>
           </Box>
           <Grid container spacing={3}>
-            {campaigns.map((campaign) => (
-              // We have to remove undefined check as we have added because we have added a new field in DB and it is giving undefined where this field isn't added yet.
-              campaign?.takenBy === null || campaign?.takenBy === undefined &&
-              < Grid item xs={12} md={4} key={campaign._id} >
-                <JobCard
-                  campaign={campaign}
-                  onClick={() => {
-                    setSelectedCampaign(campaign);
-                    handleDialogOpen();
-                  }}
-                />
-              </Grid>
-            ))}
+            {campaigns.map((campaign) => {
+              return (
+                campaign?.takenBy === null &&
+                < Grid item xs={12} md={4} key={campaign._id} >
+                  <JobCard
+                    campaign={campaign}
+                    onClick={() => {
+                      setSelectedCampaign(campaign);
+                      handleDialogOpen();
+                    }}
+                  />
+                </Grid>
+              )
+            })}
           </Grid>
         </Container>
 
