@@ -75,7 +75,7 @@ export const FileDropzone = (props) => {
           }
         }}
         {...getRootProps()}>
-        <input {...getInputProps()} />
+        <input disabled={disabled} {...getInputProps()} />
         <Box
           sx={{
             '& img': {

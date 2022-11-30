@@ -67,6 +67,7 @@ export const ProductListTable = (props) => {
     ...other
   } = props;
   const [openProduct, setOpenProduct] = useState(null);
+  console.log(products)
 
   const handleOpenProduct = (productId) => {
     setOpenProduct((prevValue) => (prevValue === productId ? null : productId));
