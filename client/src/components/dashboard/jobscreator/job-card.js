@@ -74,37 +74,37 @@ function JobCard({ campaign, onClick }) {
                 size="small"
                 sx={{ mt: 2 }}
               />
-              
-              <Grid
-            item
-            xs={4}
-            md={12}
-            style={{ alignItems: "center", display: "flex" }}
-          >
-            <img
-              style={{
-                width: "100%",
-                margin:"10px 0 0 0 ",
-                borderRadius:"10px"
 
-              }}
-              src={campaign?.product?.cover}
-              alt="Image"
-            />
-          </Grid>
+              <Grid
+                item
+                xs={4}
+                md={12}
+                style={{ alignItems: "center", display: "flex" }}
+              >
+                <img
+                  style={{
+                    width: "100%",
+                    margin: "10px 0 0 0 ",
+                    borderRadius: "10px"
+
+                  }}
+                  src={campaign?.product?.cover}
+                  alt="Image"
+                />
+              </Grid>
               <Stack direction="row" sx={{ mt: 6 }} spacing={1}> {/*Free product*/}
                 {campaign?.content?.contentType === 0 ? (
                   <ImageIcon color="primary" />
                 ) : (
                   <VideocamIcon color="primary" />
                 )}
-                
+
                 <Typography variant="subtitle2">
                   Product Demo
                   {campaign?.content?.contentType === 0 ? " Image" : " Video"}
                 </Typography>
               </Stack>
-              
+
               <Stack direction="row" sx={{ mt: 1 }} spacing={1}>
                 <StayCurrentPortraitIcon color="primary" />
                 <Typography variant="subtitle2">
@@ -125,7 +125,7 @@ function JobCard({ campaign, onClick }) {
               )}
               <Stack direction="row" sx={{ mt: 2 }} spacing={1}>
                 <Button
-                  
+
                   size="medium"
                   variant="contained"
                   fullWidth

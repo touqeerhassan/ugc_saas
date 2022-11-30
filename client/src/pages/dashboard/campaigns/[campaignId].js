@@ -402,20 +402,15 @@ const Creators = () => {
                             onClick={async () => {
                               console.log(user);
                               console.log(creator?.price);
-                              // revert this code ..
-                              setSelectedCreator(creator);
-                              setSuccessOpen(true);
-
-                              /// add fund issue not resolved so this code is commented out.
-                              // if (
-                              //   user?.userData?.funds?.amount <
-                              //   creator?.price * 1.03
-                              // ) {
-                              //   setErrorOpen(true);
-                              // } else {
-                              //   setSelectedCreator(creator);
-                              //   setSuccessOpen(true);
-                              // }
+                              if (
+                                user?.userData?.funds?.amount <
+                                creator?.price * 1.03
+                              ) {
+                                setErrorOpen(true);
+                              } else {
+                                setSelectedCreator(creator);
+                                setSuccessOpen(true);
+                              }
                             }}
                           >
                             Choose Creator
