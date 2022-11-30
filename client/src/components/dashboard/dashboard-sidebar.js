@@ -84,11 +84,11 @@ export const DashboardSidebar = (props) => {
           icon: <UsersIcon fontSize="small" />,
         },
 
-        {
-          title: t("Brand select Creator"),
-          path: "/dashboard/creators",
-          icon: <ClipboardListIcon fontSize="small" />,
-        },
+        // {
+        //   title: t("Brand select Creator"),
+        //   path: "/dashboard/creators",
+        //   icon: <ClipboardListIcon fontSize="small" />,
+        // },
         {
           path: "/add-funds",
           icon: <AttachMoney fontSize="small" />,
