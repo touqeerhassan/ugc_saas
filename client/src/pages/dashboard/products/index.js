@@ -154,7 +154,7 @@ const ProductList = () => {
                 </NextLink>
               </Grid>
             </Grid>
-            <Box
+            {/* <Box
               sx={{
                 m: -1,
                 mt: 3
@@ -172,7 +172,7 @@ const ProductList = () => {
               >
                 Export
               </Button>
-            </Box>
+            </Box> */}
           </Box>
           <Card>
             <ProjectListFilters onChange={handleFiltersChange} />

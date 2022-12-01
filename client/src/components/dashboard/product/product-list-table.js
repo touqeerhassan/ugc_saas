@@ -103,14 +103,14 @@ export const ProductListTable = (props) => {
                 Price
               </TableCell>
               <TableCell>
-                sku
+                cover
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 Status
-              </TableCell>
-              <TableCell align="right">
+              </TableCell> */}
+              {/* <TableCell align="right">
                 Actions
-              </TableCell>
+              </TableCell> */}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -229,18 +229,23 @@ export const ProductListTable = (props) => {
                       {numeral(product.price).format(`${product.currency}0,0.00`)}
                     </TableCell>
                     <TableCell>
-                      {product.sku}
+                      {/* {product.sku} */}
+                      <img
+                        style={{ width: "100px" }}
+                        src={product?.cover}
+                        alt="Image"
+                      />
                     </TableCell>
-                    <TableCell>
+                    {/* <TableCell>
                       <SeverityPill color={product.status === 'published' ? 'success' : 'info'}>
                         {product.status}
                       </SeverityPill>
-                    </TableCell>
-                    <TableCell align="right">
+                    </TableCell> */}
+                    {/* <TableCell align="right">
                       <IconButton>
                         <DotsHorizontalIcon fontSize="small" />
                       </IconButton>
-                    </TableCell>
+                    </TableCell> */}
                   </TableRow>
                   {open && (
                     <TableRow>
