@@ -89,7 +89,7 @@ export const ProductListTable = (props) => {
   return (
     <div {...other}>
       <Scrollbar>
-        <Table sx={{ minWidth: 900 }}>
+        <Table sx={{ minWidth: 1200 }}>
           <TableHead>
             <TableRow>
               <TableCell />
@@ -154,13 +154,13 @@ export const ProductListTable = (props) => {
                           display: 'flex'
                         }}
                       >
-                        {product.image
+                        {product?.cover
                           ? (
                             <Box
                               sx={{
                                 alignItems: 'center',
                                 backgroundColor: 'background.default',
-                                backgroundImage: `url(${product.image})`,
+                                backgroundImage: `url(${product?.cover})`,
                                 backgroundPosition: 'center',
                                 backgroundSize: 'cover',
                                 borderRadius: 1,
@@ -184,11 +184,7 @@ export const ProductListTable = (props) => {
                                 width: 80
                               }}
                             >
-                              <img
-                                style={{ width: "100px" }}
-                                src={product?.cover}
-                                alt="Image"
-                              />
+                              <ImageIcon fontSize="small" />
                             </Box>
                           )}
                         <Box
