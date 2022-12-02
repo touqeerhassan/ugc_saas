@@ -102,7 +102,6 @@ const CustomerList = () => {
       if (response.status === 200) {
         // console.log(response);
         const data = await response.json();
-        console.log(data);
         setCampaigns(data);
         setLoading(false);
       }
@@ -331,7 +330,7 @@ const CustomerList = () => {
                               >
                                 <TableCell align="center">{i + 1}</TableCell>
                                 <TableCell align="center">
-                                  {row?.brand}
+                                  {row?.brand?.name}
                                 </TableCell>
                                 <TableCell align="center">
                                   {row?.campaignName}
