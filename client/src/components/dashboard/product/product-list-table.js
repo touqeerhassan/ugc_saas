@@ -89,22 +89,22 @@ export const ProductListTable = (props) => {
   return (
     <div {...other}>
       <Scrollbar>
-        <Table sx={{ minWidth: 1200 }}>
+        <Table sx={{ minWidth: 900 }}>
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell width="25%">
+              <TableCell width="40%">
                 Name
               </TableCell>
-              <TableCell width="25%">
+              <TableCell width="30%">
                 Stock
               </TableCell>
-              <TableCell>
+              <TableCell width="30%">
                 Price
               </TableCell>
-              <TableCell>
+              {/* <TableCell>
                 cover
-              </TableCell>
+              </TableCell> */}
               {/* <TableCell>
                 Status
               </TableCell> */}
@@ -184,7 +184,11 @@ export const ProductListTable = (props) => {
                                 width: 80
                               }}
                             >
-                              <ImageIcon fontSize="small" />
+                              <img
+                                style={{ width: "100px" }}
+                                src={product?.cover}
+                                alt="Image"
+                              />
                             </Box>
                           )}
                         <Box
@@ -228,14 +232,14 @@ export const ProductListTable = (props) => {
                     <TableCell>
                       {numeral(product.price).format(`${product.currency}0,0.00`)}
                     </TableCell>
-                    <TableCell>
-                      {/* {product.sku} */}
+                    {/* <TableCell>
+                      {product.sku}
                       <img
                         style={{ width: "100px" }}
                         src={product?.cover}
                         alt="Image"
                       />
-                    </TableCell>
+                    </TableCell> */}
                     {/* <TableCell>
                       <SeverityPill color={product.status === 'published' ? 'success' : 'info'}>
                         {product.status}
