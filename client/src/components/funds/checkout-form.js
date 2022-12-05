@@ -91,78 +91,84 @@ export default function CheckoutForm({ handleBack, setClientSecret }) {
 
     setLoading(true);
     console.log('here')
-
-    await stripe
-      .confirmPayment({
-        elements,
-        confirmParams: {
-          shipping: {
-            name: details.name,
-            address: {
-              line1: details.street,
-              postal_code: details.zip,
-              city: details.city,
-              country: details.country,
-            },
-          },
-          // Make sure to change this to your payment completion page
-          return_url: "http://localhost:3000",
-        },
-        redirect: "if_required",
-      })
-      .then(async function (result) {
-        console.log(result);
-        const { paymentIntent, error } = result;
-        if (error) {
-          if (
-            error.type === "card_error" ||
-            error.type === "validation_error"
-          ) {
-            setMessage(error.message);
-            setSeverity("error");
-            setOpen(true);
-            setLoading(false);
-          } else {
-            console.log(error);
-            setMessage("An unexpected error occurred.");
-            setSeverity("error");
-            setOpen(true);
-            setLoading(false);
-          }
-        } else {
-          if (paymentIntent.status === "succeeded") {
-            const { currency, amount, customer } = paymentIntent;
-            const response = await fetch(`${API_SERVICE}/addFunds`, {
-              method: "POST",
-              headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
+    if (details?.name && details?.city && details?.country && details?.street) {
+      await stripe
+        .confirmPayment({
+          elements,
+          confirmParams: {
+            shipping: {
+              name: details.name,
+              address: {
+                line1: details.street,
+                postal_code: details.zip,
+                city: details.city,
+                country: details.country,
               },
-              body: JSON.stringify({
-                currency,
-                amount,
-                userId: user.id,
-              }),
-            });
-            if (response.status == 200) {
-              setMessage("Funds added to wallet");
-              setSeverity("success");
+            },
+            // Make sure to change this to your payment completion page
+            return_url: "http://localhost:3000",
+          },
+          redirect: "if_required",
+        })
+        .then(async function (result) {
+          console.log(result);
+          const { paymentIntent, error } = result;
+          if (error) {
+            if (
+              error.type === "card_error" ||
+              error.type === "validation_error"
+            ) {
+              setMessage(error.message);
+              setSeverity("error");
               setOpen(true);
               setLoading(false);
             } else {
-              setMessage("An Unknown error occurred");
+              console.log(error);
+              setMessage("An unexpected error occurred.");
               setSeverity("error");
               setOpen(true);
               setLoading(false);
             }
           } else {
-            setMessage(paymentIntent.status);
-            setSeverity("error");
-            setOpen(true);
-            setLoading(false);
+            if (paymentIntent.status === "succeeded") {
+              const { currency, amount, customer } = paymentIntent;
+              const response = await fetch(`${API_SERVICE}/addFunds`, {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  currency,
+                  amount,
+                  userId: user.id,
+                }),
+              });
+              if (response.status == 200) {
+                setMessage("Funds added to wallet");
+                setSeverity("success");
+                setOpen(true);
+                setLoading(false);
+              } else {
+                setMessage("An Unknown error occurred");
+                setSeverity("error");
+                setOpen(true);
+                setLoading(false);
+              }
+            } else {
+              setMessage(paymentIntent.status);
+              setSeverity("error");
+              setOpen(true);
+              setLoading(false);
+            }
           }
-        }
-      });
+        });
+    } else {
+      setMessage("All fields are required");
+      setSeverity("error");
+      setOpen(true);
+      setLoading(false);
+    }
 
     // This point will only be reached if there is an immediate error when
     // confirming the payment. Otherwise, your customer will be redirected to
