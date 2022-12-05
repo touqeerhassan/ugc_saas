@@ -342,7 +342,7 @@ const OrderPreview = (props) => {
           align="center"
           onClick={() => uploadFile(cover)}
         >
-          Save
+          Submit
         </Button>
       </Box>
 
@@ -383,7 +383,7 @@ const OrderPreview = (props) => {
           align="center"
           onClick={() => uploadExtraFile(extraCover)}
         >
-          Save Extra
+          Submit Extra Content
         </Button>
       </Box>
 

@@ -69,7 +69,7 @@ export const DashboardSidebar = (props) => {
           icon: <UsersIcon fontSize="small" />,
         },
         {
-          title: t("Orders"),
+          title: t("Jobs"),
           path: "/dashboard/orders",
           icon: <ChartBarIcon fontSize="small" />,
         },
