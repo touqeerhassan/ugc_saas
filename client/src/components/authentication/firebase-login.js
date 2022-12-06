@@ -200,8 +200,8 @@ export const FirebaseLogin = (props) => {
         // setOpen(true);
         router.push("/dashboard/orders");
       } else {
-        router.push("/dashboard/orders");
-        // router.push("/dashboard");
+        // router.push("/dashboard/orders");
+        router.push("/dashboard");
       }
     }
   }, [auth?.isAuthenticated]);
