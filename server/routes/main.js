@@ -401,7 +401,7 @@ router.get("/get_campaigns/:userId", async (req, res) => {
   Campaign.find({ userId: req.params.userId }, (err, products) => {
     if (err) res.status(400).json(`Error: ${err}`);
     else res.status(200).json(products);
-  });
+  }).populate("brand", "name");
 });
 
 // Delete a campaign
