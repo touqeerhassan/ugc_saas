@@ -197,7 +197,8 @@ export const FirebaseLogin = (props) => {
     // }
     else {
       if (auth?.user?.userData?.userType == "creator") {
-        setOpen(true);
+        // setOpen(true);
+        router.push("/dashboard/orders");
       } else {
         // router.push("/dashboard/orders");
         router.push("/dashboard");
