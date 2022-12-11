@@ -163,7 +163,7 @@ export const DashboardSidebar = (props) => {
             //   icon: <HomeIcon fontSize="small" />,
             // },
             {
-              title: t("Creators Onboarding"),
+              title: t("Onboarding"),
               path: "/dashboard/onboarding",
               icon: <UserCircleIcon fontSize="small" />,
             },
