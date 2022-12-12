@@ -57,7 +57,7 @@ export default function Disclaimer({ children, onClick }) {
     <>
       <Container
         maxWidth="md"
-        // style={{ margin: "0 20px", padding: "0 50px" }}
+      // style={{ margin: "0 20px", padding: "0 50px" }}
       >
         <Card sx={{ display: "flex" }}>
           <Box>
@@ -78,7 +78,7 @@ export default function Disclaimer({ children, onClick }) {
               </Grid>
               <Grid item xs={12} sx={{ mb: 3 }}>
                 <Typography variant="secondary" sx={{ color: "gray" }}>
-                  We care about your safety on JoinBrands. Please avoid the
+                  We care about your safety on CyberClick. Please avoid the
                   following actions to keep it line with our community standards
                 </Typography>
               </Grid>
@@ -92,7 +92,7 @@ export default function Disclaimer({ children, onClick }) {
               <Grid item xs={12} md={6}>
                 <LockIcon />
                 <div style={{ color: "gray" }}>
-                  Taking communication and payment outside of the JoinBrands
+                  Taking communication and payment outside of the CyberClick
                   platform
                 </div>
               </Grid>

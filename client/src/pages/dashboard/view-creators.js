@@ -581,11 +581,9 @@ const Creators = () => {
                             fullWidth
                             variant="contained"
                             onClick={() => {
-                              console.log(user);
-                              console.log(creator?.price);
-
-                              setSelectedCreator(creator);
-                              setSuccessOpen(true);
+                              router.push(`/dashboard/portfolio?id=${creator?.userId}`)
+                              // setSelectedCreator(creator);
+                              // setSuccessOpen(true);
                             }}
                           >
                             View More

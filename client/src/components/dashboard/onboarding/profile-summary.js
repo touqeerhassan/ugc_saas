@@ -76,7 +76,7 @@ export default function Disclaimer({ onClick, onEdit }) {
     <>
       <Container
         maxWidth="md"
-        // style={{ margin: "0 20px", padding: "0 50px" }}
+      // style={{ margin: "0 20px", padding: "0 50px" }}
       >
         <Card sx={{ display: "flex" }}>
           <Box>
@@ -122,7 +122,7 @@ export default function Disclaimer({ onClick, onEdit }) {
                     height="100%"
                     width="100%"
                     component="img"
-                    image={cover}
+                    image={creator?.profile}
                     alt="green iguana"
                   />
                 </Box>

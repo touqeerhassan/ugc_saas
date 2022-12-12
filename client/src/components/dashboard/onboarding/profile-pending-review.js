@@ -41,9 +41,11 @@ import { FileDropzone } from "../../file-dropzone";
 
 import { gtm } from "../../../lib/gtm";
 import { fileToBase64 } from "../../../utils/file-to-base64";
+import { useSelector } from "react-redux";
 
 export default function ProfilePendingReview({ children, onClick }) {
   const [cover, setCover] = useState("/static/mock-images/covers/cover_4.jpeg");
+  const creator = useSelector((state) => state.creator);
   const [info, setInfo] = useState("");
 
   const handleDropCover = async ([file]) => {
@@ -59,7 +61,7 @@ export default function ProfilePendingReview({ children, onClick }) {
     <>
       <Container
         maxWidth="md"
-        // style={{ margin: "0 20px", padding: "0 50px" }}
+      // style={{ margin: "0 20px", padding: "0 50px" }}
       >
         <Card sx={{ display: "flex" }}>
           <Box sx={{ width: "500px" }}>
@@ -68,7 +70,7 @@ export default function ProfilePendingReview({ children, onClick }) {
               height="100%"
               width="100%"
               component="img"
-              image={cover}
+              image={creator?.profile}
               alt="green iguana"
             />
           </Box>

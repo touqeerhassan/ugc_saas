@@ -236,7 +236,8 @@ export const FirebaseLogin = (props) => {
               auth?.user?.userData?.userType == "creator" &&
               auth?.user?.userData?.email == user.email
             ) {
-              setOpen(true);
+              // setOpen(true);
+              router.push("/dashboard/orders");
             }
             if (
               auth.user &&
